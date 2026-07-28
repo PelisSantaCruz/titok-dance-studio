@@ -1,0 +1,1561 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok Dance Arena 3D - Live Profesional</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Three.js para el motor 3D -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <!-- SDK de Firebase (Versión 8) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #0f172a; color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        #canvas-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+        
+        /* Glassmorphism UI */
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .gift-btn { transition: all 0.2s ease; }
+        .gift-btn:hover { transform: scale(1.05) translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3); }
+        .gift-btn:active { transform: scale(0.95); }
+
+        /* Animaciones UI */
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .notification { animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+
+        /* Emojis voladores */
+        .flying-emoji {
+            position: absolute; font-size: 3rem; pointer-events: none; z-index: 50; animation: flyUp 2s ease-out forwards;
+        }
+        @keyframes flyUp {
+            0% { transform: translate(-50%, 0) scale(0.5); opacity: 1; }
+            50% { transform: translate(-50%, -150px) scale(1.2); opacity: 1; }
+            100% { transform: translate(-50%, -300px) scale(1); opacity: 0; }
+        }
+
+        /* Banners de Publicidad Horizontales */
+        @keyframes slideHorizontal {
+            0% { transform: translateX(100vw); opacity: 1; }
+            100% { transform: translateX(-150%); opacity: 1; }
+        }
+        
+        @keyframes broadwayFlash {
+            0%, 100% { border-color: #ff007f; box-shadow: 0 0 40px #ff007f, inset 0 0 30px #ff007f; }
+            33% { border-color: #00ffff; box-shadow: 0 0 50px #00ffff, inset 0 0 40px #00ffff; }
+            66% { border-color: #ffff00; box-shadow: 0 0 45px #ffff00, inset 0 0 35px #ffff00; }
+        }
+        
+        @keyframes textGlow {
+            0%, 100% { text-shadow: 0 0 15px currentColor, 0 0 30px currentColor, 0 0 50px currentColor; }
+            50% { text-shadow: 0 0 5px currentColor, 0 0 10px currentColor, 0 0 20px currentColor; }
+        }
+
+        .floating-banner {
+            position: absolute;
+            animation: slideHorizontal 18s linear forwards, broadwayFlash 1s infinite alternate;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 40;
+            background-color: #050505;
+            background-image: radial-gradient(#333 3px, transparent 3px);
+            background-size: 8px 8px; 
+            border: 14px dotted #ffffff; 
+            border-radius: 20px;
+        }
+
+        /* Pantallas y Modales */
+        .screen { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 20; }
+        .screen.active { display: flex; }
+        
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 100; backdrop-filter: blur(5px); justify-content: center; align-items: center; }
+        .modal-overlay.active { display: flex; }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        #tiktok-gifts-panel { transition: opacity 0.3s ease; }
+    </style>
+</head>
+<body>
+
+    <!-- Contenedor del Motor 3D -->
+    <div id="canvas-container"></div>
+
+    <!-- PANTALLA DE CARGA INICIAL (Para Base de Datos) -->
+    <div id="loading-screen" class="screen active justify-center items-center z-[300] bg-slate-900">
+        <div class="text-center">
+            <div class="w-16 h-16 border-4 border-pink-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p class="text-cyan-400 font-bold tracking-widest animate-pulse">CONECTANDO AL SERVIDOR FIREBASE...</p>
+        </div>
+    </div>
+
+    <!-- PANTALLA DE LOGIN UNIFICADA -->
+    <div id="login-screen" class="screen justify-center items-center">
+        <div class="glass-panel p-8 rounded-2xl w-full max-w-md mx-4 relative overflow-hidden shadow-[0_0_50px_rgba(236,72,153,0.2)]">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500"></div>
+            <h1 class="text-3xl font-black text-center mb-2 text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-cyan-400">Entretenimiento MoBol</h1>
+            <p class="text-center text-gray-300 mb-6 text-sm font-semibold">Plataforma Interactiva 3D</p>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-400 mb-1">Nombre de Usuario (Nick o Email)</label>
+                    <input type="text" id="username" class="w-full bg-slate-900/80 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-pink-500 transition-colors" placeholder="Ej: @Usuario o Email">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-400 mb-1">Contraseña</label>
+                    <input type="password" id="password" class="w-full bg-slate-900/80 border border-slate-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-cyan-500 transition-colors" placeholder="••••••••">
+                </div>
+                
+                <div class="pt-4">
+                    <button onclick="login()" class="w-full bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-black py-3 px-4 rounded-xl shadow-[0_0_20px_rgba(236,72,153,0.4)] transition-all transform hover:scale-[1.02] active:scale-95">
+                        INGRESAR AL LIVE
+                    </button>
+                </div>
+                <div class="text-[10px] text-center text-gray-500 mt-2">
+                    Si tu usuario no existe, se registrará automáticamente como Jugador.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE ADMINISTRACIÓN DE JUGADORES Y SUB-ADMINS -->
+    <div id="admin-modal" class="modal-overlay">
+        <div class="glass-panel p-6 rounded-2xl w-full max-w-lg mx-4 border border-cyan-500/50 shadow-[0_0_30px_rgba(6,182,212,0.3)] flex flex-col max-h-[90vh]">
+            <div class="flex justify-between items-center mb-4 border-b border-gray-600 pb-2">
+                <h2 class="text-xl font-black text-cyan-400">👥 Gestión de la Plataforma</h2>
+                <button onclick="closeAdminModal()" class="text-gray-400 hover:text-white text-3xl leading-none">&times;</button>
+            </div>
+            
+            <!-- Panel de Creación de Usuarios -->
+            <div class="bg-slate-800/80 rounded-xl p-3 mb-4 border border-slate-600">
+                <h3 class="text-xs font-bold text-pink-400 mb-2 uppercase tracking-wide">➕ Crear Nuevo Usuario</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-2">
+                    <input type="text" id="new-user-name" placeholder="@Usuario" class="sm:col-span-1 bg-slate-900 border border-slate-600 rounded px-2 py-1.5 text-xs text-white focus:border-pink-500 outline-none">
+                    <input type="text" id="new-user-pass" placeholder="Clave" class="sm:col-span-1 bg-slate-900 border border-slate-600 rounded px-2 py-1.5 text-xs text-white focus:border-pink-500 outline-none">
+                    <select id="new-user-role" class="sm:col-span-1 bg-slate-900 border border-slate-600 rounded px-2 py-1.5 text-xs text-white focus:border-pink-500 outline-none appearance-none">
+                        <option value="player">Jugador</option>
+                        <option value="subadmin" id="opt-subadmin" class="font-bold text-cyan-300">Sub-Admin</option>
+                    </select>
+                    <button onclick="createNewUser()" class="sm:col-span-1 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold rounded px-2 py-1.5 text-xs shadow-lg transition-colors">Crear</button>
+                </div>
+            </div>
+
+            <p class="text-[10px] text-gray-400 mb-2 uppercase tracking-widest font-bold">Lista de Usuarios Registrados</p>
+            
+            <!-- Lista de Usuarios -->
+            <div class="overflow-y-auto pr-2 flex-1 space-y-2" id="player-list-container">
+                <!-- Generado por JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- PANTALLA PRINCIPAL (LIVE) -->
+    <div id="game-screen" class="screen flex-col justify-between pointer-events-none">
+        
+        <div id="banners-container" class="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden z-10"></div>
+
+        <div id="avatar-name-tag" class="absolute px-4 py-1.5 bg-slate-900/80 text-white rounded-full text-sm font-black pointer-events-none transform -translate-x-1/2 -translate-y-1/2 backdrop-blur-md border-2 border-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.6)] z-10" style="display: none; transition: top 0.05s, left 0.05s;">@Usuario</div>
+
+        <!-- Header Superior -->
+        <div class="p-4 flex justify-between items-start pointer-events-auto z-20">
+            <div class="flex flex-col gap-2">
+                <div class="glass-panel px-4 py-2 rounded-full flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-pink-500 to-yellow-500 flex items-center justify-center font-bold text-lg" id="user-avatar-letter">J</div>
+                    <div>
+                        <div class="text-sm font-bold flex items-center gap-1">
+                            <span id="ui-username">@Usuario</span>
+                            <span id="ui-role-badge" class="text-[9px] bg-slate-700 px-1.5 py-0.5 rounded text-gray-300">Player</span>
+                        </div>
+                        <div class="text-[10px] text-green-400 font-bold uppercase tracking-wider">Conectado al Live</div>
+                    </div>
+                </div>
+
+                <!-- Selector de Avatar -->
+                <div class="glass-panel px-3 py-1.5 rounded-xl flex gap-2 justify-center items-center border border-pink-500/30">
+                    <span class="text-[10px] font-bold text-gray-400 uppercase">Avatar:</span>
+                    <button onclick="changeAvatar('chico')" class="bg-blue-900 hover:bg-blue-600 px-3 py-1 rounded-lg text-xs font-bold transition-colors shadow-[0_0_10px_rgba(59,130,246,0.5)]">👨 Chico</button>
+                    <button onclick="changeAvatar('chica')" class="bg-pink-900 hover:bg-pink-600 px-3 py-1 rounded-lg text-xs font-bold transition-colors shadow-[0_0_10px_rgba(236,72,153,0.5)]">👩 Chica</button>
+                    <button onclick="changeAvatar('robot')" class="bg-slate-700 hover:bg-cyan-600 px-2 py-1 rounded-lg text-[10px] font-bold transition-colors">🤖 Bot</button>
+                </div>
+            </div>
+
+            <!-- CONTROLES DERECHOS (Botón Salir + Admin) -->
+            <div class="flex flex-col items-end gap-2">
+                <!-- Botón de Salir -->
+                <button onclick="logout()" class="glass-panel px-4 py-1.5 rounded-xl flex items-center gap-2 text-xs font-bold text-red-400 hover:text-white hover:bg-red-500/50 transition-colors shadow-lg border border-red-500/30">
+                    <span>🚪</span> Salir
+                </button>
+
+                <!-- Controles de Admin -->
+                <div id="admin-controls" class="glass-panel p-3 rounded-xl hidden flex-col gap-2 border border-cyan-500/30 z-20 w-48 shadow-lg">
+                    <div class="text-xs font-bold text-cyan-400 uppercase tracking-wider text-center border-b border-gray-600 pb-1 mb-1" id="admin-panel-title">Panel Streamer</div>
+                    
+                    <div class="text-[10px] text-gray-400 text-center">Escenarios:</div>
+                    <div class="flex gap-1 justify-center">
+                        <button onclick="changeScenario(0)" class="bg-slate-700 hover:bg-pink-600 px-2 py-1 rounded text-[10px] font-bold transition-colors">Neón</button>
+                        <button onclick="changeScenario(1)" class="bg-slate-700 hover:bg-green-600 px-2 py-1 rounded text-[10px] font-bold transition-colors">Matrix</button>
+                        <button onclick="changeScenario(2)" class="bg-slate-700 hover:bg-orange-600 px-2 py-1 rounded text-[10px] font-bold transition-colors shadow-[0_0_10px_rgba(255,255,255,0.2)]">Sala</button>
+                    </div>
+
+                    <div class="mt-2 pt-2 border-t border-gray-600">
+                        <button onclick="openAdminModal()" class="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 px-3 py-1.5 rounded text-xs font-bold w-full shadow-[0_0_15px_rgba(6,182,212,0.4)] transition-colors flex items-center justify-center gap-1">
+                            <span>⚙️</span> Gestionar Jugadores
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANELES INFERIORES: BAILES Y HABLAR (Libres) -->
+        <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 pointer-events-auto z-20 w-[95vw] max-w-3xl flex flex-col gap-3">
+            <div class="glass-panel px-4 py-2 rounded-2xl flex items-center justify-center gap-3 border border-cyan-500/50 shadow-[0_0_20px_rgba(6,182,212,0.3)] mx-auto w-fit">
+                <span class="text-[10px] font-bold text-cyan-300 uppercase tracking-wider pr-2 border-r border-gray-500">Expresión</span>
+                <button onclick="triggerAction('talk_happy', 5000, 0xffffff)" class="hover:scale-110 transition-transform bg-emerald-600/50 hover:bg-emerald-500 px-3 py-1.5 rounded-full text-xs font-bold shadow-lg">😊 Feliz</button>
+                <button onclick="triggerAction('talk_explain', 5000, 0xffffff)" class="hover:scale-110 transition-transform bg-blue-600/50 hover:bg-blue-500 px-3 py-1.5 rounded-full text-xs font-bold shadow-lg">🤔 Explicar</button>
+                <button onclick="triggerAction('talk_shout', 4000, 0xff0000)" class="hover:scale-110 transition-transform bg-red-600/50 hover:bg-red-500 px-3 py-1.5 rounded-full text-xs font-bold shadow-lg">📢 Gritar</button>
+            </div>
+
+            <div class="glass-panel px-3 py-2 rounded-2xl flex items-center gap-2 border border-pink-500/50 shadow-[0_0_20px_rgba(236,72,153,0.3)] overflow-x-auto scrollbar-hide">
+                <div class="sticky left-0 bg-[#0f172a]/90 backdrop-blur px-2 py-1 z-10 border-r border-gray-500 flex items-center shrink-0">
+                    <span class="text-[10px] font-bold text-pink-300 uppercase tracking-wider">Pasos (10)</span>
+                </div>
+                <button onclick="triggerAction('salsa', 5000, 0xff00ff)" class="shrink-0 hover:scale-110 transition-transform bg-purple-600/50 hover:bg-purple-500 px-3 py-1.5 rounded-full text-xs font-bold shadow-lg">💃 Salsa</button>
+                <button onclick="triggerAction('shake', 5000, 0xff3366)" class="shrink-0 hover:scale-110 transition-transform bg-pink-600/50 hover:bg-pink-500 px-3 py-1.5 rounded-full text-xs font-bold shadow-lg">🔥 Cadera</button>
+                <button onclick="triggerAction('wave', 5000, 0x33ccff)" class="shrink-0 hover:scale-110 transition-transform bg-cyan-600/50 hover:bg-cyan-500 px-3 py-1.5 rounded-full text-xs font-bold shadow-lg">🌊 Wave</button>
+                <button onclick="triggerAction('robot_dance', 5000, 0x00ff00)" class="shrink-0 hover:scale-110 transition-transform bg-green-600/50 hover:bg-green-500 px-3 py-1.5 rounded-full text-xs font-bold shadow-lg">🤖 Robot</button>
+                <button onclick="triggerAction('moonwalk', 5000, 0xcccccc)" class="shrink-0 hover:scale-110 transition-transform bg-gray-600/50 hover:bg-gray-500 px-3 py-1.5 rounded-full text-xs font-bold shadow-lg">🚶 Moonwalk</button>
+                <button onclick="triggerAction('macarena', 5000, 0xffaa00)" class="shrink-0 hover:scale-110 transition-transform bg-orange-600/50 hover:bg-orange-500 px-3 py-1.5 rounded-full text-xs font-bold shadow-lg">🙌 Macarena</button>
+                <button onclick="triggerAction('hiphop', 5000, 0xff4400)" class="shrink-0 hover:scale-110 transition-transform bg-red-600/50 hover:bg-red-500 px-3 py-1.5 rounded-full text-xs font-bold shadow-lg">🎧 HipHop</button>
+                <button onclick="triggerAction('ballet', 5000, 0xffbbff)" class="shrink-0 hover:scale-110 transition-transform bg-fuchsia-600/50 hover:bg-fuchsia-500 px-3 py-1.5 rounded-full text-xs font-bold shadow-lg">🩰 Ballet</button>
+                <button onclick="triggerAction('disco', 5000, 0xffff00)" class="shrink-0 hover:scale-110 transition-transform bg-yellow-600/50 hover:bg-yellow-500 px-3 py-1.5 rounded-full text-xs font-bold shadow-lg">🕺 Disco</button>
+                <button onclick="triggerAction('floss', 5000, 0x00ffff)" class="shrink-0 hover:scale-110 transition-transform bg-teal-600/50 hover:bg-teal-500 px-3 py-1.5 rounded-full text-xs font-bold shadow-lg">🧶 Floss</button>
+            </div>
+        </div>
+
+        <!-- PANEL DE REGALOS TIKTOK (Derecha - Administrado) -->
+        <div id="tiktok-gifts-panel" class="absolute right-4 top-1/2 transform -translate-y-1/2 flex flex-col gap-3 pointer-events-auto z-20">
+            <button onclick="sendGift('rosa')" class="gift-btn glass-panel w-20 h-20 rounded-2xl flex flex-col items-center justify-center relative overflow-hidden group">
+                <div class="absolute inset-0 bg-pink-500/20 group-hover:bg-pink-500/40 transition-colors"></div>
+                <span class="text-3xl mb-1 drop-shadow-lg">🌹</span>
+                <span class="text-[10px] font-bold text-pink-300">Rosa</span>
+                <span class="text-[9px] text-gray-300">Activar</span>
+            </button>
+
+            <button onclick="sendGift('dona')" class="gift-btn glass-panel w-20 h-20 rounded-2xl flex flex-col items-center justify-center relative overflow-hidden group">
+                <div class="absolute inset-0 bg-yellow-500/20 group-hover:bg-yellow-500/40 transition-colors"></div>
+                <span class="text-3xl mb-1 drop-shadow-lg">🍩</span>
+                <span class="text-[10px] font-bold text-yellow-300">Dona</span>
+                <span class="text-[9px] text-gray-300">Activar</span>
+            </button>
+
+            <button onclick="sendGift('rayo')" class="gift-btn glass-panel w-20 h-20 rounded-2xl flex flex-col items-center justify-center relative overflow-hidden group">
+                <div class="absolute inset-0 bg-blue-500/20 group-hover:bg-blue-500/40 transition-colors"></div>
+                <span class="text-3xl mb-1 drop-shadow-lg">⚡</span>
+                <span class="text-[10px] font-bold text-blue-300">Rayo</span>
+                <span class="text-[9px] text-gray-300">Activar</span>
+            </button>
+
+            <button onclick="sendGift('corona')" class="gift-btn glass-panel w-20 h-20 rounded-2xl flex flex-col items-center justify-center relative overflow-hidden group">
+                <div class="absolute inset-0 bg-orange-500/20 group-hover:bg-orange-500/40 transition-colors"></div>
+                <span class="text-3xl mb-1 drop-shadow-lg">👑</span>
+                <span class="text-[10px] font-bold text-orange-400">Corona</span>
+                <span class="text-[9px] text-gray-300">Activar</span>
+            </button>
+        </div>
+
+    </div>
+
+    <!-- MODAL DE CAMBIO DE CONTRASEÑA OBLIGATORIO (SEGURIDAD) -->
+    <div id="force-pwd-modal" class="modal-overlay z-[200]">
+        <div class="glass-panel p-6 rounded-2xl w-full max-w-sm mx-4 border border-red-500/50 shadow-[0_0_30px_rgba(239,68,68,0.3)]">
+            <h2 class="text-xl font-black text-red-400 mb-2">⚠️ Seguridad Requerida</h2>
+            <p class="text-sm text-gray-300 mb-4">Estás usando la contraseña predeterminada del Super Administrador. Para preparar tu conexión a la base de datos externa, debes establecer una clave segura ahora.</p>
+            <input type="password" id="new-secure-pass" class="w-full bg-slate-900 border border-slate-600 rounded px-4 py-3 text-white focus:border-red-500 outline-none mb-4" placeholder="Nueva contraseña segura">
+            <button onclick="saveSecurePassword()" class="w-full bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-500 hover:to-orange-400 text-white font-black rounded-xl py-3 shadow-[0_0_15px_rgba(239,68,68,0.4)] transition-all transform hover:scale-[1.02] active:scale-95">Guardar y Continuar</button>
+        </div>
+    </div>
+
+    <!-- Contenedor de Notificaciones -->
+    <div id="notifications-container" class="absolute top-24 right-4 w-64 flex flex-col gap-2 pointer-events-none z-50"></div>
+
+    <script>
+        // ============================================================================
+        // 🔗 CONFIGURACIÓN DE FIREBASE REALTIME DATABASE
+        // ============================================================================
+        // PASO 1: Reemplaza estos valores con los de tu consola de Firebase
+      	 const firebaseConfig = {
+    	 apiKey: "AIzaSyDzDUQ1v740C9S-3On-wLm7YwtFaRIVMWM",
+    	 authDomain: "tik-tok-dance-225cb.firebaseapp.com",
+	 databaseURL: "https://tik-tok-dance-225cb-default-rtdb.firebaseio.com/",
+   	 projectId: "tik-tok-dance-225cb",
+   	 storageBucket: "tik-tok-dance-225cb.firebasestorage.app",
+   	 messagingSenderId: "668301493985",
+   	 appId: "1:668301493985:web:d221f79f019945ef8f59a0"
+ 	 };
+
+
+        // Inicializar Firebase (Evita inicialización doble)
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const database = firebase.database();
+        // ============================================================================
+
+        const SUPER_ADMIN_EMAIL = 'copauyunifreddy@gmail.com';
+        
+        // Base semilla de arranque.
+        const defaultDB = [
+            { name: SUPER_ADMIN_EMAIL, password: 'admin', role: 'admin', hasGiftAccess: true, hasGameAccess: true, canManageGifts: true, canCreateSubAdmins: true }
+        ];
+
+        let playersDB = [];
+        let currentUser = null;
+        let currentUserRole = 'player';
+        let canManagePlatform = false; 
+        let bannerIntervalId = null; 
+
+        // ----------------------------------------------------------------------------
+        // CARGA Y GUARDADO ASÍNCRONO HACIA FIREBASE
+        // ----------------------------------------------------------------------------
+        async function loadDB() {
+            return new Promise((resolve) => {
+                try {
+                    // 1. Intentar leer de Firebase
+                    database.ref('playersDB').once('value').then((snapshot) => {
+                        let db = snapshot.val();
+                        
+                        // Si está vacío o falta el Super Admin, inyectamos la semilla
+                        if (!db || !db.find(p => p.name.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase())) {
+                            db = defaultDB;
+                            database.ref('playersDB').set(db); // Guardar semilla en Firebase
+                        }
+                        resolve(db);
+                    }).catch((error) => {
+                        console.warn("⚠️ Firebase no configurado o sin permisos. Usando LocalStorage como respaldo.", error);
+                        // 2. Fallback: LocalStorage (Si el usuario aún no pega sus API Keys)
+                        let db = JSON.parse(localStorage.getItem('tiktokArenaDBFallback'));
+                        if (!db || !db.find(p => p.name.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase())) {
+                            db = defaultDB;
+                            localStorage.setItem('tiktokArenaDBFallback', JSON.stringify(db));
+                        }
+                        resolve(db);
+                    });
+                } catch(err) {
+                    console.error("Error crítico en carga:", err);
+                    resolve(defaultDB);
+                }
+            });
+        }
+
+        async function saveDB() {
+            return new Promise((resolve) => {
+                try {
+                    // 1. Guardar en Firebase
+                    database.ref('playersDB').set(playersDB).then(() => {
+                        localStorage.setItem('tiktokArenaDBFallback', JSON.stringify(playersDB)); // Backup local por si falla el internet luego
+                        resolve(true);
+                    }).catch((error) => {
+                        console.error("Error guardando en Firebase. Guardando en modo Offline (LocalStorage):", error);
+                        localStorage.setItem('tiktokArenaDBFallback', JSON.stringify(playersDB));
+                        resolve(false);
+                    });
+                } catch(err) {
+                     localStorage.setItem('tiktokArenaDBFallback', JSON.stringify(playersDB));
+                     resolve(false);
+                }
+            });
+        }
+
+        // ----------------------------------------------------------------------------
+        // ESCUCHADOR EN TIEMPO REAL (REALTIME SYNC)
+        // ----------------------------------------------------------------------------
+        function setupRealtimeSync() {
+            database.ref('playersDB').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    playersDB = data;
+                    
+                    // Si el usuario actual está logueado, validamos sus permisos instantáneamente
+                    if (currentUser) {
+                        const me = playersDB.find(p => p.name.toLowerCase() === currentUser.toLowerCase());
+                        if (me) {
+                            if (!me.hasGameAccess && currentUserRole !== 'admin') {
+                                alert("El administrador ha revocado tu acceso al juego en vivo. 🚫");
+                                logout();
+                            } else {
+                                updateTikTokPanelVisibility(); // Se le apagará el panel si le quitan el permiso
+                            }
+                        }
+                    }
+                    
+                    // Si el panel de administración está abierto, lo actualizamos visualmente
+                    if (document.getElementById('admin-modal').classList.contains('active')) {
+                        renderPlayerList();
+                    }
+                }
+            });
+        }
+
+        const GIFTS = {
+            'rosa': { name: 'Rosa', emoji: '🌹', action: 'spin', duration: 3000, color: 0xff69b4 },
+            'dona': { name: 'Dona', emoji: '🍩', action: 'jump', duration: 4000, color: 0xffd700 },
+            'rayo': { name: 'Rayo', emoji: '⚡', action: 'fast_dance', duration: 5000, color: 0x00ffff },
+            'corona': { name: 'Corona', emoji: '👑', action: 'epic_flip', duration: 6000, color: 0xff8c00 }
+        };
+
+        // --- ARRANQUE DE LA APLICACIÓN ---
+        window.onload = async () => {
+            // Cargar base de datos primero (Firebase o Local)
+            playersDB = await loadDB();
+            
+            // Iniciar sincronización de permisos y bloqueos en tiempo real
+            setupRealtimeSync();
+
+            // Ocultar pantalla de carga y mostrar login
+            document.getElementById('loading-screen').classList.remove('active');
+            document.getElementById('login-screen').classList.add('active');
+            
+            // Iniciar Motor 3D en el fondo
+            init3D(); 
+        };
+
+        // --- FUNCIONES UI Y LOGIN UNIFICADO ---
+        async function login() {
+            let usernameInput = document.getElementById('username').value.trim();
+            const passwordInput = document.getElementById('password').value.trim();
+
+            if (!usernameInput) { alert("Por favor ingresa un nombre de usuario/nick"); return; }
+            if (!passwordInput) { alert("Por favor ingresa una contraseña"); return; }
+
+            if (!usernameInput.startsWith('@') && !usernameInput.includes('@gmail.com')) {
+                usernameInput = '@' + usernameInput;
+            }
+
+            let player = playersDB.find(p => p.name.toLowerCase() === usernameInput.toLowerCase());
+            
+            if (player) {
+                if (player.password !== passwordInput) {
+                    alert("Contraseña incorrecta para este usuario.");
+                    return;
+                }
+                if (!player.hasGameAccess) {
+                    alert("El administrador te ha bloqueado el acceso al juego. 🚫");
+                    return;
+                }
+                currentUserRole = player.role;
+                currentUser = player.name; 
+            } else {
+                playersDB.push({ 
+                    name: usernameInput, 
+                    password: passwordInput, 
+                    role: 'player', 
+                    hasGiftAccess: true, 
+                    hasGameAccess: true,
+                    canManageGifts: false,
+                    canCreateSubAdmins: false
+                });
+                await saveDB(); 
+                currentUserRole = 'player';
+                currentUser = usernameInput;
+            }
+
+            canManagePlatform = (currentUserRole === 'admin' || currentUserRole === 'subadmin');
+
+            document.getElementById('ui-username').innerText = currentUser;
+            document.getElementById('user-avatar-letter').innerText = currentUser.charAt(0).toUpperCase();
+            
+            const badge = document.getElementById('ui-role-badge');
+            if(currentUserRole === 'admin') { badge.innerText = '👑 Admin'; badge.className = "text-[9px] bg-yellow-600 px-1.5 py-0.5 rounded text-white font-bold"; }
+            else if(currentUserRole === 'subadmin') { badge.innerText = '🛡️ Mod'; badge.className = "text-[9px] bg-cyan-600 px-1.5 py-0.5 rounded text-white font-bold"; }
+            else { badge.innerText = '🎮 Player'; badge.className = "text-[9px] bg-slate-700 px-1.5 py-0.5 rounded text-gray-300"; }
+            
+            const nameTag = document.getElementById('avatar-name-tag');
+            nameTag.innerText = currentUser;
+            nameTag.style.display = 'block';
+            
+            if (canManagePlatform) {
+                document.getElementById('admin-controls').classList.remove('hidden');
+                document.getElementById('admin-controls').classList.add('flex');
+                document.getElementById('admin-panel-title').innerText = currentUserRole === 'admin' ? "Panel Principal" : "Panel Moderador";
+            } else {
+                document.getElementById('admin-controls').classList.add('hidden');
+                document.getElementById('admin-controls').classList.remove('flex');
+            }
+
+            document.getElementById('login-screen').classList.remove('active');
+            document.getElementById('game-screen').classList.add('active');
+            
+            showNotification(`¡Bienvenido ${currentUser}!`, "text-green-400");
+            startBannerSystem();
+            updateTikTokPanelVisibility(); 
+
+            // VERIFICACIÓN DE SEGURIDAD OBLIGATORIA PARA EL SUPER ADMIN
+            if (currentUser.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase() && passwordInput === 'admin') {
+                document.getElementById('force-pwd-modal').classList.add('active');
+            }
+        }
+
+        async function saveSecurePassword() {
+            const newPass = document.getElementById('new-secure-pass').value.trim();
+            if (newPass.length < 5 || newPass === 'admin') {
+                alert("La contraseña debe tener al menos 5 caracteres y no puede ser 'admin'.");
+                return;
+            }
+            
+            const adminPlayer = playersDB.find(p => p.name.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase());
+            if (adminPlayer) {
+                adminPlayer.password = newPass;
+                await saveDB(); 
+                document.getElementById('force-pwd-modal').classList.remove('active');
+                showNotification("Contraseña asegurada exitosamente. Plataforma lista.", "text-green-400");
+                
+                if (document.getElementById('player-list-container').innerHTML !== '') {
+                    renderPlayerList();
+                }
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            currentUserRole = 'player';
+            canManagePlatform = false;
+
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+
+            document.getElementById('game-screen').classList.remove('active');
+            document.getElementById('login-screen').classList.add('active');
+
+            document.getElementById('admin-controls').classList.add('hidden');
+            document.getElementById('admin-controls').classList.remove('flex');
+            document.getElementById('avatar-name-tag').style.display = 'none';
+
+            if (bannerIntervalId) {
+                clearInterval(bannerIntervalId);
+                bannerIntervalId = null;
+            }
+            document.getElementById('banners-container').innerHTML = ''; 
+
+            showNotification("Has cerrado sesión exitosamente", "text-gray-300");
+        }
+
+        // --- GESTIÓN DE JUGADORES Y SUB-ADMINS ---
+        function openAdminModal() {
+            const optSubadmin = document.getElementById('opt-subadmin');
+            const meAdmin = playersDB.find(p => p.name === currentUser);
+            
+            if (currentUserRole !== 'admin' && (!meAdmin || !meAdmin.canCreateSubAdmins)) {
+                optSubadmin.hidden = true;
+                optSubadmin.disabled = true;
+                document.getElementById('new-user-role').value = 'player'; 
+            } else {
+                optSubadmin.hidden = false;
+                optSubadmin.disabled = false;
+            }
+            
+            document.getElementById('new-user-name').value = '';
+            document.getElementById('new-user-pass').value = '';
+            
+            renderPlayerList();
+            document.getElementById('admin-modal').classList.add('active');
+        }
+
+        function closeAdminModal() {
+            document.getElementById('admin-modal').classList.remove('active');
+        }
+
+        async function createNewUser() {
+            let name = document.getElementById('new-user-name').value.trim();
+            const pass = document.getElementById('new-user-pass').value.trim();
+            const role = document.getElementById('new-user-role').value;
+
+            const meAdmin = playersDB.find(p => p.name === currentUser);
+
+            if (role === 'subadmin' && currentUserRole !== 'admin' && (!meAdmin || !meAdmin.canCreateSubAdmins)) {
+                alert("No tienes permisos para crear Sub-Administradores. Solicítalo al Admin Principal.");
+                return;
+            }
+
+            if(!name || !pass) { alert("Completa nombre y contraseña para crear usuario."); return; }
+            if(!name.startsWith('@')) { name = '@' + name; } 
+            
+            if(playersDB.find(p => p.name.toLowerCase() === name.toLowerCase())) { 
+                alert("Este usuario ya existe."); 
+                return; 
+            }
+
+            playersDB.push({
+                name: name,
+                password: pass,
+                role: role,
+                hasGiftAccess: true,
+                hasGameAccess: true,
+                canManageGifts: role === 'admin',
+                canCreateSubAdmins: role === 'admin'
+            });
+
+            await saveDB(); 
+            showNotification(`Usuario ${name} creado con éxito.`, "text-green-400");
+            document.getElementById('new-user-name').value = '';
+            document.getElementById('new-user-pass').value = '';
+            renderPlayerList();
+        }
+
+        function renderPlayerList() {
+            const container = document.getElementById('player-list-container');
+            container.innerHTML = ''; 
+            
+            const meAdmin = playersDB.find(p => p.name === currentUser);
+
+            const sortedDB = [...playersDB].sort((a, b) => {
+                const w = { 'admin': 1, 'subadmin': 2, 'player': 3 };
+                return w[a.role] - w[b.role];
+            });
+
+            sortedDB.forEach(p => {
+                // SEGURIDAD: Ocultar al Super Administrador si quien ve la lista es un Sub-Admin
+                if (p.role === 'admin' && currentUserRole !== 'admin') {
+                    return;
+                }
+
+                const isMe = p.name === currentUser;
+                const isTargetAdmin = p.role === 'admin';
+                
+                const canEditBasic = currentUserRole === 'admin' || (currentUserRole === 'subadmin' && !isTargetAdmin);
+                
+                let canToggleGifts = false;
+                if (currentUserRole === 'admin') canToggleGifts = true; 
+                if (currentUserRole === 'subadmin' && meAdmin.canManageGifts && p.role === 'player') canToggleGifts = true; 
+
+                const giftBtnColor = p.hasGiftAccess ? 'bg-emerald-600 hover:bg-emerald-500' : 'bg-rose-600 hover:bg-rose-500';
+                const giftBtnText = p.hasGiftAccess ? 'Regalos: 🔓' : 'Regalos: 🔒';
+                
+                const gameBtnColor = p.hasGameAccess ? 'bg-emerald-600 hover:bg-emerald-500' : 'bg-rose-600 hover:bg-rose-500';
+                const gameBtnText = p.hasGameAccess ? 'Login: 🔓' : 'Login: 🔒';
+
+                let roleBadge = "Player"; let roleColor = "text-gray-400";
+                if(p.role === 'admin') { roleBadge = "👑 Admin"; roleColor = "text-yellow-400"; }
+                if(p.role === 'subadmin') { roleBadge = "🛡️ Mod"; roleColor = "text-cyan-400"; }
+
+                const row = document.createElement('div');
+                row.className = `flex flex-col gap-2 bg-slate-800/80 p-3 rounded-lg border ${p.hasGameAccess ? 'border-slate-600' : 'border-red-500/50'}`;
+                
+                const disableBasicHtml = canEditBasic ? '' : 'disabled opacity-50 cursor-not-allowed';
+                const disableGiftHtml = canToggleGifts ? '' : 'disabled opacity-50 cursor-not-allowed';
+
+                let subAdminPermHTML = '';
+                if (p.role === 'subadmin' && currentUserRole === 'admin') {
+                    const permGiftColor = p.canManageGifts ? 'bg-indigo-600 hover:bg-indigo-500' : 'bg-gray-600 hover:bg-gray-500';
+                    const permGiftText = p.canManageGifts ? 'Regalos: SI' : 'Regalos: NO';
+
+                    const permCreateColor = p.canCreateSubAdmins ? 'bg-violet-600 hover:bg-violet-500' : 'bg-gray-600 hover:bg-gray-500';
+                    const permCreateText = p.canCreateSubAdmins ? 'Crea Mods: SI' : 'Crea Mods: NO';
+
+                    subAdminPermHTML = `
+                    <div class="flex gap-2 mt-2">
+                        <button onclick="toggleSubAdminGiftManager('${p.name}')" class="flex-1 ${permGiftColor} px-2 py-1.5 rounded text-[10px] font-bold text-white transition-colors shadow-md border border-indigo-400/50">
+                            ⚙️ Gest. ${permGiftText}
+                        </button>
+                        <button onclick="toggleSubAdminCreateManager('${p.name}')" class="flex-1 ${permCreateColor} px-2 py-1.5 rounded text-[10px] font-bold text-white transition-colors shadow-md border border-violet-400/50">
+                            ⚙️ Perm. ${permCreateText}
+                        </button>
+                    </div>
+                    `;
+                }
+
+                row.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center font-bold text-white shadow-inner">${p.name.charAt(1).toUpperCase()}</div>
+                            <div class="flex flex-col">
+                                <div class="font-bold text-sm text-white">${p.name} ${isMe ? '<span class="text-xs text-cyan-300">(Tú)</span>' : ''}</div>
+                                <div class="text-[9px] ${roleColor} font-bold uppercase tracking-wider">${roleBadge}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-5 gap-2 mt-1 items-center">
+                        <div class="sm:col-span-2 flex items-center gap-2">
+                            <label class="text-[9px] text-gray-400">Pass:</label>
+                            <input type="text" value="${p.password}" onchange="updatePlayerPassword('${p.name}', this.value)" class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1.5 text-xs text-white focus:border-pink-500 outline-none transition-colors" placeholder="Clave" ${disableBasicHtml}>
+                        </div>
+                        <div class="sm:col-span-3 flex gap-2">
+                            <button onclick="togglePlayerGiftAccess('${p.name}')" class="flex-1 ${giftBtnColor} px-2 py-1.5 rounded text-[10px] font-bold text-white transition-colors shadow-md flex justify-between items-center" ${disableGiftHtml}>
+                                <span>Regalos</span> <span class="text-sm">${giftBtnText.split(' ')[1]}</span>
+                            </button>
+                            ${currentUserRole === 'admin' ? `
+                            <button onclick="togglePlayerGameAccess('${p.name}')" class="flex-1 ${gameBtnColor} px-2 py-1.5 rounded text-[10px] font-bold text-white transition-colors shadow-md flex justify-between items-center" ${disableBasicHtml}>
+                                <span>Juego</span> <span class="text-sm">${gameBtnText.split(' ')[1]}</span>
+                            </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                    ${subAdminPermHTML}
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        async function toggleSubAdminGiftManager(playerName) {
+            if (currentUserRole !== 'admin') {
+                alert("Sólo el Administrador Principal puede modificar los privilegios de un Sub-Administrador.");
+                return;
+            }
+
+            const player = playersDB.find(p => p.name === playerName);
+            if(player && player.role === 'subadmin') {
+                player.canManageGifts = !player.canManageGifts;
+                await saveDB(); 
+                renderPlayerList();
+                showNotification(`Permiso de gestión actualizado para ${playerName}`, "text-indigo-300");
+            }
+        }
+
+        async function toggleSubAdminCreateManager(playerName) {
+            if (currentUserRole !== 'admin') {
+                alert("Sólo el Administrador Principal puede modificar los privilegios de un Sub-Administrador.");
+                return;
+            }
+
+            const player = playersDB.find(p => p.name === playerName);
+            if(player && player.role === 'subadmin') {
+                player.canCreateSubAdmins = !player.canCreateSubAdmins;
+                await saveDB(); 
+                renderPlayerList();
+                showNotification(`Permiso para crear Sub-Admins actualizado para ${playerName}`, "text-violet-300");
+            }
+        }
+
+        async function updatePlayerPassword(playerName, newPassword) {
+            const player = playersDB.find(p => p.name === playerName);
+            if (player) {
+                if (player.role === 'admin' && currentUserRole !== 'admin') {
+                    alert("No tienes permisos para modificar al Super Administrador.");
+                    return;
+                }
+
+                player.password = newPassword.trim();
+                await saveDB(); 
+                showNotification(`Clave de ${playerName} actualizada`, "text-cyan-300");
+            }
+        }
+
+        async function togglePlayerGameAccess(playerName) {
+            if (currentUserRole !== 'admin') { alert("Sólo el Administrador Principal puede expulsar jugadores."); return; }
+            const player = playersDB.find(p => p.name === playerName);
+            if(player) {
+                if(player.role === 'admin' && player.name !== currentUser) { alert("No puedes banear a otro Super Admin."); return; }
+                
+                player.hasGameAccess = !player.hasGameAccess;
+                await saveDB(); 
+                renderPlayerList(); 
+                showNotification(player.hasGameAccess ? `Acceso al juego restaurado a ${playerName}` : `Acceso al juego revocado a ${playerName}`, player.hasGameAccess ? "text-green-400" : "text-red-400");
+                
+                if (!player.hasGameAccess && playerName === currentUser) {
+                    alert("Te has auto-expulsado de la sesión.");
+                    logout(); 
+                }
+            }
+        }
+
+        async function togglePlayerGiftAccess(playerName) {
+            const meAdmin = playersDB.find(p => p.name === currentUser);
+            const player = playersDB.find(p => p.name === playerName);
+            
+            if (currentUserRole === 'subadmin' && !meAdmin.canManageGifts) {
+                alert("No tienes permisos para gestionar regalos. Solicítalo al Admin."); return;
+            }
+
+            if(player) {
+                if (player.role === 'admin' && currentUserRole !== 'admin') {
+                    alert("No puedes modificar los permisos del Super Administrador.");
+                    return;
+                }
+
+                player.hasGiftAccess = !player.hasGiftAccess;
+                await saveDB(); 
+                renderPlayerList(); 
+                updateTikTokPanelVisibility(); 
+                showNotification(`Permiso de panel TikTok actualizado para ${playerName}`, "text-pink-300");
+            }
+        }
+
+        function updateTikTokPanelVisibility() {
+            const tiktokPanel = document.getElementById('tiktok-gifts-panel');
+            const me = playersDB.find(p => p.name === currentUser);
+            
+            let hasAccess = false;
+            if (me) { hasAccess = me.hasGiftAccess; }
+
+            if (hasAccess) {
+                tiktokPanel.style.opacity = '1';
+                tiktokPanel.style.pointerEvents = 'auto';
+            } else {
+                tiktokPanel.style.opacity = '0.2';
+                tiktokPanel.style.pointerEvents = 'none';
+            }
+        }
+
+        // --- SISTEMA COMÚN Y ALERTAS ---
+        function showNotification(text, colorClass = "text-white") {
+            const container = document.getElementById('notifications-container');
+            const notif = document.createElement('div');
+            notif.className = `notification glass-panel p-3 rounded-lg border-l-4 border-cyan-500 shadow-lg`;
+            notif.innerHTML = `<p class="text-sm font-bold ${colorClass}">${text}</p>`;
+            container.appendChild(notif);
+            setTimeout(() => { notif.style.opacity = "0"; setTimeout(() => notif.remove(), 300); }, 4000);
+        }
+
+        function spawnFlyingEmoji(emoji) {
+            const el = document.createElement('div');
+            el.className = 'flying-emoji';
+            el.innerText = emoji;
+            el.style.left = (50 + (Math.random() * 20 - 10)) + '%';
+            el.style.bottom = '20%';
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 2000);
+        }
+
+        function triggerAction(actionName, duration, colorHex) {
+            if (currentUser) {
+                const me = playersDB.find(p => p.name === currentUser);
+                if (me && !me.hasGameAccess) {
+                    alert("Has sido expulsado del servidor. 🚫");
+                    logout(); return;
+                }
+            }
+            showNotification(`${currentUser} ejecutó un paso 💥`, "text-cyan-300");
+            trigger3DAction({action: actionName, duration: duration, color: colorHex});
+        }
+
+        function sendGift(giftId) {
+            const me = playersDB.find(p => p.name === currentUser);
+            
+            if (!me || !me.hasGameAccess) { alert("Has sido expulsado. 🚫"); logout(); return; }
+            if (!me.hasGiftAccess) { showNotification("Tu panel de regalos está bloqueado por el Admin.", "text-red-400"); return; }
+
+            const gift = GIFTS[giftId];
+            showNotification(`${currentUser} activó ${gift.name} ${gift.emoji}`, "text-pink-300");
+            spawnFlyingEmoji(gift.emoji);
+            trigger3DAction(gift);
+        }
+
+        // --- SISTEMA DE BANNERS PUBLICITARIOS ---
+        function startBannerSystem() {
+            const container = document.getElementById('banners-container');
+            const messages = [
+                "✨ DINÁMICAS DE SUERTE VIRTUAL 🎰", 
+                "🎁 PARTICIPA TODOS LOS DÍAS AL 68318417 🎉",
+                "🔥 ¡ÚNETE AHORA Y GANA GRANDES PREMIOS! 🏆",
+                "🌟 ¡HAZ QUE EL AVATAR BAILE CON TUS REGALOS! 💃"
+            ];
+            const neonColors = ["#ff00ff", "#00ffff", "#39ff14", "#ffff00", "#ff3131"];
+
+            if (bannerIntervalId) clearInterval(bannerIntervalId);
+
+            bannerIntervalId = setInterval(() => {
+                const banner = document.createElement('div');
+                const text = messages[Math.floor(Math.random() * messages.length)];
+                const color = neonColors[Math.floor(Math.random() * neonColors.length)];
+                
+                banner.className = `floating-banner px-20 py-8 flex items-center justify-center transform scale-110`;
+                banner.style.color = color; 
+                banner.innerHTML = `<span style="font-size: 5rem; font-weight: 900; letter-spacing: 0.1em; font-family: 'Arial Black', Impact, sans-serif; animation: textGlow 0.8s infinite alternate;">${text}</span>`;
+                
+                const isTop = Math.random() > 0.5;
+                if (isTop) banner.style.top = Math.floor(Math.random() * 7 + 8) + '%';
+                else banner.style.top = Math.floor(Math.random() * 6 + 72) + '%';
+                
+                container.appendChild(banner);
+                setTimeout(() => banner.remove(), 18500);
+            }, 8000); 
+        }
+
+        // --- SETUP THREE.JS (Motor 3D y Animaciones) ---
+        let scene, camera, renderer;
+        let avatarRoot, bodyGroup;
+        let leftArm, leftElbow, rightArm, rightElbow;
+        let leftLeg, leftKnee, rightLeg, rightKnee;
+        let head, neck, currentMouth; 
+        
+        let particles, particleSystem;
+        let currentDanceState = 'idle';
+        let danceTimer = 0;
+        let clock;
+        let currentScenarioIndex = 2; // Sala Casual por defecto
+        let floorGrid, solidFloor, solidWall, mainSign, spotLight1, spotLight2;
+        let currentAvatarType = 'chico'; 
+
+        const SCENARIOS = [
+            { bg: 0x0f172a, floor: 0x1e293b, grid: 0xec4899, light1: 0xec4899, light2: 0x06b6d4, isReal: false }, 
+            { bg: 0x052e16, floor: 0x022c22, grid: 0x22c55e, light1: 0x4ade80, light2: 0x22c55e, isReal: false }, 
+            { bg: 0x9ca3af, floor: 0x8b5a2b, wall: 0xe2e8f0, light1: 0xffeedd, light2: 0xffffff, isReal: true }    
+        ];
+
+        function init3D() {
+            const container = document.getElementById('canvas-container');
+            scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(SCENARIOS[currentScenarioIndex].bg, 0.03);
+
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 4, 12); 
+            camera.lookAt(0, 2, 0);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.setClearColor(SCENARIOS[currentScenarioIndex].bg);
+            renderer.shadowMap.enabled = true; 
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            container.appendChild(renderer.domElement);
+
+            clock = new THREE.Clock();
+
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+
+            spotLight1 = new THREE.SpotLight(SCENARIOS[currentScenarioIndex].light1, 1.5);
+            spotLight1.position.set(5, 10, 5);
+            spotLight1.angle = Math.PI / 4;
+            spotLight1.penumbra = 0.5;
+            spotLight1.castShadow = true;
+            scene.add(spotLight1);
+
+            spotLight2 = new THREE.SpotLight(SCENARIOS[currentScenarioIndex].light2, 1.5);
+            spotLight2.position.set(-5, 10, 5);
+            spotLight2.angle = Math.PI / 4;
+            spotLight2.penumbra = 0.5;
+            spotLight2.castShadow = true;
+            scene.add(spotLight2);
+
+            createEnvironment();
+            createMainSign();
+            createAvatar(currentAvatarType);
+            createParticles();
+
+            window.addEventListener('resize', onWindowResize);
+            animate();
+        }
+
+        function createEnvironment() {
+            if(floorGrid) { scene.remove(floorGrid); floorGrid = null; }
+            if(solidFloor) { scene.remove(solidFloor); solidFloor = null; }
+            if(solidWall) { scene.remove(solidWall); solidWall = null; }
+
+            const conf = SCENARIOS[currentScenarioIndex];
+
+            if (conf.isReal) {
+                const floorGeo = new THREE.PlaneGeometry(100, 100);
+                const floorMat = new THREE.MeshStandardMaterial({ color: conf.floor, roughness: 0.9, metalness: 0.1 });
+                solidFloor = new THREE.Mesh(floorGeo, floorMat);
+                solidFloor.rotation.x = -Math.PI / 2;
+                solidFloor.receiveShadow = true;
+                scene.add(solidFloor);
+
+                const wallGeo = new THREE.PlaneGeometry(100, 50);
+                const wallMat = new THREE.MeshStandardMaterial({ color: conf.wall, roughness: 1.0 });
+                solidWall = new THREE.Mesh(wallGeo, wallMat);
+                solidWall.position.set(0, 25, -8); 
+                solidWall.receiveShadow = true;
+                scene.add(solidWall);
+            } else {
+                const gridGeo = new THREE.PlaneGeometry(50, 50, 20, 20);
+                const gridMat = new THREE.MeshBasicMaterial({ color: conf.grid, wireframe: true, transparent: true, opacity: 0.3 });
+                floorGrid = new THREE.Mesh(gridGeo, gridMat);
+                floorGrid.rotation.x = -Math.PI / 2;
+                scene.add(floorGrid);
+            }
+        }
+
+        function createMainSign() {
+            if (mainSign) { scene.remove(mainSign); }
+
+            const canvas = document.createElement('canvas');
+            canvas.width = 1024;
+            canvas.height = 256;
+            const ctx = canvas.getContext('2d');
+
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.strokeStyle = '#ec4899'; 
+            ctx.lineWidth = 15;
+            ctx.strokeRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 75px "Segoe UI", Arial, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
+            ctx.shadowColor = '#06b6d4';
+            ctx.shadowBlur = 25;
+            ctx.fillText('Entretenimiento MoBol', 512, 128);
+            
+            ctx.shadowBlur = 0;
+            ctx.fillText('Entretenimiento MoBol', 512, 128);
+
+            const texture = new THREE.CanvasTexture(canvas);
+            const signMat = new THREE.MeshStandardMaterial({ 
+                map: texture, 
+                emissive: 0xffffff,
+                emissiveMap: texture,
+                emissiveIntensity: 0.6,
+                roughness: 0.2
+            });
+
+            const signGeo = new THREE.PlaneGeometry(10, 2.5);
+            mainSign = new THREE.Mesh(signGeo, signMat);
+            mainSign.position.set(0, 6.5, -7.9); 
+            scene.add(mainSign);
+        }
+
+        function changeAvatar(type) {
+            currentAvatarType = type;
+            createAvatar(type);
+            showNotification(`Avatar cambiado a ${type.toUpperCase()}`, "text-cyan-300");
+        }
+
+        function createAvatar(type) {
+            if (avatarRoot) scene.remove(avatarRoot);
+            
+            leftArm = leftElbow = rightArm = rightElbow = null;
+            leftLeg = leftKnee = rightLeg = rightKnee = null;
+            head = neck = bodyGroup = currentMouth = null;
+
+            avatarRoot = new THREE.Group();
+            bodyGroup = new THREE.Group();
+            
+            const matSkinMale = new THREE.MeshStandardMaterial({ color: 0xe0ac69, roughness: 0.5 }); 
+            const matSkinFemale = new THREE.MeshStandardMaterial({ color: 0xf1c27d, roughness: 0.4 }); 
+            const matShoesW = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.5 });
+            const matShoesB = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.3 });
+            const matEyes = new THREE.MeshStandardMaterial({ color: 0xffffff });
+            const matPupil = new THREE.MeshStandardMaterial({ color: 0x000000 });
+            const matMouth = new THREE.MeshStandardMaterial({ color: 0x8b0000 });
+            
+            if (type === 'chico') {
+                const matShirt = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.9 }); 
+                const matJeans = new THREE.MeshStandardMaterial({ color: 0x2563eb, roughness: 0.8 }); 
+                const matHair = new THREE.MeshStandardMaterial({ color: 0x2b1d0e, roughness: 0.9 }); 
+                const skin = matSkinMale;
+
+                head = new THREE.Group(); head.position.y = 3.8;
+                const headMesh = new THREE.Mesh(new THREE.SphereGeometry(0.35, 32, 32), skin);
+                headMesh.castShadow = true; head.add(headMesh);
+                
+                const hair1 = new THREE.Mesh(new THREE.SphereGeometry(0.36, 16, 16, 0, Math.PI*2, 0, Math.PI/1.7), matHair);
+                hair1.position.y = 0.02; head.add(hair1);
+                const hair2 = new THREE.Mesh(new THREE.SphereGeometry(0.15, 16, 16), matHair);
+                hair2.position.set(0, 0.3, 0.1); head.add(hair2); 
+                
+                const eyeGeo = new THREE.SphereGeometry(0.04, 16, 16);
+                const pupilGeo = new THREE.SphereGeometry(0.02, 16, 16);
+                const eyeL = new THREE.Mesh(eyeGeo, matEyes); eyeL.position.set(-0.12, 0.05, 0.32);
+                const pupL = new THREE.Mesh(pupilGeo, matPupil); pupL.position.set(-0.12, 0.05, 0.35);
+                const eyeR = new THREE.Mesh(eyeGeo, matEyes); eyeR.position.set(0.12, 0.05, 0.32);
+                const pupR = new THREE.Mesh(pupilGeo, matPupil); pupR.position.set(0.12, 0.05, 0.35);
+                head.add(eyeL, pupL, eyeR, pupR);
+
+                currentMouth = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.02, 0.05), matMouth);
+                currentMouth.position.set(0, -0.15, 0.33);
+                head.add(currentMouth);
+
+                bodyGroup.add(head);
+
+                neck = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.2), skin);
+                neck.position.y = 3.4; neck.castShadow = true; bodyGroup.add(neck);
+
+                const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.3, 1.2, 32), matShirt);
+                torso.scale.z = 0.6; torso.position.y = 2.7; torso.castShadow = true; bodyGroup.add(torso);
+                
+                const hips = new THREE.Mesh(new THREE.CylinderGeometry(0.31, 0.32, 0.4, 32), matJeans);
+                hips.scale.z = 0.65; hips.position.y = 1.9; hips.castShadow = true; bodyGroup.add(hips);
+
+                leftArm = new THREE.Group(); leftArm.position.set(-0.45, 3.2, 0); 
+                const lSleeve = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.11, 0.4), matShirt);
+                lSleeve.position.y = -0.2; lSleeve.castShadow = true; leftArm.add(lSleeve);
+                const lUpperArm = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.07, 0.6), skin);
+                lUpperArm.position.y = -0.5; lUpperArm.castShadow = true; leftArm.add(lUpperArm);
+                leftElbow = new THREE.Group(); leftElbow.position.set(0, -0.8, 0); 
+                const lLowerArm = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.05, 0.6), skin);
+                lLowerArm.position.y = -0.3; lLowerArm.castShadow = true; leftElbow.add(lLowerArm);
+                const lHand = new THREE.Mesh(new THREE.SphereGeometry(0.07), skin);
+                lHand.position.y = -0.65; lHand.castShadow = true; leftElbow.add(lHand);
+                leftArm.add(leftElbow); bodyGroup.add(leftArm);
+
+                rightArm = new THREE.Group(); rightArm.position.set(0.45, 3.2, 0); 
+                const rSleeve = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.11, 0.4), matShirt);
+                rSleeve.position.y = -0.2; rSleeve.castShadow = true; rightArm.add(rSleeve);
+                const rUpperArm = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.07, 0.6), skin);
+                rUpperArm.position.y = -0.5; rUpperArm.castShadow = true; rightArm.add(rUpperArm);
+                rightElbow = new THREE.Group(); rightElbow.position.set(0, -0.8, 0); 
+                const rLowerArm = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.05, 0.6), skin);
+                rLowerArm.position.y = -0.3; rLowerArm.castShadow = true; rightElbow.add(rLowerArm);
+                const rHand = new THREE.Mesh(new THREE.SphereGeometry(0.07), skin);
+                rHand.position.y = -0.65; rHand.castShadow = true; rightElbow.add(rHand);
+                rightArm.add(rightElbow); bodyGroup.add(rightArm);
+
+                leftLeg = new THREE.Group(); leftLeg.position.set(-0.16, 1.7, 0); 
+                const lThigh = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.12, 0.9), matJeans);
+                lThigh.position.y = -0.45; lThigh.castShadow = true; leftLeg.add(lThigh);
+                leftKnee = new THREE.Group(); leftKnee.position.set(0, -0.9, 0); 
+                const lCalf = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.09, 0.8), matJeans);
+                lCalf.position.y = -0.4; lCalf.castShadow = true; leftKnee.add(lCalf);
+                const lShoe = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.15, 0.3), matShoesW);
+                lShoe.position.set(0, -0.85, 0.05); lShoe.castShadow = true; leftKnee.add(lShoe);
+                leftLeg.add(leftKnee); avatarRoot.add(leftLeg);
+
+                rightLeg = new THREE.Group(); rightLeg.position.set(0.16, 1.7, 0); 
+                const rThigh = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.12, 0.9), matJeans);
+                rThigh.position.y = -0.45; rThigh.castShadow = true; rightLeg.add(rThigh);
+                rightKnee = new THREE.Group(); rightKnee.position.set(0, -0.9, 0);
+                const rCalf = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.09, 0.8), matJeans);
+                rCalf.position.y = -0.4; rCalf.castShadow = true; rightKnee.add(rCalf);
+                const rShoe = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.15, 0.3), matShoesW);
+                rShoe.position.set(0, -0.85, 0.05); rShoe.castShadow = true; rightKnee.add(rShoe);
+                rightLeg.add(rightKnee); avatarRoot.add(rightLeg);
+
+            } else if (type === 'chica') {
+                const matTop = new THREE.MeshStandardMaterial({ color: 0xec4899, roughness: 0.3 }); 
+                const matPants = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.8 }); 
+                const matHair = new THREE.MeshStandardMaterial({ color: 0xfada5e, roughness: 0.6 }); 
+                const skin = matSkinFemale;
+                
+                head = new THREE.Group(); head.position.y = 3.8;
+                const headMesh = new THREE.Mesh(new THREE.SphereGeometry(0.32, 32, 32), skin);
+                headMesh.castShadow = true; head.add(headMesh);
+                
+                const hairMain = new THREE.Mesh(new THREE.SphereGeometry(0.34, 32, 32, 0, Math.PI*2, 0, Math.PI/1.8), matHair);
+                hairMain.position.y = 0.02; head.add(hairMain);
+                const hairBack = new THREE.Mesh(new THREE.CylinderGeometry(0.33, 0.35, 0.8, 16), matHair);
+                hairBack.position.set(0, -0.2, -0.1); hairBack.rotation.x = -0.1; head.add(hairBack);
+                
+                const eyeGeo = new THREE.SphereGeometry(0.04, 16, 16);
+                const pupilGeo = new THREE.SphereGeometry(0.02, 16, 16);
+                const eyeL = new THREE.Mesh(eyeGeo, matEyes); eyeL.position.set(-0.11, 0.03, 0.29);
+                const pupL = new THREE.Mesh(pupilGeo, matPupil); pupL.position.set(-0.11, 0.03, 0.32);
+                const eyeR = new THREE.Mesh(eyeGeo, matEyes); eyeR.position.set(0.11, 0.03, 0.29);
+                const pupR = new THREE.Mesh(pupilGeo, matPupil); pupR.position.set(0.11, 0.03, 0.32);
+                head.add(eyeL, pupL, eyeR, pupR);
+
+                currentMouth = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.025, 0.05), new THREE.MeshStandardMaterial({color: 0xff0044}));
+                currentMouth.position.set(0, -0.12, 0.3); 
+                head.add(currentMouth);
+
+                bodyGroup.add(head);
+                neck = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.09, 0.2), skin);
+                neck.position.y = 3.4; neck.castShadow = true; bodyGroup.add(neck);
+
+                const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.22, 1.1, 32), matTop);
+                torso.scale.z = 0.6; torso.position.y = 2.8; torso.castShadow = true; bodyGroup.add(torso);
+                
+                const hips = new THREE.Mesh(new THREE.CylinderGeometry(0.23, 0.32, 0.5, 32), matPants);
+                hips.scale.z = 0.7; hips.position.y = 2.0; hips.castShadow = true; bodyGroup.add(hips);
+
+                leftArm = new THREE.Group(); leftArm.position.set(-0.38, 3.2, 0);
+                const lUpperArm = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.05, 0.6), skin);
+                lUpperArm.position.y = -0.3; lUpperArm.castShadow = true; leftArm.add(lUpperArm);
+                leftElbow = new THREE.Group(); leftElbow.position.set(0, -0.6, 0); 
+                const lLowerArm = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.04, 0.6), skin);
+                lLowerArm.position.y = -0.3; lLowerArm.castShadow = true; leftElbow.add(lLowerArm);
+                const lHand = new THREE.Mesh(new THREE.SphereGeometry(0.05), skin);
+                lHand.position.y = -0.62; lHand.castShadow = true; leftElbow.add(lHand);
+                leftArm.add(leftElbow); bodyGroup.add(leftArm);
+
+                rightArm = new THREE.Group(); rightArm.position.set(0.38, 3.2, 0);
+                const rUpperArm = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.05, 0.6), skin);
+                rUpperArm.position.y = -0.3; rUpperArm.castShadow = true; rightArm.add(rUpperArm);
+                rightElbow = new THREE.Group(); rightElbow.position.set(0, -0.6, 0); 
+                const rLowerArm = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.04, 0.6), skin);
+                rLowerArm.position.y = -0.3; rLowerArm.castShadow = true; rightElbow.add(rLowerArm);
+                const rHand = new THREE.Mesh(new THREE.SphereGeometry(0.05), skin);
+                rHand.position.y = -0.62; rHand.castShadow = true; rightElbow.add(rHand);
+                rightArm.add(rightElbow); bodyGroup.add(rightArm);
+
+                leftLeg = new THREE.Group(); leftLeg.position.set(-0.15, 1.8, 0);
+                const lThigh = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.1, 0.9), matPants);
+                lThigh.position.y = -0.45; lThigh.castShadow = true; leftLeg.add(lThigh);
+                leftKnee = new THREE.Group(); leftKnee.position.set(0, -0.9, 0); 
+                const lCalf = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.07, 0.8), matPants);
+                lCalf.position.y = -0.4; lCalf.castShadow = true; leftKnee.add(lCalf);
+                const lShoe = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.15, 0.25), matShoesB);
+                lShoe.position.set(0, -0.85, 0.05); lShoe.castShadow = true; leftKnee.add(lShoe);
+                leftLeg.add(leftKnee); avatarRoot.add(leftLeg);
+
+                rightLeg = new THREE.Group(); rightLeg.position.set(0.15, 1.8, 0);
+                const rThigh = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.1, 0.9), matPants);
+                rThigh.position.y = -0.45; rThigh.castShadow = true; rightLeg.add(rThigh);
+                rightKnee = new THREE.Group(); rightKnee.position.set(0, -0.9, 0);
+                const rCalf = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.07, 0.8), matPants);
+                rCalf.position.y = -0.4; rCalf.castShadow = true; rightKnee.add(rCalf);
+                const rShoe = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.15, 0.25), matShoesB);
+                rShoe.position.set(0, -0.85, 0.05); rShoe.castShadow = true; rightKnee.add(rShoe);
+                rightLeg.add(rightKnee); avatarRoot.add(rightLeg);
+
+            } else if (type === 'robot') {
+                const matBase = new THREE.MeshStandardMaterial({ color: 0x94a3b8, roughness: 0.3, metalness: 0.8 });
+                const matAccent = new THREE.MeshStandardMaterial({ color: 0x06b6d4, emissive: 0x06b6d4, emissiveIntensity: 0.5 });
+                const matScreen = new THREE.MeshStandardMaterial({ color: 0x000000 });
+
+                head = new THREE.Group(); head.position.y = 3.5;
+                const headMesh = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.0, 1.2), matBase);
+                headMesh.castShadow = true; head.add(headMesh);
+                
+                currentMouth = new THREE.Mesh(new THREE.PlaneGeometry(1.0, 0.6), matScreen);
+                currentMouth.position.set(0, 0, 0.61); 
+                head.add(currentMouth);
+                
+                const eyeL = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.15, 0.1), matAccent);
+                eyeL.position.set(-0.2, 0, 0.62); head.add(eyeL);
+                const eyeR = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.15, 0.1), matAccent);
+                eyeR.position.set(0.2, 0, 0.62); head.add(eyeR);
+                bodyGroup.add(head);
+
+                const torso = new THREE.Mesh(new THREE.BoxGeometry(1.6, 2.0, 0.8), matBase);
+                torso.position.y = 1.8; torso.castShadow = true; bodyGroup.add(torso);
+
+                leftArm = new THREE.Group(); leftArm.position.set(-1.0, 2.6, 0);
+                const lArmMesh = new THREE.Mesh(new THREE.BoxGeometry(0.4, 1.0, 0.4), matBase);
+                lArmMesh.position.y = -0.5; lArmMesh.castShadow = true; leftArm.add(lArmMesh);
+                leftElbow = new THREE.Group(); leftElbow.position.set(0, -1.0, 0);
+                const lLowArmMesh = new THREE.Mesh(new THREE.BoxGeometry(0.35, 1.0, 0.35), matBase);
+                lLowArmMesh.position.y = -0.5; lLowArmMesh.castShadow = true; leftElbow.add(lLowArmMesh);
+                leftArm.add(leftElbow); bodyGroup.add(leftArm);
+
+                rightArm = new THREE.Group(); rightArm.position.set(1.0, 2.6, 0);
+                const rArmMesh = new THREE.Mesh(new THREE.BoxGeometry(0.4, 1.0, 0.4), matBase);
+                rArmMesh.position.y = -0.5; rArmMesh.castShadow = true; rightArm.add(rArmMesh);
+                rightElbow = new THREE.Group(); rightElbow.position.set(0, -1.0, 0);
+                const rLowArmMesh = new THREE.Mesh(new THREE.BoxGeometry(0.35, 1.0, 0.35), matBase);
+                rLowArmMesh.position.y = -0.5; rLowArmMesh.castShadow = true; rightElbow.add(rLowArmMesh);
+                rightArm.add(rightElbow); bodyGroup.add(rightArm);
+
+                leftLeg = new THREE.Group(); leftLeg.position.set(-0.4, 0.8, 0);
+                const lLegMesh = new THREE.Mesh(new THREE.BoxGeometry(0.5, 1.0, 0.5), matBase);
+                lLegMesh.position.y = -0.5; lLegMesh.castShadow = true; leftLeg.add(lLegMesh);
+                leftKnee = new THREE.Group(); leftKnee.position.set(0, -1.0, 0);
+                const lLowLegMesh = new THREE.Mesh(new THREE.BoxGeometry(0.45, 1.0, 0.45), matBase);
+                lLowLegMesh.position.y = -0.5; lLowLegMesh.castShadow = true; leftKnee.add(lLowLegMesh);
+                leftLeg.add(leftKnee); avatarRoot.add(leftLeg);
+
+                rightLeg = new THREE.Group(); rightLeg.position.set(0.4, 0.8, 0);
+                const rLegMesh = new THREE.Mesh(new THREE.BoxGeometry(0.5, 1.0, 0.5), matBase);
+                rLegMesh.position.y = -0.5; rLegMesh.castShadow = true; rightLeg.add(rLegMesh);
+                rightKnee = new THREE.Group(); rightKnee.position.set(0, -1.0, 0);
+                const rLowLegMesh = new THREE.Mesh(new THREE.BoxGeometry(0.45, 1.0, 0.45), matBase);
+                rLowLegMesh.position.y = -0.5; rLowLegMesh.castShadow = true; rightKnee.add(rLowLegMesh);
+                rightLeg.add(rightKnee); avatarRoot.add(rightLeg);
+            }
+
+            avatarRoot.add(bodyGroup);
+            scene.add(avatarRoot);
+        }
+
+        function createParticles() {
+            const particleCount = 200;
+            const pGeo = new THREE.BufferGeometry();
+            const pPos = new Float32Array(particleCount * 3);
+            for(let i=0; i<particleCount*3; i++) { pPos[i] = (Math.random() - 0.5) * 20; }
+            pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+            const pMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.2, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending });
+            particleSystem = new THREE.Points(pGeo, pMat);
+            scene.add(particleSystem);
+        }
+
+        function changeScenario(index) {
+            currentScenarioIndex = index;
+            const conf = SCENARIOS[index];
+            scene.fog.color.setHex(conf.bg);
+            renderer.setClearColor(conf.bg);
+            spotLight1.color.setHex(conf.light1);
+            spotLight2.color.setHex(conf.light2);
+            
+            createEnvironment();
+            
+            if(conf.isReal) { createMainSign(); } 
+            else if (mainSign) { scene.remove(mainSign); mainSign = null; }
+
+            showNotification("Escenario actualizado", "text-cyan-400");
+        }
+
+        function trigger3DAction(gift) {
+            currentDanceState = gift.action;
+            danceTimer = gift.duration / 1000;
+            spotLight1.color.setHex(gift.color);
+            spotLight2.color.setHex(0xffffff);
+
+            const positions = particleSystem.geometry.attributes.position.array;
+            for(let i=0; i<positions.length; i+=3) {
+                positions[i] = (Math.random() - 0.5) * 5;
+                positions[i+1] = Math.random() * 5;
+                positions[i+2] = (Math.random() - 0.5) * 5;
+            }
+            particleSystem.geometry.attributes.position.needsUpdate = true;
+            particleSystem.material.color.setHex(gift.color);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        let targets = { 
+            lArmX: 0, lArmZ: 0, rArmX: 0, rArmZ: 0,
+            lElbowX: 0, rElbowX: 0,
+            lLegX: 0, rLegX: 0,
+            lKneeX: 0, rKneeX: 0,
+            bodyY: 0, bodyRotY: 0, bodyRotX: 0, bodyRotZ: 0,
+            rootPosY: 0, rootRotY: 0, rootRotX: 0,
+            mouthScaleY: 1 
+        };
+
+        function resetTargets() {
+            for (let key in targets) targets[key] = (key === 'mouthScaleY' ? 1 : 0);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            const rawDt = clock.getDelta();
+            const dt = Math.min(rawDt, 0.05); 
+            const time = clock.getElapsedTime();
+
+            if(particleSystem) {
+                particleSystem.rotation.y += 0.2 * dt;
+                particleSystem.rotation.x += 0.1 * dt;
+                const positions = particleSystem.geometry.attributes.position.array;
+                for(let i=1; i<positions.length; i+=3) {
+                    positions[i] += 2 * dt;
+                    if(positions[i] > 15) positions[i] = -5;
+                }
+                particleSystem.geometry.attributes.position.needsUpdate = true;
+            }
+
+            if(avatarRoot) {
+                if (danceTimer > 0) {
+                    danceTimer -= dt;
+                    if (danceTimer <= 0) {
+                        currentDanceState = 'idle';
+                        spotLight1.color.setHex(SCENARIOS[currentScenarioIndex].light1);
+                        spotLight2.color.setHex(SCENARIOS[currentScenarioIndex].light2);
+                        particleSystem.material.color.setHex(0xffffff);
+                    }
+                }
+
+                resetTargets();
+
+                // Lógica de Movimiento
+                switch(currentDanceState) {
+                    case 'idle':
+                        targets.bodyY = Math.sin(time * 2) * 0.05;
+                        targets.lArmX = Math.sin(time) * 0.1; targets.rArmX = -Math.sin(time) * 0.1;
+                        targets.lArmZ = 0.15; targets.rArmZ = -0.15; 
+                        targets.lElbowX = -0.1; targets.rElbowX = -0.1; 
+                        head.rotation.y = Math.sin(time * 0.5) * 0.1;
+                        break;
+
+                    case 'talk_happy':
+                        targets.mouthScaleY = 1 + Math.abs(Math.sin(time * 15)) * 1.5; 
+                        head.rotation.x = Math.sin(time * 5) * 0.1; 
+                        targets.lArmZ = 0.4; targets.rArmZ = -0.4; 
+                        targets.lElbowX = -0.2; targets.rElbowX = -0.2;
+                        targets.bodyY = Math.sin(time * 6) * 0.05; 
+                        break;
+                    
+                    case 'talk_explain':
+                        targets.mouthScaleY = 1 + Math.abs(Math.sin(time * 12)) * 1.0; 
+                        head.rotation.y = Math.sin(time * 2) * 0.2; 
+                        targets.rArmX = -Math.PI / 4 + Math.sin(time * 4) * 0.2; 
+                        targets.rArmZ = -0.2; targets.rElbowX = -Math.PI / 2;
+                        targets.lArmZ = 0.1; 
+                        break;
+
+                    case 'talk_shout':
+                        targets.mouthScaleY = 2.0 + Math.sin(time * 20) * 0.8; 
+                        head.rotation.x = -0.2; 
+                        targets.lArmX = -Math.PI / 2; targets.rArmX = -Math.PI / 2; 
+                        targets.lArmZ = 0.3; targets.rArmZ = -0.3;
+                        targets.lElbowX = -Math.PI / 2; targets.rElbowX = -Math.PI / 2;
+                        targets.bodyRotX = 0.1; 
+                        break;
+
+                    case 'salsa':
+                        targets.bodyRotY = Math.sin(time * 8) * 0.3;
+                        targets.rootPosY = Math.abs(Math.sin(time * 8)) * 0.1;
+                        targets.lArmX = -Math.PI / 3 + Math.sin(time * 8) * 0.2;
+                        targets.rArmX = -Math.PI / 3 - Math.sin(time * 8) * 0.2;
+                        targets.lElbowX = -Math.PI / 2; targets.rElbowX = -Math.PI / 2;
+                        targets.lLegX = Math.sin(time * 8) * 0.4; targets.rLegX = -Math.sin(time * 8) * 0.4;
+                        targets.lKneeX = Math.max(0, Math.sin(time * 8)) * 0.5; targets.rKneeX = Math.max(0, -Math.sin(time * 8)) * 0.5;
+                        break;
+
+                    case 'shake':
+                        targets.bodyRotY = Math.sin(time * 20) * 0.25; targets.bodyRotX = 0.2; 
+                        targets.rootPosY = -0.3 + Math.abs(Math.sin(time * 15)) * 0.15; 
+                        targets.lArmZ = Math.PI - 0.5; targets.rArmZ = -Math.PI + 0.5;
+                        targets.lElbowX = -0.5; targets.rElbowX = -0.5;
+                        targets.lLegX = -0.2; targets.rLegX = -0.2;
+                        targets.lKneeX = 0.4; targets.rKneeX = 0.4;
+                        break;
+
+                    case 'wave':
+                        targets.bodyRotZ = Math.sin(time * 4) * 0.15; targets.bodyRotY = Math.sin(time * 2) * 0.2;
+                        targets.lArmZ = Math.PI / 2 + Math.sin(time * 6) * 0.5; targets.rArmZ = -Math.PI / 2 + Math.cos(time * 6) * 0.5;
+                        targets.lElbowX = Math.sin(time * 6 - 1) * 0.8; targets.rElbowX = Math.cos(time * 6 - 1) * 0.8;
+                        targets.lLegX = Math.sin(time * 4) * 0.1; targets.rLegX = -Math.sin(time * 4) * 0.1;
+                        break;
+
+                    case 'robot_dance':
+                        let st = Math.floor(time * 5); 
+                        targets.lArmX = Math.sin(st) * 1.5; targets.rArmX = Math.cos(st) * 1.5;
+                        targets.lElbowX = -Math.abs(Math.sin(st + 1)) * 1.5; targets.rElbowX = -Math.abs(Math.cos(st + 1)) * 1.5;
+                        head.rotation.y = Math.sin(st) * 0.4; targets.bodyRotY = Math.cos(st) * 0.3;
+                        break;
+
+                    case 'moonwalk':
+                        targets.lLegX = Math.sin(time * 6) * 0.6; targets.rLegX = Math.cos(time * 6) * 0.6;
+                        targets.lKneeX = Math.max(0, Math.sin(time * 6)) * 0.4; targets.rKneeX = Math.max(0, Math.cos(time * 6)) * 0.4;
+                        targets.lArmX = Math.cos(time * 6) * 0.5; targets.rArmX = Math.sin(time * 6) * 0.5;
+                        targets.rootPosY = 0; 
+                        break;
+
+                    case 'macarena':
+                        let step = Math.floor(time * 2) % 4;
+                        if(step===0) { targets.lArmX = -Math.PI/2; targets.rArmX = -Math.PI/2; } 
+                        else if(step===1) { targets.lArmX = -Math.PI/2; targets.rArmX = -Math.PI/2; targets.lElbowX = -Math.PI/2; targets.rElbowX = -Math.PI/2; } 
+                        else if(step===2) { targets.lArmX = -Math.PI/4; targets.rArmX = -Math.PI/4; targets.lElbowX = -Math.PI/2; targets.rElbowX = -Math.PI/2; } 
+                        else { targets.lArmX = 0; targets.rArmX = 0; targets.lElbowX = -Math.PI/2; targets.rElbowX = -Math.PI/2; } 
+                        targets.bodyRotY = Math.sin(time * 4) * 0.2; 
+                        break;
+
+                    case 'hiphop':
+                        targets.bodyY = Math.abs(Math.sin(time * 4)) * 0.3; 
+                        targets.lArmZ = Math.PI / 4; targets.rArmZ = -Math.PI / 4;
+                        targets.lArmX = -Math.PI / 4; targets.rArmX = -Math.PI / 4;
+                        targets.lElbowX = -Math.PI / 1.5; targets.rElbowX = -Math.PI / 1.5; 
+                        head.rotation.x = Math.sin(time * 4) * 0.2;
+                        break;
+
+                    case 'ballet':
+                        targets.rootPosY = 0.3; 
+                        targets.lArmZ = Math.PI - 0.2; targets.rArmZ = -Math.PI + 0.2; 
+                        targets.lElbowX = -0.8; targets.rElbowX = -0.8;
+                        targets.rootRotY = time * 3; 
+                        targets.lLegX = -0.2; targets.lKneeX = 0.5; 
+                        break;
+
+                    case 'disco':
+                        targets.lArmX = 0; targets.lArmZ = 0.2; targets.lElbowX = -Math.PI/2; 
+                        targets.rArmX = -Math.PI/2 + Math.sin(time * 5) * Math.PI/2; 
+                        targets.rArmZ = -Math.sin(time * 5) * Math.PI/4;
+                        targets.bodyRotY = Math.sin(time * 5) * 0.3;
+                        break;
+
+                    case 'floss':
+                        targets.bodyRotY = Math.sin(time * 12) * 0.4;
+                        targets.lArmZ = 0.2; targets.rArmZ = -0.2;
+                        targets.lArmX = -Math.PI/4 + Math.sin(time * 12) * 0.6; 
+                        targets.rArmX = -Math.PI/4 + Math.sin(time * 12) * 0.6;
+                        targets.lElbowX = -0.3; targets.rElbowX = -0.3;
+                        break;
+
+                    case 'spin':
+                        targets.rootRotY = time * 8; 
+                        targets.lArmZ = Math.PI / 2; targets.rArmZ = -Math.PI / 2;
+                        targets.lElbowX = -0.2; targets.rElbowX = -0.2;
+                        targets.lLegX = -0.1; targets.rLegX = 0.2; 
+                        break;
+
+                    case 'jump':
+                        targets.rootPosY = Math.abs(Math.sin(time * 8)) * 2.5;
+                        targets.lArmZ = Math.PI - 0.2; targets.rArmZ = -Math.PI + 0.2;
+                        if (targets.rootPosY > 1) { targets.lLegX = -0.4; targets.rLegX = -0.4; targets.lKneeX = 0.8; targets.rKneeX = 0.8; } 
+                        else { targets.lKneeX = 0.2; targets.rKneeX = 0.2; }
+                        break;
+
+                    case 'fast_dance':
+                        targets.lArmX = Math.sin(time * 15) * 1.2; targets.rArmX = -Math.sin(time * 15) * 1.2;
+                        targets.lElbowX = -Math.abs(Math.cos(time * 15)); targets.rElbowX = -Math.abs(Math.sin(time * 15));
+                        targets.lLegX = -Math.sin(time * 15) * 0.6; targets.rLegX = Math.sin(time * 15) * 0.6;
+                        break;
+
+                    case 'epic_flip':
+                        targets.rootRotX = time * -6; 
+                        targets.rootPosY = Math.sin(danceTimer * Math.PI / (GIFTS['corona'].duration/1000)) * 4;
+                        if(targets.rootPosY > 1) {
+                            targets.lLegX = -1.2; targets.rLegX = -1.2;
+                            targets.lKneeX = 1.5; targets.rKneeX = 1.5; 
+                            targets.lArmX = Math.PI; targets.rArmX = Math.PI;
+                        }
+                        break;
+                }
+
+                const lerpSpeed = Math.min(10 * dt, 0.5); 
+                
+                avatarRoot.position.y = THREE.MathUtils.lerp(avatarRoot.position.y, targets.rootPosY, lerpSpeed);
+                avatarRoot.rotation.y = (currentDanceState === 'spin' || currentDanceState === 'ballet') ? targets.rootRotY : THREE.MathUtils.lerp(avatarRoot.rotation.y, 0, lerpSpeed);
+                avatarRoot.rotation.x = currentDanceState === 'epic_flip' ? targets.rootRotX : THREE.MathUtils.lerp(avatarRoot.rotation.x, 0, lerpSpeed);
+                
+                bodyGroup.position.y = THREE.MathUtils.lerp(bodyGroup.position.y, targets.bodyY, lerpSpeed);
+                bodyGroup.rotation.y = THREE.MathUtils.lerp(bodyGroup.rotation.y, targets.bodyRotY, lerpSpeed);
+                bodyGroup.rotation.x = THREE.MathUtils.lerp(bodyGroup.rotation.x, targets.bodyRotX, lerpSpeed);
+                bodyGroup.rotation.z = THREE.MathUtils.lerp(bodyGroup.rotation.z, targets.bodyRotZ, lerpSpeed);
+
+                if(currentMouth) {
+                    currentMouth.scale.y = THREE.MathUtils.lerp(currentMouth.scale.y, targets.mouthScaleY, lerpSpeed);
+                }
+
+                if(leftArm && rightArm) {
+                    leftArm.rotation.x = THREE.MathUtils.lerp(leftArm.rotation.x, targets.lArmX, lerpSpeed);
+                    leftArm.rotation.z = THREE.MathUtils.lerp(leftArm.rotation.z, targets.lArmZ, lerpSpeed);
+                    rightArm.rotation.x = THREE.MathUtils.lerp(rightArm.rotation.x, targets.rArmX, lerpSpeed);
+                    rightArm.rotation.z = THREE.MathUtils.lerp(rightArm.rotation.z, targets.rArmZ, lerpSpeed);
+                    
+                    if(leftElbow) leftElbow.rotation.x = THREE.MathUtils.lerp(leftElbow.rotation.x, targets.lElbowX, lerpSpeed);
+                    if(rightElbow) rightElbow.rotation.x = THREE.MathUtils.lerp(rightElbow.rotation.x, targets.rElbowX, lerpSpeed);
+                }
+                if(leftLeg && rightLeg) {
+                    leftLeg.rotation.x = THREE.MathUtils.lerp(leftLeg.rotation.x, targets.lLegX, lerpSpeed);
+                    rightLeg.rotation.x = THREE.MathUtils.lerp(rightLeg.rotation.x, targets.rLegX, lerpSpeed);
+                    if(leftKnee) leftKnee.rotation.x = THREE.MathUtils.lerp(leftKnee.rotation.x, targets.lKneeX, lerpSpeed);
+                    if(rightKnee) rightKnee.rotation.x = THREE.MathUtils.lerp(rightKnee.rotation.x, targets.rKneeX, lerpSpeed);
+                }
+
+                // LÓGICA DE NAME TAG 3D -> 2D 
+                if (head) {
+                    const vector = new THREE.Vector3();
+                    head.getWorldPosition(vector);
+                    vector.y += 0.8; 
+                    vector.project(camera); 
+
+                    const x = (vector.x * 0.5 + 0.5) * window.innerWidth;
+                    const y = (vector.y * -0.5 + 0.5) * window.innerHeight;
+
+                    const nameTag = document.getElementById('avatar-name-tag');
+                    if (nameTag.style.display !== 'none') {
+                        nameTag.style.left = `${x}px`;
+                        nameTag.style.top = `${y}px`;
+                    }
+                }
+            }
+
+            renderer.render(scene, camera);
+        }
+
+    </script>
+</body>
+</html>
