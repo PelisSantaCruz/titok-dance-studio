@@ -109,7 +109,7 @@
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         .notification { animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
 
-        .flying-emoji { position: absolute; font-size: 3.2rem; pointer-events: none; z-index: 50; animation: flyUp 2.2s ease-out forwards; }
+        .flying-emoji { position: absolute; font-size: 3.2rem; pointer-events: none; z-index: 50; will-change: transform, opacity; animation: flyUp 2.2s ease-out forwards; }
         @keyframes flyUp {
             0% { transform: translate(-50%, 0) scale(0.5); opacity: 1; }
             50% { transform: translate(-50%, -160px) scale(1.35); opacity: 1; }
@@ -117,12 +117,12 @@
         }
 
         @keyframes slideHorizontalSlow {
-            0% { transform: translateX(100vw); }
-            100% { transform: translateX(-150vw); }
+            0% { transform: translate3d(100vw, 0, 0); }
+            100% { transform: translate3d(-150vw, 0, 0); }
         }
 
         .modern-banner {
-            position: absolute; animation: slideHorizontalSlow 35s linear forwards; white-space: nowrap; pointer-events: none;
+            position: absolute; animation: slideHorizontalSlow 35s linear forwards; white-space: nowrap; pointer-events: none; will-change: transform;
             z-index: 40; background: rgba(5, 5, 10, 0.9); backdrop-filter: blur(16px); border: 2px solid rgba(255, 255, 255, 0.2); 
             border-radius: 50px; padding: 15px 50px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8); display: flex; align-items: center; justify-content: center;
         }
@@ -187,6 +187,7 @@
             top: 0;
             pointer-events: none;
             z-index: 60;
+            will-change: transform, opacity;
             font-family: 'Arial Black', Impact, sans-serif;
             font-weight: 900;
             text-transform: uppercase;
@@ -286,7 +287,7 @@
     <div id="game-screen" class="screen flex-col justify-between pointer-events-none overflow-hidden">
         
         <div id="banners-container" class="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden z-10"></div>
-        <div id="avatar-name-tag" class="absolute px-4 py-1.5 bg-slate-900/80 text-white rounded-full text-sm font-black pointer-events-none transform -translate-x-1/2 -translate-y-1/2 backdrop-blur-md border-2 border-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.6)] z-10" style="display: none; transition: top 0.05s, left 0.05s;">@Usuario</div>
+        <div id="avatar-name-tag" class="absolute top-0 left-0 px-4 py-1.5 bg-slate-900/80 text-white rounded-full text-sm font-black pointer-events-none backdrop-blur-md border-2 border-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.6)] z-10" style="display: none; will-change: transform;">@Usuario</div>
 
         <!-- OVERLAY PANTALLA COMPLETA: ROSTRO DE MUJER JOVEN SONRIENTE + VOZ SINCRONIZADA "LIKE POR FAVOR" -->
         <div id="woman-like-overlay">
@@ -532,41 +533,44 @@
         <!-- PANEL LATERAL PUBLICIDAD HUD -->
         <div id="ad-panel" class="absolute left-4 top-48 glass-panel p-4 rounded-2xl border border-yellow-500/50 shadow-[0_0_20px_rgba(234,179,8,0.3)] z-40 flex-col gap-3 w-80 transform -translate-x-[150%] transition-transform duration-300 flex pointer-events-auto">
             <div class="flex justify-between items-center border-b border-gray-600 pb-2">
-                <h3 class="text-sm font-bold text-yellow-400">📢 Letreros 3D</h3>
-                <div class="flex gap-2">
-                    <button id="btn-edit-ads" onclick="toggleEditAdsMode()" class="hidden text-[10px] bg-slate-700 hover:bg-slate-600 px-2 py-1 rounded text-white font-bold transition-colors">⚙️ Editar</button>
+                <div>
+                    <h3 class="text-sm font-bold text-yellow-400">📢 Mis Letreros 3D</h3>
+                    <p id="ad-owner-label" class="text-[9px] text-cyan-300 font-bold">Cuenta: @Usuario</p>
+                </div>
+                <div class="flex gap-2 items-center">
+                    <button id="btn-edit-ads" onclick="toggleEditAdsMode()" class="text-[10px] bg-slate-700 hover:bg-slate-600 px-2 py-1 rounded text-white font-bold transition-colors border border-yellow-400/40">⚙️ Editar</button>
                     <button onclick="toggleAdPanel()" class="text-gray-400 hover:text-white text-lg leading-none">&times;</button>
                 </div>
             </div>
             
             <div id="ad-view-mode" class="flex flex-col gap-2">
-                <p class="text-[10px] text-gray-300">Emite tu anuncio flotante en HUD. La pantalla 3D se mostrará frente a ti de forma cómoda.</p>
+                <p class="text-[10px] text-gray-300">Tus anuncios son exclusivos de tu cuenta y quedan guardados permanentemente.</p>
                 <div id="preset-ads-container" class="flex flex-col gap-2 max-h-[30vh] overflow-y-auto pr-1 mt-1">
                     <button id="btn-preset-1" onclick="sendAd(this.innerText)" class="bg-slate-700/80 hover:bg-slate-600 text-left text-[10px] p-2 rounded border border-slate-500 transition-colors shadow-sm text-yellow-300 font-semibold">👍 Suscríbete al canal y deja tu like para apoyarnos</button>
                     <button id="btn-preset-2" onclick="sendAd(this.innerText)" class="bg-slate-700/80 hover:bg-slate-600 text-left text-[10px] p-2 rounded border border-slate-500 transition-colors shadow-sm text-cyan-300 font-semibold">💼 Servicios Digitales Model Bolivia para plataformas comerciales</button>
                     <button id="btn-preset-3" onclick="sendAd(this.innerText)" class="bg-slate-700/80 hover:bg-slate-600 text-left text-[10px] leading-tight p-2 rounded border border-slate-500 transition-colors shadow-sm text-pink-300 font-semibold">✨ Compra tu tratamiento estético dermatológico para aclarar la piel y obtén premios o beneficios por tus compras</button>
                 </div>
                 <div class="mt-2 border-t border-gray-600 pt-2">
-                    <textarea id="custom-ad-text" rows="2" class="w-full bg-slate-900 border border-slate-600 rounded p-2 text-xs text-white focus:border-yellow-500 outline-none resize-none" placeholder="Escribe tu anuncio libre..."></textarea>
-                    <button onclick="sendCustomAd()" class="w-full mt-2 bg-gradient-to-r from-yellow-600 to-orange-500 hover:from-yellow-500 hover:to-orange-400 text-white text-xs font-bold py-2 rounded shadow-lg transition-colors active:scale-95 transform">Emitir Letrero HUD 🚀</button>
+                    <textarea id="custom-ad-text" rows="2" class="w-full bg-slate-900 border border-slate-600 rounded p-2 text-xs text-white focus:border-yellow-500 outline-none resize-none" placeholder="Escribe tu anuncio libre (se guarda en tu cuenta)..."></textarea>
+                    <button onclick="sendCustomAd()" class="w-full mt-2 bg-gradient-to-r from-yellow-600 to-orange-500 hover:from-yellow-500 hover:to-orange-400 text-white text-xs font-bold py-2 rounded shadow-lg transition-colors active:scale-95 transform">Emitir y Guardar Letrero HUD 🚀</button>
                 </div>
             </div>
 
-            <!-- MODO DE EDICIÓN DE PUBLICIDAD GLOBAL (Admin) -->
-            <div id="ad-edit-mode" class="hidden flex-col gap-2 max-h-[50vh] overflow-y-auto pr-1 pb-1">
-                <p class="text-[9px] text-gray-400 uppercase tracking-widest font-bold">Panel de Control Global</p>
-                <label class="text-[10px] font-bold text-cyan-300 mt-1">Letrero Principal 3D (Fondo):</label>
+            <!-- MODO DE EDICIÓN DE PUBLICIDAD PERSONAL POR JUGADOR -->
+            <div id="ad-edit-mode" class="hidden flex-col gap-2 max-h-[52vh] overflow-y-auto pr-1 pb-1">
+                <p id="ad-edit-owner-label" class="text-[9px] text-emerald-300 uppercase tracking-widest font-bold">💾 Publicidad Exclusiva de @Usuario</p>
+                <label class="text-[10px] font-bold text-cyan-300 mt-1">Mi Letrero Principal 3D (Fondo):</label>
                 <input type="text" id="edit-main-sign" class="w-full bg-slate-900 border border-slate-600 rounded p-1.5 text-xs text-white" placeholder="MO-BOL DANCE CLUB">
-                <label class="text-[10px] font-bold text-pink-300 mt-1">Banners Deslizantes (Separar con '|'):</label>
-                <textarea id="edit-banners" rows="3" class="w-full bg-slate-900 border border-slate-600 rounded p-1.5 text-xs text-white resize-none" placeholder="OFERTA 1 | OFERTA 2"></textarea>
-                <label class="text-[10px] font-bold text-yellow-300 mt-1">Botón de Emisión 1:</label>
+                <label class="text-[10px] font-bold text-pink-300 mt-1">Mis Banners Deslizantes (Separar con '|'):</label>
+                <textarea id="edit-banners" rows="3" class="w-full bg-slate-900 border border-slate-600 rounded p-1.5 text-xs text-white resize-none" placeholder="MI OFERTA 1 | MI OFERTA 2"></textarea>
+                <label class="text-[10px] font-bold text-yellow-300 mt-1">Mi Botón Rápido 1:</label>
                 <input type="text" id="edit-preset-1" class="w-full bg-slate-900 border border-slate-600 rounded p-1.5 text-xs text-white">
-                <label class="text-[10px] font-bold text-yellow-300 mt-1">Botón de Emisión 2:</label>
+                <label class="text-[10px] font-bold text-yellow-300 mt-1">Mi Botón Rápido 2:</label>
                 <input type="text" id="edit-preset-2" class="w-full bg-slate-900 border border-slate-600 rounded p-1.5 text-xs text-white">
-                <label class="text-[10px] font-bold text-yellow-300 mt-1">Botón de Emisión 3:</label>
+                <label class="text-[10px] font-bold text-yellow-300 mt-1">Mi Botón Rápido 3:</label>
                 <input type="text" id="edit-preset-3" class="w-full bg-slate-900 border border-slate-600 rounded p-1.5 text-xs text-white">
                 <div class="flex gap-2 mt-2">
-                    <button onclick="saveGlobalAds()" class="flex-1 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white text-xs font-bold py-2 rounded shadow-lg">Guardar 💾</button>
+                    <button onclick="saveGlobalAds()" class="flex-1 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white text-xs font-bold py-2 rounded shadow-lg">Guardar en Mi Cuenta 💾</button>
                     <button onclick="toggleEditAdsMode()" class="flex-1 bg-gray-600 hover:bg-gray-500 text-white text-xs font-bold py-2 rounded shadow-lg">Cancelar</button>
                 </div>
             </div>
@@ -803,39 +807,28 @@
         // ============================================================================
         // 🔗 CONFIGURACIÓN FIREBASE Y DB (BASE OFICIAL DEL PROTOTIPO)
         // ============================================================================
-        const firebaseConfig = {
-            apiKey: "AIzaSyDzDUQ1v740C9S-3On-wLm7YwtFaRIVMWM",
-            authDomain: "tik-tok-dance-225cb.firebaseapp.com",
-            databaseURL: "https://tik-tok-dance-225cb-default-rtdb.firebaseio.com/",
-            projectId: "tik-tok-dance-225cb",
-            storageBucket: "tik-tok-dance-225cb.firebasestorage.app",
-            messagingSenderId: "668301493985",
-            appId: "1:668301493985:web:d221f79f019945ef8f59a0"
-        };
+      	const firebaseConfig = {
+    	    apiKey: "AIzaSyDzDUQ1v740C9S-3On-wLm7YwtFaRIVMWM",
+    	    authDomain: "tik-tok-dance-225cb.firebaseapp.com",
+	        databaseURL: "https://tik-tok-dance-225cb-default-rtdb.firebaseio.com/",
+   	        projectId: "tik-tok-dance-225cb",
+   	        storageBucket: "tik-tok-dance-225cb.firebasestorage.app",
+   	        messagingSenderId: "668301493985",
+   	        appId: "1:668301493985:web:d221f79f019945ef8f59a0"
+ 	    };
 
         let database = null;
         try {
             if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
             database = firebase.database();
         } catch (e) {
-            console.warn("Firebase en modo local de respaldo:", e);
+            console.warn("Modo autónomo GitHub Pages activo:", e);
         }
 
         const SUPER_ADMIN_EMAIL = 'copauyunifreddy@gmail.com';
-        const defaultDB = [{
-            name: SUPER_ADMIN_EMAIL,
-            password: 'V7#Luna!Roca$94_Sol@Nebula%815*Bosque&Rio?Fenix=27',
-            role: 'admin',
-            hasGiftAccess: true,
-            hasGameAccess: true,
-            canManageGifts: true,
-            canCreateSubAdmins: true
-        }];
+        const defaultDB = [{ name: SUPER_ADMIN_EMAIL, password: 'V7#Luna!Roca$94_Sol@Nebula%815*Bosque&Rio?Fenix=27', role: 'admin', hasGiftAccess: true, hasGameAccess: true, canManageGifts: true, canCreateSubAdmins: true }];
 
-        let playersDB = [...defaultDB];
-        let playerAdsDB = {};
-        let globalAdsDB = null;
-        let currentBanners = [
+        const DEFAULT_BANNERS = [
             "🔥 ESTAMOS ACTIVOS - DJ EN LA CASA - MODEL BOLIVIA ENTRETENIMIENTO DIGITAL CONTACTOS AL +591 68318417 🔥", 
             "🎰 DINÁMICAS DE SUERTE VIRTUAL & STREAMING MUSIC DANCE - MODEL BOLIVIA CONTACTOS AL +591 68318417 🎰",
             "🎁 ÚNETE Y PARTICIPA TODOS LOS DÍAS PUEDE QUE SEAS EL GANADOR DE UN PREMIO EN EL STREAMING - SUSCRIBETE Y APOYANOS CON TU LIKE - CONTACTOS AL +591 68318417 🎉",
@@ -843,6 +836,15 @@
             "✨ MANDA TUS REGALOS PARA VER EFECTOS ÉPICOS DE LOS PERSONAJES TE PODRÁS GANAR GRANDES PREMIOS A CAMBIO DE TUS REGALITOS - MODEL BOLIVIA ENTRETENIMIENTO DIGITAL ✨",
             "🔥 HAZ QUE LOS PERSONAJES BAILEN A TU RITMO ENVIANDO REGALITOS - ESTAMOS EN SANTA CRUZ DE LA SIERRA - MODEL BOLIVIA ENTRETENIMIENTO DIGITAL CONTACTOS AL +591 68318417 🔥"
         ];
+        const DEFAULT_PRESET_1 = "👍 Suscríbete al canal y deja tu like para apoyarnos";
+        const DEFAULT_PRESET_2 = "💼 Servicios Digitales Model Bolivia para plataformas comerciales";
+        const DEFAULT_PRESET_3 = "✨ Compra tu tratamiento estético dermatológico para aclarar la piel y obtén premios o beneficios por tus compras";
+
+        let playersDB = [];
+        let playerAdsDB = {};
+        let globalAdsDB = null;
+        let userAdsListenerRef = null;
+        let currentBanners = [...DEFAULT_BANNERS];
         
         let currentUser = null;
         let currentUserRole = 'player';
@@ -851,9 +853,10 @@
         let activeAdSigns = []; 
         let isHalloweenActive = false;
 
-        // Variables 3D Globales
+        // Variables 3D Globales y Caché de Rendimiento para GitHub Pages
         let scene, camera, renderer, clock;
         let avatarRoot, bodyGroup, leftArm, leftElbow, rightArm, rightElbow, leftLeg, leftKnee, rightLeg, rightKnee, head, neck, currentMouth; 
+        let avatarVfxGroup = null, avatarLeftTrail = null, avatarRightTrail = null;
         let botsArray = [];
         let particles, particleSystem, currentDanceState = 'idle';
         let currentScenarioIndex = 2; 
@@ -868,6 +871,21 @@
         let superAuraGroup = null;
         let superGiftBurstTimer = 0;
         let screenShakeTimer = 0;
+        let suddenWomanTimer = 15.0;
+        const tempProjVec = new THREE.Vector3();
+        let cachedNameTagEl = null, cachedGameScreenEl = null, cachedWomanOverlayEl = null;
+        let viewportW = window.innerWidth, viewportH = window.innerHeight, cachedCamRadius = 12.2;
+        let isDirectRotY = false, isDirectRotX = false, isDirectRotZ = false, isTrioChoreoState = false;
+        let lastHighlightedGiftBtn = null;
+        let lastStageRingHex = -1;
+
+        // Telemetría de rendimiento para GitHub Pages y modo demostración
+        let perfFrameCount = 0;
+        let perfLastCheck = performance.now();
+        let currentFpsValue = 60;
+        let perfHudBadgeEl = null;
+        let demoTourTimeouts = [];
+        let isDemoTourRunning = false;
 
         function normalizePlayersList(raw) {
             if (!raw) return null;
@@ -875,10 +893,206 @@
             return arr.length > 0 ? arr : null;
         }
 
+        function computeResponsiveCameraRadius(w, h) {
+            const aspect = w / Math.max(h, 1);
+            if (aspect < 0.65) return 16.5;
+            if (aspect < 1.0) return 14.5;
+            return 12.2;
+        }
+        cachedCamRadius = computeResponsiveCameraRadius(viewportW, viewportH);
+
+        function drawRoundedRectPath(ctx, x, y, w, h, r) {
+            const radius = Math.min(r, w / 2, h / 2);
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + w - radius, y);
+            ctx.quadraticCurveTo(x + w, y, x + w, y + radius);
+            ctx.lineTo(x + w, y + h - radius);
+            ctx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h);
+            ctx.lineTo(x + radius, y + h);
+            ctx.quadraticCurveTo(x, y + h, x, y + h - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+        }
+
+        function disposeObject3D(obj) {
+            if (!obj) return;
+            obj.traverse((child) => {
+                if (child.geometry) child.geometry.dispose();
+                if (child.material) {
+                    if (Array.isArray(child.material)) {
+                        child.material.forEach(m => {
+                            if (m.map) m.map.dispose();
+                            m.dispose();
+                        });
+                    } else {
+                        if (child.material.map) child.material.map.dispose();
+                        child.material.dispose();
+                    }
+                }
+            });
+        }
+
+        function getDefaultUserAdsConfig(username) {
+            return {
+                owner: username || '@Usuario',
+                mainSignText: 'MO-BOL DANCE CLUB',
+                banners: [...DEFAULT_BANNERS],
+                preset1: DEFAULT_PRESET_1,
+                preset2: DEFAULT_PRESET_2,
+                preset3: DEFAULT_PRESET_3,
+                customDraft: '',
+                updatedAt: 0
+            };
+        }
+
+        function applyUserAdsConfigToUI(cfg, restartBanners = false) {
+            if (!cfg) return;
+            globalAdsDB = cfg;
+            const ownerTag = cfg.owner || currentUser || '@Usuario';
+            const ownerLbl = document.getElementById('ad-owner-label');
+            const editOwnerLbl = document.getElementById('ad-edit-owner-label');
+            if (ownerLbl) ownerLbl.innerText = `Cuenta: ${ownerTag}`;
+            if (editOwnerLbl) editOwnerLbl.innerText = `💾 Publicidad Exclusiva de ${ownerTag}`;
+
+            if (scene) {
+                createMainSign(cfg.mainSignText || 'MO-BOL DANCE CLUB');
+            }
+            if (Array.isArray(cfg.banners) && cfg.banners.length > 0) {
+                currentBanners = [...cfg.banners];
+            } else {
+                currentBanners = [...DEFAULT_BANNERS];
+            }
+
+            const b1 = document.getElementById('btn-preset-1');
+            const b2 = document.getElementById('btn-preset-2');
+            const b3 = document.getElementById('btn-preset-3');
+            if (b1) b1.innerText = cfg.preset1 || DEFAULT_PRESET_1;
+            if (b2) b2.innerText = cfg.preset2 || DEFAULT_PRESET_2;
+            if (b3) b3.innerText = cfg.preset3 || DEFAULT_PRESET_3;
+
+            const customInput = document.getElementById('custom-ad-text');
+            if (customInput && typeof cfg.customDraft === 'string' && document.activeElement !== customInput) {
+                customInput.value = cfg.customDraft;
+            }
+
+            if (restartBanners && currentUser) {
+                startBannerSystem();
+            }
+        }
+
+        // Inicializa mejoras de fluidez para GitHub Pages, monitor FPS y botón de Demo Guiada
+        function initGitHubPagesPerformanceSuite() {
+            cachedNameTagEl = document.getElementById('avatar-name-tag');
+            cachedGameScreenEl = document.getElementById('game-screen');
+
+            // 1. Botón de ingreso rápido en pantalla de Login para pruebas instantáneas
+            const loginBtn = document.querySelector('#login-screen button[onclick="login()"]');
+            if (loginBtn && !document.getElementById('btn-quick-demo-login')) {
+                const quickBtn = document.createElement('button');
+                quickBtn.id = 'btn-quick-demo-login';
+                quickBtn.type = 'button';
+                quickBtn.onclick = quickEnterShowcase;
+                quickBtn.className = 'w-full mt-2 bg-slate-800/90 hover:bg-cyan-950/80 text-cyan-300 border border-cyan-400/50 font-bold py-2.5 px-4 rounded-xl text-xs shadow-lg transition-all transform hover:scale-[1.01] active:scale-95 flex items-center justify-center gap-2';
+                quickBtn.innerHTML = '<span>⚡</span> Entrar Ahora y Ver Demo en Vivo (1-Clic)';
+                loginBtn.parentElement.appendChild(quickBtn);
+            }
+
+            // 2. Barra compacta de telemetría FPS + Botón "▶ Probar Todo" en la vista principal
+            const gameScreen = document.getElementById('game-screen');
+            if (gameScreen && !document.getElementById('github-perf-bar')) {
+                const perfBar = document.createElement('div');
+                perfBar.id = 'github-perf-bar';
+                perfBar.className = 'fixed top-2 left-1/2 transform -translate-x-1/2 z-40 pointer-events-auto flex items-center gap-2 glass-panel px-3 py-1 rounded-full border border-emerald-400/40 shadow-[0_0_15px_rgba(16,185,129,0.25)]';
+                perfBar.innerHTML = `
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span id="fps-telemetry-text" class="text-[10px] font-black text-emerald-300 tracking-wide">60 FPS • GitHub Ready</span>
+                    <span class="text-slate-600">|</span>
+                    <button id="btn-run-showcase" onclick="runOptimalShowcaseDemo()" class="bg-gradient-to-r from-cyan-500 to-pink-500 hover:from-cyan-400 hover:to-pink-400 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full shadow transition-transform active:scale-95">
+                        ▶ Probar Todo
+                    </button>
+                `;
+                gameScreen.appendChild(perfBar);
+                perfHudBadgeEl = document.getElementById('fps-telemetry-text');
+            }
+        }
+
+        function quickEnterShowcase() {
+            const uInput = document.getElementById('username');
+            const pInput = document.getElementById('password');
+            if (uInput && !uInput.value.trim()) uInput.value = '@TesterModelBO';
+            if (pInput && !pInput.value.trim()) pInput.value = 'mobol2026';
+            login().then(() => {
+                setTimeout(() => runOptimalShowcaseDemo(), 700);
+            });
+        }
+
+        // Recorrido automático que demuestra todas las funciones implementadas
+        function runOptimalShowcaseDemo() {
+            demoTourTimeouts.forEach(t => clearTimeout(t));
+            demoTourTimeouts = [];
+
+            const btn = document.getElementById('btn-run-showcase');
+            if (isDemoTourRunning) {
+                isDemoTourRunning = false;
+                if (btn) btn.innerText = '▶ Probar Todo';
+                showNotification('Demostración detenida. Control manual activo 🎮', 'text-cyan-300');
+                return;
+            }
+
+            isDemoTourRunning = true;
+            if (btn) btn.innerText = '⏹ Detener Demo';
+
+            // Paso 1: Demostrar paso sostenido + atajo de teclado
+            showNotification('1/4 🕺 Probando Paso Sostenido (Tecla [K] / Botón)...', 'text-cyan-300');
+            triggerSustainedStep('shuffle_pro', 0xffcc00, 'Shuffle Pro [K]');
+
+            // Paso 2: Demostrar Letrero 3D Independiente del Jugador
+            demoTourTimeouts.push(setTimeout(() => {
+                if (!isDemoTourRunning) return;
+                const ownerName = currentUser || '@TesterModelBO';
+                showNotification(`2/4 📢 Mostrando Publicidad 3D exclusiva de ${ownerName}`, 'text-yellow-300');
+                const p1Text = document.getElementById('btn-preset-1')?.innerText || '⚡ Servicios Digitales Model Bolivia';
+                create3DAdSign(p1Text, ownerName);
+            }, 3200));
+
+            // Paso 3: Demostrar Coreografía Coherente en Trío + Cotillones
+            demoTourTimeouts.push(setTimeout(() => {
+                if (!isDemoTourRunning) return;
+                showNotification('3/4 👯‍♀️ Coreografía Trío Live + Cotillones y Lluvia Neón 🎉', 'text-pink-400');
+                triggerTrioLiveAction('like');
+                triggerGranPresentacion();
+            }, 6800));
+
+            // Paso 4: Demostrar Super Regalo Extraordinario del Catálogo TikTok
+            demoTourTimeouts.push(setTimeout(() => {
+                if (!isDemoTourRunning) return;
+                showNotification('4/4 🌌 Ejecutando Super Regalo: TikTok Universe 360°', 'text-amber-300');
+                sendGift('universo');
+            }, 12200));
+
+            demoTourTimeouts.push(setTimeout(() => {
+                isDemoTourRunning = false;
+                if (btn) btn.innerText = '▶ Probar Todo';
+                showNotification('✅ ¡Demostración completada a máxima fluidez!', 'text-emerald-400');
+            }, 17000));
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(initGitHubPagesPerformanceSuite, 150);
+            try {
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.getVoices();
+                    window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+                }
+            } catch (e) {}
+        });
+
         function triggerScreenShake(durationSeconds = 1.35) {
             screenShakeTimer = durationSeconds;
             document.body.classList.remove('screen-shake-active');
-            void document.body.offsetWidth;
+            void document.body.offsetWidth; // Reiniciar animación CSS
             document.body.classList.add('screen-shake-active');
             setTimeout(() => {
                 document.body.classList.remove('screen-shake-active');
@@ -979,7 +1193,6 @@
                 osc.frequency.exponentialRampToValueAtTime(pitchFreq * 1.06, now + durationSec);
                 subOsc.frequency.setValueAtTime(pitchFreq * 2, now);
 
-                // Filtros de formantes vocales femeninos (F1 y F2) para articular cada vocal
                 const filter1 = audioCtx.createBiquadFilter();
                 filter1.type = 'bandpass';
                 filter1.frequency.setValueAtTime(f1, now);
@@ -1020,7 +1233,6 @@
             overlay.classList.add('active');
             setWomanMouthShape(0.1, 1.05, null);
 
-            // Síntesis de voz femenina en español ("¡Like por favor!") coordinada con formantes Web Audio
             try {
                 if ('speechSynthesis' in window && soundEffectsEnabled) {
                     window.speechSynthesis.cancel();
@@ -1036,18 +1248,17 @@
                 }
             } catch (e) {}
 
-            // Secuencia exacta sílaba por sílaba sincronizando boca y formantes vocales: "¡LIKE - POR - FA - VOR!"
             const syllableTimeline = [
-                { delay: 60,   open: 0.95, width: 1.12, syl: 'syl-like', f1: 820, f2: 1950, pitch: 293.66, dur: 0.30 }, // "LAIK"
+                { delay: 60,   open: 0.95, width: 1.12, syl: 'syl-like', f1: 820, f2: 1950, pitch: 293.66, dur: 0.30 },
                 { delay: 230,  open: 0.35, width: 1.08, syl: 'syl-like', f1: 420, f2: 2350, pitch: 329.63, dur: 0.14 },
                 { delay: 390,  open: 0.12, width: 1.00, syl: null,       f1: 0,   f2: 0,    pitch: 0,      dur: 0    },
-                { delay: 460,  open: 0.72, width: 0.86, syl: 'syl-por',  f1: 520, f2: 980,  pitch: 349.23, dur: 0.24 }, // "POR"
+                { delay: 460,  open: 0.72, width: 0.86, syl: 'syl-por',  f1: 520, f2: 980,  pitch: 349.23, dur: 0.24 },
                 { delay: 720,  open: 0.15, width: 1.00, syl: null,       f1: 0,   f2: 0,    pitch: 0,      dur: 0    },
-                { delay: 800,  open: 0.92, width: 1.10, syl: 'syl-fa',   f1: 880, f2: 1450, pitch: 392.00, dur: 0.25 }, // "FA"
+                { delay: 800,  open: 0.92, width: 1.10, syl: 'syl-fa',   f1: 880, f2: 1450, pitch: 392.00, dur: 0.25 },
                 { delay: 1060, open: 0.18, width: 1.02, syl: null,       f1: 0,   f2: 0,    pitch: 0,      dur: 0    },
-                { delay: 1140, open: 0.85, width: 0.88, syl: 'syl-vor',  f1: 540, f2: 1020, pitch: 440.00, dur: 0.42 }, // "VOR!"
+                { delay: 1140, open: 0.85, width: 0.88, syl: 'syl-vor',  f1: 540, f2: 1020, pitch: 440.00, dur: 0.42 },
                 { delay: 1420, open: 0.45, width: 1.10, syl: 'syl-vor',  f1: 650, f2: 1600, pitch: 523.25, dur: 0.22 },
-                { delay: 1680, open: 0.18, width: 1.14, syl: null,       f1: 0,   f2: 0,    pitch: 0,      dur: 0    }  // Sonrisa radiante final
+                { delay: 1680, open: 0.18, width: 1.14, syl: null,       f1: 0,   f2: 0,    pitch: 0,      dur: 0    }
             ];
 
             syllableTimeline.forEach(step => {
@@ -1134,7 +1345,6 @@
         };
 
         window.addEventListener('keydown', (e) => {
-            // Ignorar si el usuario está escribiendo en un input o textarea
             const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
             if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
             if (e.ctrlKey || e.altKey || e.metaKey) return;
@@ -1195,6 +1405,7 @@
             if (!grid) return;
             grid.innerHTML = '';
 
+            // Actualizar pestañas activas
             ['all', 'popular', 'luxury'].forEach(tab => {
                 const btn = document.getElementById('tab-gift-' + tab);
                 if (btn) {
@@ -1232,6 +1443,22 @@
             renderSuperGiftsMenu(category);
         }
 
+        function highlightActiveSuperGiftButton(actionName) {
+            if (lastHighlightedGiftBtn) {
+                lastHighlightedGiftBtn.classList.remove('border-amber-300', 'shadow-[0_0_15px_rgba(251,191,36,0.7)]');
+                lastHighlightedGiftBtn.classList.add('border-pink-500/30');
+                lastHighlightedGiftBtn = null;
+            }
+            const matched = SUPER_GIFTS_CATALOG.find(g => g.action === actionName);
+            if (!matched) return;
+            const btn = document.getElementById(`super-gift-btn-${matched.id}`);
+            if (btn) {
+                btn.classList.add('border-amber-300', 'shadow-[0_0_15px_rgba(251,191,36,0.7)]');
+                btn.classList.remove('border-pink-500/30');
+                lastHighlightedGiftBtn = btn;
+            }
+        }
+
         async function loadDB() {
             return new Promise((resolve) => {
                 let resolved = false;
@@ -1241,14 +1468,27 @@
                     resolve(dbData);
                 };
 
-                // Timeout de seguridad (2 segundos) para evitar bloqueo en pantalla de carga
+                const readLocalFallback = () => {
+                    try {
+                        let local = normalizePlayersList(JSON.parse(localStorage.getItem('tiktokArenaDBFallback')));
+                        if (!local || !local.find(p => p && p.name && p.name.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase())) {
+                            local = [...defaultDB];
+                            localStorage.setItem('tiktokArenaDBFallback', JSON.stringify(local));
+                        }
+                        return local;
+                    } catch (e) {
+                        return [...defaultDB];
+                    }
+                };
+
+                // Timeout rápido (1.8s) para que GitHub Pages jamás se quede congelado en la pantalla de carga
                 setTimeout(() => {
-                    finish(defaultDB);
-                }, 2000);
+                    finish(readLocalFallback());
+                }, 1800);
 
                 try {
                     if (!database) {
-                        finish(defaultDB);
+                        finish(readLocalFallback());
                         return;
                     }
                     database.ref('playersDB').once('value').then((snapshot) => {
@@ -1257,12 +1497,13 @@
                             db = [...defaultDB];
                             database.ref('playersDB').set(db).catch(() => {});
                         }
+                        try { localStorage.setItem('tiktokArenaDBFallback', JSON.stringify(db)); } catch (e) {}
                         finish(db);
                     }).catch(() => {
-                        finish(defaultDB);
+                        finish(readLocalFallback());
                     });
                 } catch(err) {
-                    finish(defaultDB);
+                    finish(readLocalFallback());
                 }
             });
         }
@@ -1270,10 +1511,100 @@
         async function saveDB() {
             return new Promise((resolve) => {
                 try {
-                    if (!database) { resolve(false); return; }
+                    localStorage.setItem('tiktokArenaDBFallback', JSON.stringify(playersDB));
+                } catch (e) {}
+                try {
+                    if (!database) { resolve(true); return; }
                     database.ref('playersDB').set(playersDB).then(() => resolve(true)).catch(() => resolve(false));
                 } catch(err) { resolve(false); }
             });
+        }
+
+        function persistUserAdsConfig(username, adsData) {
+            if (!username || !adsData) return;
+            const safeKey = sanitizeKey(username.toLowerCase());
+            playerAdsDB[safeKey] = adsData;
+
+            try {
+                localStorage.setItem('mobol_userAds_' + safeKey, JSON.stringify(adsData));
+            } catch (e) {}
+
+            const me = playersDB.find(p => p && p.name && p.name.toLowerCase() === username.toLowerCase());
+            if (me) {
+                me.adsConfig = adsData;
+                saveDB();
+            }
+
+            if (database) {
+                database.ref('userAdsConfig/' + safeKey).set(adsData).catch(() => {});
+            }
+        }
+
+        async function bindIndependentUserAds(username) {
+            if (!username) return;
+            const safeKey = sanitizeKey(username.toLowerCase());
+
+            // Desvincular listener del jugador anterior si hubiera
+            if (userAdsListenerRef) {
+                try { userAdsListenerRef.off(); } catch (e) {}
+                userAdsListenerRef = null;
+            }
+
+            // 1. Buscar la publicidad guardada del jugador en su perfil de playersDB y en localStorage
+            const meInDB = playersDB.find(p => p && p.name && p.name.toLowerCase() === username.toLowerCase());
+            let bestConfig = (meInDB && meInDB.adsConfig) ? meInDB.adsConfig : null;
+
+            try {
+                const rawLocal = localStorage.getItem('mobol_userAds_' + safeKey);
+                if (rawLocal) {
+                    const parsedLocal = JSON.parse(rawLocal);
+                    if (!bestConfig || (parsedLocal.updatedAt || 0) >= (bestConfig.updatedAt || 0)) {
+                        bestConfig = parsedLocal;
+                    }
+                }
+            } catch (e) {}
+
+            // 2. Consultar nodo exclusivo userAdsConfig/{safeKey} en Firebase (con timeout rápido de 1.2s)
+            if (database) {
+                const remoteSnap = await new Promise((resolve) => {
+                    let done = false;
+                    const timer = setTimeout(() => { if (!done) { done = true; resolve(null); } }, 1200);
+                    database.ref('userAdsConfig/' + safeKey).once('value')
+                        .then(snap => { if (!done) { done = true; clearTimeout(timer); resolve(snap.val()); } })
+                        .catch(() => { if (!done) { done = true; clearTimeout(timer); resolve(null); } });
+                });
+
+                if (remoteSnap && remoteSnap.owner) {
+                    if (!bestConfig || (remoteSnap.updatedAt || 0) >= (bestConfig.updatedAt || 0)) {
+                        bestConfig = remoteSnap;
+                    }
+                }
+            }
+
+            if (!bestConfig) {
+                bestConfig = getDefaultUserAdsConfig(username);
+                bestConfig.updatedAt = Date.now();
+            }
+
+            // Asegurar que quede persistido en las 3 capas (LocalStorage, playersDB y userAdsConfig)
+            persistUserAdsConfig(username, bestConfig);
+            applyUserAdsConfigToUI(bestConfig, false);
+
+            // 3. Escuchar cambios en tiempo real únicamente del nodo exclusivo de este jugador
+            if (database) {
+                userAdsListenerRef = database.ref('userAdsConfig/' + safeKey);
+                userAdsListenerRef.on('value', (snapshot) => {
+                    const remoteData = snapshot.val();
+                    if (remoteData && remoteData.owner && currentUser && currentUser.toLowerCase() === username.toLowerCase()) {
+                        const currentUpdated = (globalAdsDB && globalAdsDB.updatedAt) ? globalAdsDB.updatedAt : 0;
+                        if ((remoteData.updatedAt || 0) > currentUpdated) {
+                            try { localStorage.setItem('mobol_userAds_' + safeKey, JSON.stringify(remoteData)); } catch (e) {}
+                            playerAdsDB[safeKey] = remoteData;
+                            applyUserAdsConfigToUI(remoteData, true);
+                        }
+                    }
+                });
+            }
         }
 
         function setupRealtimeSync() {
@@ -1286,44 +1617,21 @@
                         const me = playersDB.find(p => p && p.name && p.name.toLowerCase() === currentUser.toLowerCase());
                         if (me) {
                             if (!me.hasGameAccess && currentUserRole !== 'admin') { alert("Has sido desconectado de la sala. 🚫"); logout(); } 
-                            else { updateTikTokPanelVisibility(); }
+                            else {
+                                updateTikTokPanelVisibility();
+                                // Si el perfil en playersDB trae publicidad más reciente de este usuario, sincronizarla
+                                if (me.adsConfig && (!globalAdsDB || (me.adsConfig.updatedAt || 0) > (globalAdsDB.updatedAt || 0))) {
+                                    applyUserAdsConfigToUI(me.adsConfig, true);
+                                }
+                            }
                         }
                     }
                     if (document.getElementById('admin-modal').classList.contains('active')) { renderPlayerList(); }
                 }
             });
-
-            database.ref('globalAds').on('value', (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    globalAdsDB = data;
-                    if(data.mainSignText) { createMainSign(data.mainSignText); }
-                    if(data.banners) { currentBanners = data.banners; }
-                    if(data.preset1) { document.getElementById('btn-preset-1').innerText = data.preset1; }
-                    if(data.preset2) { document.getElementById('btn-preset-2').innerText = data.preset2; }
-                    if(data.preset3) { document.getElementById('btn-preset-3').innerText = data.preset3; }
-                }
-            });
-
-            let initialLoadAds = true;
-            database.ref('playerAds').on('value', (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    playerAdsDB = data;
-                    if (!initialLoadAds) {
-                        let latestAd = null; let maxTime = 0;
-                        for (let key in data) {
-                            if (data[key].timestamp > maxTime) { maxTime = data[key].timestamp; latestAd = data[key]; }
-                        }
-                        if (latestAd && (Date.now() - latestAd.timestamp < 5000)) { create3DAdSign(latestAd.text, latestAd.user); }
-                    }
-                }
-                initialLoadAds = false;
-            });
         }
 
         window.onload = async () => {
-            // Permitir presionar Enter en los campos de usuario y contraseña
             const userInp = document.getElementById('username');
             const passInp = document.getElementById('password');
             if (userInp) userInp.addEventListener('keydown', (e) => { if (e.key === 'Enter') login(); });
@@ -1345,26 +1653,36 @@
             if (!passwordInput) { alert("¡Te falta la clave para entrar!"); return; }
             if (!usernameInput.startsWith('@') && !usernameInput.includes('@gmail.com')) { usernameInput = '@' + usernameInput; }
 
-            if (!Array.isArray(playersDB)) {
-                playersDB = normalizePlayersList(playersDB) || [...defaultDB];
-            }
-
-            let player = playersDB.find(p => p && p.name && p.name.toLowerCase() === usernameInput.toLowerCase());
+            let player = playersDB.find(p => p.name.toLowerCase() === usernameInput.toLowerCase());
             
             if (player) {
                 if (player.password !== passwordInput) { alert("Clave incorrecta, intenta de nuevo."); return; }
                 if (!player.hasGameAccess) { alert("Estás baneado de la pista de baile. 🚫"); return; }
                 currentUserRole = player.role; currentUser = player.name; 
+                if (!player.adsConfig) {
+                    player.adsConfig = getDefaultUserAdsConfig(currentUser);
+                    await saveDB();
+                }
             } else {
-                playersDB.push({ name: usernameInput, password: passwordInput, role: 'player', hasGiftAccess: true, hasGameAccess: true, canManageGifts: false, canCreateSubAdmins: false });
-                saveDB();
-                currentUserRole = 'player'; currentUser = usernameInput;
+                const initialUserAds = getDefaultUserAdsConfig(usernameInput);
+                initialUserAds.updatedAt = Date.now();
+                playersDB.push({
+                    name: usernameInput,
+                    password: passwordInput,
+                    role: 'player',
+                    hasGiftAccess: true,
+                    hasGameAccess: true,
+                    canManageGifts: false,
+                    canCreateSubAdmins: false,
+                    adsConfig: initialUserAds
+                });
+                await saveDB(); currentUserRole = 'player'; currentUser = usernameInput;
             }
 
             canManagePlatform = (currentUserRole === 'admin' || currentUserRole === 'subadmin');
 
             document.getElementById('ui-username').innerText = currentUser;
-            document.getElementById('user-avatar-letter').innerText = currentUser.replace('@', '').charAt(0).toUpperCase() || 'U';
+            document.getElementById('user-avatar-letter').innerText = currentUser.charAt(0).toUpperCase();
             
             const badge = document.getElementById('ui-role-badge');
             if(currentUserRole === 'admin') { badge.innerText = '👑 Admin'; badge.className = "text-[9px] bg-yellow-600 px-1.5 py-0.5 rounded text-white font-bold"; }
@@ -1373,22 +1691,23 @@
             
             const nameTag = document.getElementById('avatar-name-tag');
             nameTag.innerText = currentUser; nameTag.style.display = 'block';
+            cachedNameTagEl = nameTag;
             
             if (canManagePlatform) {
                 document.getElementById('admin-controls').classList.remove('hidden'); document.getElementById('admin-controls').classList.add('flex');
                 document.getElementById('admin-panel-title').innerText = currentUserRole === 'admin' ? "Panel DJ Principal" : "Panel Moderador";
-                const btnEditAds = document.getElementById('btn-edit-ads'); if(btnEditAds) btnEditAds.classList.remove('hidden');
             } else {
                 document.getElementById('admin-controls').classList.add('hidden'); document.getElementById('admin-controls').classList.remove('flex');
-                const btnEditAds = document.getElementById('btn-edit-ads'); if(btnEditAds) btnEditAds.classList.add('hidden');
             }
+            const btnEditAds = document.getElementById('btn-edit-ads');
+            if (btnEditAds) btnEditAds.classList.remove('hidden');
 
-            document.getElementById('login-screen').classList.remove('active');
-            document.getElementById('game-screen').classList.add('active');
+            await bindIndependentUserAds(currentUser);
+
+            document.getElementById('login-screen').classList.remove('active'); document.getElementById('game-screen').classList.add('active');
             playSynthSound('welcome');
-            showNotification(`¡Qué onda ${currentUser}! Bienvenido a la pista 🔥`, "text-green-400"); 
-            startBannerSystem();
-            updateTikTokPanelVisibility(); 
+            showNotification(`¡Qué onda ${currentUser}! Tu publicidad personal está activa 🔥`, "text-green-400"); 
+            startBannerSystem(); updateTikTokPanelVisibility(); 
 
             if (currentUser.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase() && passwordInput === 'admin') {
                 document.getElementById('force-pwd-modal').classList.add('active');
@@ -1403,8 +1722,24 @@
         }
 
         function logout() {
+            if (userAdsListenerRef) {
+                try { userAdsListenerRef.off(); } catch (e) {}
+                userAdsListenerRef = null;
+            }
+            // Limpiar letreros 3D activos del usuario saliente para mantener independencia total
+            for (let i = activeAdSigns.length - 1; i >= 0; i--) {
+                scene.remove(activeAdSigns[i].mesh);
+                disposeObject3D(activeAdSigns[i].mesh);
+            }
+            activeAdSigns = [];
+            globalAdsDB = null;
+            currentBanners = [...DEFAULT_BANNERS];
+            if (scene) createMainSign('MO-BOL DANCE CLUB');
+
             currentUser = null; currentUserRole = 'player'; canManagePlatform = false;
             document.getElementById('username').value = ''; document.getElementById('password').value = '';
+            const customInput = document.getElementById('custom-ad-text');
+            if (customInput) customInput.value = '';
             document.getElementById('game-screen').classList.remove('active'); document.getElementById('login-screen').classList.add('active');
             document.getElementById('admin-controls').classList.add('hidden'); document.getElementById('admin-controls').classList.remove('flex');
             document.getElementById('avatar-name-tag').style.display = 'none';
@@ -1413,28 +1748,24 @@
         }
 
         function toggleCustomPanel() {
-            playSynthSound('step');
             const panel = document.getElementById('custom-panel'); const btn = document.getElementById('btn-toggle-custom');
             if (panel.classList.contains('scale-y-0')) { panel.classList.remove('scale-y-0', 'opacity-0', 'h-0'); panel.classList.add('scale-y-100', 'opacity-100', 'h-auto'); btn.innerHTML = '👗 Ocultar Menú de Apariencia ▲';
             } else { panel.classList.add('scale-y-0', 'opacity-0', 'h-0'); panel.classList.remove('scale-y-100', 'opacity-100', 'h-auto'); btn.innerHTML = '👗 Mostrar Menú de Apariencia ▼'; }
         }
 
         function toggleEffectsPanel() {
-            playSynthSound('step');
             const panel = document.getElementById('effects-panel'); const btn = document.getElementById('btn-toggle-effects');
             if (panel.classList.contains('scale-y-0')) { panel.classList.remove('scale-y-0', 'opacity-0', 'h-0'); panel.classList.add('scale-y-100', 'opacity-100', 'h-auto'); btn.innerHTML = '✨ Ocultar Menú DJ & Letreros 3D ▲';
             } else { panel.classList.add('scale-y-0', 'opacity-0', 'h-0'); panel.classList.remove('scale-y-100', 'opacity-100', 'h-auto'); btn.innerHTML = '✨ Mostrar Menú DJ & Letreros 3D ▼'; }
         }
 
         function toggleDancePanel() {
-            playSynthSound('step');
             const wrapper = document.getElementById('dance-wrapper'); const btn = document.getElementById('btn-toggle-dance');
             if (wrapper.classList.contains('translate-y-[100%]')) { wrapper.classList.remove('translate-y-[100%]'); btn.innerHTML = '<span>▼</span> Ocultar Panel de Pasos';
             } else { wrapper.classList.add('translate-y-[100%]'); btn.innerHTML = '<span>▲</span> Mostrar Panel de Pasos'; }
         }
 
         function toggleSuperGiftsMenu() {
-            playSynthSound('step');
             const wrapper = document.getElementById('gifts-wrapper');
             const btn = document.getElementById('btn-toggle-super-gifts');
             if (wrapper.classList.contains('translate-x-[120%]')) {
@@ -1447,7 +1778,6 @@
         }
 
         function toggleAdPanel() {
-            playSynthSound('step');
             const panel = document.getElementById('ad-panel');
             if (panel.classList.contains('-translate-x-[150%]')) {
                 panel.classList.remove('-translate-x-[150%]');
@@ -1474,7 +1804,7 @@
         function sendAd(text) {
             if (!currentUser) return;
             playSynthSound('gift');
-            const safeKey = sanitizeKey(currentUser);
+            const safeKey = sanitizeKey(currentUser.toLowerCase());
             if (database) {
                 database.ref('playerAds/' + safeKey).set({ user: currentUser, text: text, timestamp: Date.now() }).catch(() => {});
             }
@@ -1483,26 +1813,61 @@
         }
 
         function sendCustomAd() {
-            const txt = document.getElementById('custom-ad-text').value.trim();
-            if (txt) { sendAd(txt); document.getElementById('custom-ad-text').value = ''; } else { alert("Escribe un anuncio primero."); }
+            const customInput = document.getElementById('custom-ad-text');
+            const txt = customInput ? customInput.value.trim() : '';
+            if (txt) {
+                if (currentUser) {
+                    const baseCfg = globalAdsDB || getDefaultUserAdsConfig(currentUser);
+                    const updatedCfg = {
+                        ...baseCfg,
+                        owner: currentUser,
+                        customDraft: txt,
+                        updatedAt: Date.now()
+                    };
+                    globalAdsDB = updatedCfg;
+                    persistUserAdsConfig(currentUser, updatedCfg);
+                }
+                sendAd(txt);
+            } else {
+                alert("Escribe un anuncio primero.");
+            }
         }
 
         function saveGlobalAds() {
-            const mainText = document.getElementById('edit-main-sign').value.trim(); const bannersText = document.getElementById('edit-banners').value;
-            const p1 = document.getElementById('edit-preset-1').value.trim(); const p2 = document.getElementById('edit-preset-2').value.trim(); const p3 = document.getElementById('edit-preset-3').value.trim();
-            const bannersArr = bannersText.split('|').map(s => s.trim()).filter(s => s.length > 0);
-            if (database) {
-                database.ref('globalAds').set({ mainSignText: mainText, banners: bannersArr, preset1: p1, preset2: p2, preset3: p3 }).catch(() => {});
+            if (!currentUser) {
+                customAlert("Debes iniciar sesión con tu usuario para guardar tu publicidad.", "Sesión Requerida");
+                return;
             }
-            createMainSign(mainText);
-            currentBanners = bannersArr;
-            showNotification("Publicidad Global Actualizada", "text-green-400"); toggleEditAdsMode();
+            const mainText = document.getElementById('edit-main-sign').value.trim() || 'MO-BOL DANCE CLUB';
+            const bannersText = document.getElementById('edit-banners').value;
+            const p1 = document.getElementById('edit-preset-1').value.trim() || DEFAULT_PRESET_1;
+            const p2 = document.getElementById('edit-preset-2').value.trim() || DEFAULT_PRESET_2;
+            const p3 = document.getElementById('edit-preset-3').value.trim() || DEFAULT_PRESET_3;
+            const customDraftVal = document.getElementById('custom-ad-text')?.value.trim() || (globalAdsDB?.customDraft || '');
+            const bannersArr = bannersText.split('|').map(s => s.trim()).filter(s => s.length > 0);
+            const finalBanners = bannersArr.length > 0 ? bannersArr : [...DEFAULT_BANNERS];
+
+            const personalAdsData = {
+                owner: currentUser,
+                mainSignText: mainText,
+                banners: finalBanners,
+                preset1: p1,
+                preset2: p2,
+                preset3: p3,
+                customDraft: customDraftVal,
+                updatedAt: Date.now()
+            };
+
+            persistUserAdsConfig(currentUser, personalAdsData);
+            applyUserAdsConfigToUI(personalAdsData, true);
+            playSynthSound('gift');
+            showNotification(`¡Publicidad guardada permanentemente para ${currentUser}! 💾`, "text-emerald-400");
+            toggleEditAdsMode();
         }
 
         function requestSong() {
             const input = document.getElementById('song-request'); const songName = input.value.trim();
             if(!songName) { customAlert("Por favor, escribe el nombre de la canción.", "Falta Canción"); return; }
-            playSynthSound('gift');
             customAlert(`¡Tu canción "${songName}" ha sido enviada al DJ con éxito! 🎧🔥`, "Canción Solicitada");
             input.value = ''; toggleEffectsPanel(); 
         }
@@ -1516,10 +1881,10 @@
             if (indicator) indicator.innerText = stepTitle;
         }
 
-        // Ejecutar paso sostenido desde los botones pequeños inferiores
+        // Ejecutar paso sostenido desde los botones pequeños inferiores (sin emitir notificaciones)
         function triggerSustainedStep(actionName, colorHex, stepTitle = 'Paso Activo') { 
             if (currentUser) {
-                const me = playersDB.find(p => p && p.name === currentUser);
+                const me = playersDB.find(p => p.name === currentUser);
                 if (me && !me.hasGameAccess) { logout(); return; }
             }
             playSynthSound('step');
@@ -1528,19 +1893,22 @@
             trigger3DAction({ action: actionName, color: colorHex, isSuper: false });
         }
 
-        // Ejecutar Super Regalo de TikTok con Paso Extraordinario Sostenido + Efectos 3D + Sonido
+        // Ejecutar Super Regalo de TikTok con Paso Extraordinario Sostenido + Efectos 3D
         function sendGift(giftId) { 
-            const me = playersDB.find(p => p && p.name === currentUser);
-            if (me && !me.hasGameAccess) { logout(); return; } 
-            if (me && !me.hasGiftAccess) { showNotification("No puedes enviar Super Regalos ahora.", "text-red-400"); return; } 
+            if (currentUser) {
+                const me = playersDB.find(p => p.name === currentUser);
+                if (me && !me.hasGameAccess) { logout(); return; } 
+                if (me && !me.hasGiftAccess) { showNotification("No puedes enviar Super Regalos ahora.", "text-red-400"); return; } 
+            }
             
             const gift = SUPER_GIFTS_CATALOG.find(g => g.id === giftId);
             if (!gift) return;
 
             playSynthSound(gift.coins >= 250 ? 'epic' : 'gift');
             updateActiveStepUI(gift.action, `${gift.emoji} ${gift.stepTitle}`);
-            showNotification(`${currentUser || '@Dancer'} envió ${gift.name} ${gift.emoji} — ¡${gift.stepTitle}!`, "text-amber-300");
+            showNotification(`${currentUser || '@Streamer'} envió ${gift.name} ${gift.emoji} — ¡${gift.stepTitle}!`, "text-amber-300");
             
+            // Lluvia de emojis del Super Regalo
             for (let i = 0; i < 4; i++) {
                 setTimeout(() => spawnFlyingEmoji(gift.emoji), i * 180);
             }
@@ -1570,7 +1938,9 @@
             if (role === 'subadmin' && currentUserRole !== 'admin' && (!meAdmin || !meAdmin.canCreateSubAdmins)) { alert("No tienes permisos para crear Mods."); return; }
             if(!name || !pass) { alert("Completa nombre y clave."); return; } if(!name.startsWith('@')) { name = '@' + name; } 
             if(playersDB.find(p => p.name.toLowerCase() === name.toLowerCase())) { alert("Este compa ya existe."); return; }
-            playersDB.push({ name: name, password: pass, role: role, hasGiftAccess: true, hasGameAccess: true, canManageGifts: role === 'admin', canCreateSubAdmins: role === 'admin' });
+            const newUserAds = getDefaultUserAdsConfig(name);
+            newUserAds.updatedAt = Date.now();
+            playersDB.push({ name: name, password: pass, role: role, hasGiftAccess: true, hasGameAccess: true, canManageGifts: role === 'admin', canCreateSubAdmins: role === 'admin', adsConfig: newUserAds });
             await saveDB(); showNotification(`Usuario ${name} invitado.`, "text-green-400"); document.getElementById('new-user-name').value = ''; document.getElementById('new-user-pass').value = ''; renderPlayerList();
         }
 
@@ -1580,7 +1950,7 @@
             sortedDB.forEach(p => {
                 if (p.role === 'admin' && currentUserRole !== 'admin') return;
                 const isMe = p.name === currentUser; const isTargetAdmin = p.role === 'admin'; const canEditBasic = currentUserRole === 'admin' || (currentUserRole === 'subadmin' && !isTargetAdmin);
-                let canToggleGifts = false; if (currentUserRole === 'admin') canToggleGifts = true; if (currentUserRole === 'subadmin' && meAdmin && meAdmin.canManageGifts && p.role === 'player') canToggleGifts = true; 
+                let canToggleGifts = false; if (currentUserRole === 'admin') canToggleGifts = true; if (currentUserRole === 'subadmin' && meAdmin.canManageGifts && p.role === 'player') canToggleGifts = true; 
                 const giftBtnColor = p.hasGiftAccess ? 'bg-emerald-600 hover:bg-emerald-500' : 'bg-rose-600 hover:bg-rose-500'; const giftBtnText = p.hasGiftAccess ? 'Regalos: 🔓' : 'Regalos: 🔒';
                 const gameBtnColor = p.hasGameAccess ? 'bg-emerald-600 hover:bg-emerald-500' : 'bg-rose-600 hover:bg-rose-500'; const gameBtnText = p.hasGameAccess ? 'Login: 🔓' : 'Login: 🔒';
                 let roleBadge = "Dancer"; let roleColor = "text-gray-400"; if(p.role === 'admin') { roleBadge = "👑 Admin"; roleColor = "text-yellow-400"; } if(p.role === 'subadmin') { roleBadge = "🎧 Mod"; roleColor = "text-cyan-400"; }
@@ -1591,7 +1961,7 @@
                     const permGiftColor = p.canManageGifts ? 'bg-indigo-600 hover:bg-indigo-500' : 'bg-gray-600 hover:bg-gray-500'; const permCreateColor = p.canCreateSubAdmins ? 'bg-violet-600 hover:bg-violet-500' : 'bg-gray-600 hover:bg-gray-500';
                     subAdminPermHTML = `<div class="flex gap-2 mt-2"><button onclick="toggleSubAdminGiftManager('${p.name}')" class="flex-1 ${permGiftColor} px-2 py-1.5 rounded text-[10px] font-bold text-white transition-colors shadow-md border border-indigo-400/50">⚙️ Gest. ${p.canManageGifts ? 'SI' : 'NO'}</button><button onclick="toggleSubAdminCreateManager('${p.name}')" class="flex-1 ${permCreateColor} px-2 py-1.5 rounded text-[10px] font-bold text-white transition-colors shadow-md border border-violet-400/50">⚙️ Perm. ${p.canCreateSubAdmins ? 'SI' : 'NO'}</button></div>`;
                 }
-                row.innerHTML = `<div class="flex justify-between items-center"><div class="flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center font-bold text-white shadow-inner">${p.name.replace('@','').charAt(0).toUpperCase()}</div><div class="flex flex-col"><div class="font-bold text-sm text-white">${p.name} ${isMe ? '<span class="text-xs text-cyan-300">(Tú)</span>' : ''}</div><div class="text-[9px] ${roleColor} font-bold uppercase tracking-wider">${roleBadge}</div></div></div></div><div class="grid grid-cols-1 sm:grid-cols-5 gap-2 mt-1 items-center"><div class="sm:col-span-2 flex items-center gap-2"><label class="text-[9px] text-gray-400">Pass:</label><input type="text" value="${p.password}" onchange="updatePlayerPassword('${p.name}', this.value)" class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1.5 text-xs text-white focus:border-pink-500 outline-none transition-colors" placeholder="Clave" ${disableBasicHtml}></div><div class="sm:col-span-3 flex gap-2"><button onclick="togglePlayerGiftAccess('${p.name}')" class="flex-1 ${giftBtnColor} px-2 py-1.5 rounded text-[10px] font-bold text-white transition-colors shadow-md flex justify-between items-center" ${disableGiftHtml}><span>Regalos</span> <span class="text-sm">${giftBtnText.split(' ')[1]}</span></button>${currentUserRole === 'admin' ? `<button onclick="togglePlayerGameAccess('${p.name}')" class="flex-1 ${gameBtnColor} px-2 py-1.5 rounded text-[10px] font-bold text-white transition-colors shadow-md flex justify-between items-center" ${disableBasicHtml}><span>Juego</span> <span class="text-sm">${gameBtnText.split(' ')[1]}</span></button>` : ''}</div></div>${subAdminPermHTML}`;
+                row.innerHTML = `<div class="flex justify-between items-center"><div class="flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center font-bold text-white shadow-inner">${p.name.charAt(1).toUpperCase()}</div><div class="flex flex-col"><div class="font-bold text-sm text-white">${p.name} ${isMe ? '<span class="text-xs text-cyan-300">(Tú)</span>' : ''}</div><div class="text-[9px] ${roleColor} font-bold uppercase tracking-wider">${roleBadge}</div></div></div></div><div class="grid grid-cols-1 sm:grid-cols-5 gap-2 mt-1 items-center"><div class="sm:col-span-2 flex items-center gap-2"><label class="text-[9px] text-gray-400">Pass:</label><input type="text" value="${p.password}" onchange="updatePlayerPassword('${p.name}', this.value)" class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1.5 text-xs text-white focus:border-pink-500 outline-none transition-colors" placeholder="Clave" ${disableBasicHtml}></div><div class="sm:col-span-3 flex gap-2"><button onclick="togglePlayerGiftAccess('${p.name}')" class="flex-1 ${giftBtnColor} px-2 py-1.5 rounded text-[10px] font-bold text-white transition-colors shadow-md flex justify-between items-center" ${disableGiftHtml}><span>Regalos</span> <span class="text-sm">${giftBtnText.split(' ')[1]}</span></button>${currentUserRole === 'admin' ? `<button onclick="togglePlayerGameAccess('${p.name}')" class="flex-1 ${gameBtnColor} px-2 py-1.5 rounded text-[10px] font-bold text-white transition-colors shadow-md flex justify-between items-center" ${disableBasicHtml}><span>Juego</span> <span class="text-sm">${gameBtnText.split(' ')[1]}</span></button>` : ''}</div></div>${subAdminPermHTML}`;
                 container.appendChild(row);
             });
         }
@@ -1600,9 +1970,9 @@
         async function toggleSubAdminCreateManager(playerName) { if (currentUserRole !== 'admin') return; const player = playersDB.find(p => p.name === playerName); if(player && player.role === 'subadmin') { player.canCreateSubAdmins = !player.canCreateSubAdmins; await saveDB(); renderPlayerList(); } }
         async function updatePlayerPassword(playerName, newPassword) { const player = playersDB.find(p => p.name === playerName); if (player) { if (player.role === 'admin' && currentUserRole !== 'admin') return; player.password = newPassword.trim(); await saveDB(); showNotification(`Clave actualizada`, "text-cyan-300"); } }
         async function togglePlayerGameAccess(playerName) { if (currentUserRole !== 'admin') return; const player = playersDB.find(p => p.name === playerName); if(player) { if(player.role === 'admin' && player.name !== currentUser) return; player.hasGameAccess = !player.hasGameAccess; await saveDB(); renderPlayerList(); if (!player.hasGameAccess && playerName === currentUser) { logout(); } } }
-        async function togglePlayerGiftAccess(playerName) { const meAdmin = playersDB.find(p => p.name === currentUser); const player = playersDB.find(p => p.name === playerName); if (currentUserRole === 'subadmin' && (!meAdmin || !meAdmin.canManageGifts)) return; if(player) { if (player.role === 'admin' && currentUserRole !== 'admin') return; player.hasGiftAccess = !player.hasGiftAccess; await saveDB(); renderPlayerList(); updateTikTokPanelVisibility(); } }
+        async function togglePlayerGiftAccess(playerName) { const meAdmin = playersDB.find(p => p.name === currentUser); const player = playersDB.find(p => p.name === playerName); if (currentUserRole === 'subadmin' && !meAdmin.canManageGifts) return; if(player) { if (player.role === 'admin' && currentUserRole !== 'admin') return; player.hasGiftAccess = !player.hasGiftAccess; await saveDB(); renderPlayerList(); updateTikTokPanelVisibility(); } }
 
-        function updateTikTokPanelVisibility() { const tiktokPanel = document.getElementById('tiktok-gifts-panel'); const me = playersDB.find(p => p && p.name === currentUser); let hasAccess = true; if (me && typeof me.hasGiftAccess === 'boolean') { hasAccess = me.hasGiftAccess; } if (hasAccess) { tiktokPanel.style.opacity = '1'; tiktokPanel.style.pointerEvents = 'auto'; } else { tiktokPanel.style.opacity = '0.2'; tiktokPanel.style.pointerEvents = 'none'; } }
+        function updateTikTokPanelVisibility() { const tiktokPanel = document.getElementById('tiktok-gifts-panel'); const me = playersDB.find(p => p.name === currentUser); let hasAccess = false; if (me) { hasAccess = me.hasGiftAccess; } if (hasAccess) { tiktokPanel.style.opacity = '1'; tiktokPanel.style.pointerEvents = 'auto'; } else { tiktokPanel.style.opacity = '0.2'; tiktokPanel.style.pointerEvents = 'none'; } }
         function showNotification(text, colorClass = "text-white") { const container = document.getElementById('notifications-container'); const notif = document.createElement('div'); notif.className = `notification glass-panel p-2.5 rounded-lg border-l-4 border-cyan-500 shadow-lg`; notif.innerHTML = `<p class="text-xs font-bold ${colorClass}">${text}</p>`; container.appendChild(notif); setTimeout(() => { notif.style.opacity = "0"; setTimeout(() => notif.remove(), 300); }, 3500); }
         function spawnFlyingEmoji(emoji) { const el = document.createElement('div'); el.className = 'flying-emoji'; el.innerText = emoji; el.style.left = (45 + (Math.random() * 24 - 12)) + '%'; el.style.bottom = '22%'; document.body.appendChild(el); setTimeout(() => el.remove(), 2200); }
 
@@ -1638,13 +2008,24 @@
             const container = document.getElementById('banners-container');
             const neonColors = ["#ff00ff", "#00ffff", "#39ff14", "#ffff00", "#ff3131"];
             if (bannerIntervalId) clearInterval(bannerIntervalId);
-            bannerIntervalId = setInterval(() => {
-                if(!currentBanners || currentBanners.length === 0) return;
-                const banner = document.createElement('div'); const text = currentBanners[Math.floor(Math.random() * currentBanners.length)]; const color = neonColors[Math.floor(Math.random() * neonColors.length)];
-                banner.className = `modern-banner`; banner.style.color = color; banner.innerHTML = `<span class="modern-banner-text">${text}</span>`;
-                const isTop = Math.random() > 0.5; if (isTop) banner.style.top = Math.floor(Math.random() * 7 + 8) + '%'; else banner.style.top = Math.floor(Math.random() * 6 + 72) + '%';
-                container.appendChild(banner); setTimeout(() => banner.remove(), 34500); 
-            }, 12000); 
+            if (container) container.innerHTML = '';
+
+            const spawnOneBanner = () => {
+                if (!currentBanners || currentBanners.length === 0 || !container) return;
+                const banner = document.createElement('div');
+                const text = currentBanners[Math.floor(Math.random() * currentBanners.length)];
+                const color = neonColors[Math.floor(Math.random() * neonColors.length)];
+                banner.className = 'modern-banner';
+                banner.style.color = color;
+                banner.innerHTML = `<span class="modern-banner-text">${text}</span>`;
+                const isTop = Math.random() > 0.5;
+                banner.style.top = (isTop ? Math.floor(Math.random() * 7 + 8) : Math.floor(Math.random() * 6 + 72)) + '%';
+                container.appendChild(banner);
+                setTimeout(() => banner.remove(), 34500);
+            };
+
+            setTimeout(spawnOneBanner, 600);
+            bannerIntervalId = setInterval(spawnOneBanner, 12000);
         }
 
         const SCENARIOS = [
@@ -1658,12 +2039,22 @@
             if (!container || scene) return;
             scene = new THREE.Scene(); scene.fog = new THREE.FogExp2(SCENARIOS[currentScenarioIndex].bg, 0.025);
             camera = new THREE.PerspectiveCamera(48, window.innerWidth / window.innerHeight, 0.1, 1000); camera.position.set(0, 4.2, 12.5); camera.lookAt(0, 2.2, 0);
-            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false }); renderer.setSize(window.innerWidth, window.innerHeight); renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); renderer.setClearColor(SCENARIOS[currentScenarioIndex].bg); renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap; container.appendChild(renderer.domElement);
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'high-performance' });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
+            renderer.setClearColor(SCENARIOS[currentScenarioIndex].bg);
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            container.appendChild(renderer.domElement);
             clock = new THREE.Clock();
 
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.75); scene.add(ambientLight);
-            spotLight1 = new THREE.SpotLight(SCENARIOS[currentScenarioIndex].light1, 2.4); spotLight1.position.set(6, 13, 6); spotLight1.angle = Math.PI / 3; spotLight1.penumbra = 0.5; spotLight1.castShadow = true; scene.add(spotLight1);
-            spotLight2 = new THREE.SpotLight(SCENARIOS[currentScenarioIndex].light2, 2.4); spotLight2.position.set(-6, 13, 6); spotLight2.angle = Math.PI / 3; spotLight2.penumbra = 0.5; spotLight2.castShadow = true; scene.add(spotLight2);
+            spotLight1 = new THREE.SpotLight(SCENARIOS[currentScenarioIndex].light1, 2.4); spotLight1.position.set(6, 13, 6); spotLight1.angle = Math.PI / 3; spotLight1.penumbra = 0.5; spotLight1.castShadow = true;
+            spotLight1.shadow.mapSize.width = 512; spotLight1.shadow.mapSize.height = 512;
+            scene.add(spotLight1);
+            spotLight2 = new THREE.SpotLight(SCENARIOS[currentScenarioIndex].light2, 2.4); spotLight2.position.set(-6, 13, 6); spotLight2.angle = Math.PI / 3; spotLight2.penumbra = 0.5; spotLight2.castShadow = true;
+            spotLight2.shadow.mapSize.width = 512; spotLight2.shadow.mapSize.height = 512;
+            scene.add(spotLight2);
 
             const pColors = [0xec4899, 0x22d3ee, 0xa855f7];
             for (let i = 0; i < 3; i++) {
@@ -1702,6 +2093,7 @@
             animate();
         }
 
+        // Aura holográfica 3D especial para Super Regalos Extraordinarios
         function createSuperAura() {
             if (superAuraGroup) scene.remove(superAuraGroup);
             superAuraGroup = new THREE.Group();
@@ -1730,11 +2122,12 @@
         }
 
         function createEnvironment() {
-            if(floorGrid) { scene.remove(floorGrid); floorGrid = null; }
-            if(solidFloor) { scene.remove(solidFloor); solidFloor = null; }
-            if(solidWall) { scene.remove(solidWall); solidWall = null; }
-            if(stageArenaGroup) { scene.remove(stageArenaGroup); stageArenaGroup = null; }
+            if(floorGrid) { scene.remove(floorGrid); disposeObject3D(floorGrid); floorGrid = null; }
+            if(solidFloor) { scene.remove(solidFloor); disposeObject3D(solidFloor); solidFloor = null; }
+            if(solidWall) { scene.remove(solidWall); disposeObject3D(solidWall); solidWall = null; }
+            if(stageArenaGroup) { scene.remove(stageArenaGroup); disposeObject3D(stageArenaGroup); stageArenaGroup = null; }
             stageFloorRings = [];
+            lastStageRingHex = -1;
 
             const conf = SCENARIOS[currentScenarioIndex];
 
@@ -1787,7 +2180,7 @@
         }
 
         function createModernProps() {
-            if (modernPropsGroup) scene.remove(modernPropsGroup);
+            if (modernPropsGroup) { scene.remove(modernPropsGroup); disposeObject3D(modernPropsGroup); }
             modernPropsGroup = new THREE.Group();
             const speakerMat = new THREE.MeshStandardMaterial({ color: 0x0b0f19, roughness: 0.4, metalness: 0.7 });
             const coneMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.8, roughness: 0.2 });
@@ -1819,7 +2212,7 @@
 
         function createMainSign(customText) {
             if(!customText) customText = 'MO-BOL DANCE CLUB';
-            if (mainSign) scene.remove(mainSign);
+            if (mainSign) { scene.remove(mainSign); disposeObject3D(mainSign); }
             const canvas = document.createElement('canvas'); canvas.width = 1200; canvas.height = 256; const ctx = canvas.getContext('2d');
             ctx.fillStyle = 'rgba(15, 23, 42, 0.8)'; ctx.fillRect(0, 0, canvas.width, canvas.height); ctx.strokeStyle = '#06b6d4'; ctx.lineWidth = 15; ctx.strokeRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = '#ffffff'; ctx.font = '900 80px "Arial Black", sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.shadowColor = '#ec4899'; ctx.shadowBlur = 40; ctx.fillText(customText, 600, 128); ctx.shadowBlur = 0; ctx.fillText(customText, 600, 128);
@@ -1838,7 +2231,7 @@
 
         function create3DAdSign(text, username) {
             const canvas = document.createElement('canvas'); canvas.width = 1024; canvas.height = 768; const ctx = canvas.getContext('2d');
-            ctx.fillStyle = 'rgba(10, 15, 30, 0.9)'; ctx.beginPath(); ctx.roundRect(10, 10, 1004, 748, 40); ctx.fill();
+            ctx.fillStyle = 'rgba(10, 15, 30, 0.9)'; drawRoundedRectPath(ctx, 10, 10, 1004, 748, 40); ctx.fill();
             ctx.strokeStyle = '#ec4899'; ctx.lineWidth = 15; ctx.shadowColor = '#06b6d4'; ctx.shadowBlur = 30; ctx.stroke(); ctx.shadowBlur = 0;
             ctx.fillStyle = '#facc15'; ctx.font = 'bold 32px "Segoe UI", sans-serif'; ctx.textAlign = 'center'; ctx.fillText(`📢 Presentado por ${username}`, 512, 70);
             ctx.fillStyle = '#475569'; ctx.fillRect(80, 100, 864, 5);
@@ -1853,7 +2246,7 @@
 
         function createFloatingTextMesh(text, colorHex) {
             const canvas = document.createElement('canvas'); canvas.width = 512; canvas.height = 256; const ctx = canvas.getContext('2d');
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.6)'; ctx.roundRect(10, 50, 492, 156, 20); ctx.fill(); ctx.strokeStyle = colorHex; ctx.lineWidth = 6; ctx.stroke();
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.6)'; drawRoundedRectPath(ctx, 10, 50, 492, 156, 20); ctx.fill(); ctx.strokeStyle = colorHex; ctx.lineWidth = 6; ctx.stroke();
             ctx.fillStyle = '#ffffff'; ctx.font = 'bold 36px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; wrapText(ctx, text, 256, 110, 480, 40);
             const tex = new THREE.CanvasTexture(canvas); const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, side: THREE.DoubleSide });
             return new THREE.Mesh(new THREE.PlaneGeometry(3, 1.5), mat);
@@ -1872,6 +2265,7 @@
                 danceOffset: Math.random() * 10
             };
 
+            // Materiales realistas con acabado físico suave para piel, telas urbanas y detalles neón
             const matSkinMale = new THREE.MeshStandardMaterial({ color: 0xe8b48a, roughness: 0.48, metalness: 0.04 });
             const matSkinFemale = new THREE.MeshStandardMaterial({ color: 0xf4c6a4, roughness: 0.42, metalness: 0.04 });
             const matDarkFabric = new THREE.MeshStandardMaterial({ color: 0x111827, roughness: 0.65, metalness: 0.15 });
@@ -1884,6 +2278,7 @@
             const hwOrange = new THREE.MeshStandardMaterial({ color: 0xff6600, emissive: 0xff4400, emissiveIntensity: 0.45, roughness: 0.35 });
             const hwBlack = new THREE.MeshStandardMaterial({ color: 0x0f1016, metalness: 0.4, roughness: 0.45 });
 
+            // Constructor auxiliar de rostro humano realista y juvenil
             function buildRealisticHead(skinMat, irisHex, lipHex, isFemale) {
                 const headGroup = new THREE.Group();
                 headGroup.position.y = 3.85;
@@ -1910,6 +2305,7 @@
                     return { headGroup, mouthMesh };
                 }
 
+                // Cráneo y contorno mandibular esculpido
                 const cranium = new THREE.Mesh(new THREE.SphereGeometry(0.34, 32, 32), skinMat);
                 cranium.scale.set(0.96, 1.08, 0.98);
                 cranium.castShadow = true;
@@ -1920,6 +2316,7 @@
                 jaw.scale.set(0.95, 1, 0.88);
                 headGroup.add(jaw);
 
+                // Orejas detalladas + Aretes juveniles
                 [-1, 1].forEach(side => {
                     const ear = new THREE.Mesh(new THREE.SphereGeometry(0.065, 16, 16), skinMat);
                     ear.scale.set(0.45, 1.15, 0.7);
@@ -1935,6 +2332,7 @@
                     headGroup.add(earring);
                 });
 
+                // Ojos realistas con esclerótica, iris coloreado, pupila y brillo corneal
                 const matIris = new THREE.MeshStandardMaterial({ color: irisHex, roughness: 0.2 });
                 const browMat = new THREE.MeshStandardMaterial({ color: isFemale ? 0x3b0764 : 0x0f172a, roughness: 0.5 });
 
@@ -1966,17 +2364,20 @@
                     }
                     headGroup.add(eyeGroup);
 
+                    // Cejas expresivas
                     const brow = new THREE.Mesh(new THREE.BoxGeometry(0.115, 0.022, 0.025), browMat);
                     brow.position.set(side * 0.115, 0.115, 0.305);
                     brow.rotation.z = side * (isFemale ? -0.06 : 0.05);
                     headGroup.add(brow);
                 });
 
+                // Nariz 3D anatómica
                 const noseBridge = new THREE.Mesh(new THREE.ConeGeometry(0.038, 0.13, 12), skinMat);
                 noseBridge.position.set(0, -0.02, 0.335);
                 noseBridge.rotation.x = 0.22;
                 headGroup.add(noseBridge);
 
+                // Labios realistas con volumen
                 const mouthMesh = new THREE.Mesh(
                     new THREE.BoxGeometry(isFemale ? 0.11 : 0.12, 0.034, 0.045),
                     new THREE.MeshStandardMaterial({ color: lipHex, roughness: 0.3 })
@@ -1987,6 +2388,7 @@
                 return { headGroup, mouthMesh };
             }
 
+            // Constructor auxiliar de zapatillas urbanas LED detalladas
             function buildStreetSneaker(primaryMat, neonMat, isFemale) {
                 const shoeGroup = new THREE.Group();
                 const scaleW = isFemale ? 0.92 : 1.0;
@@ -2028,12 +2430,14 @@
                 avatar.currentMouth = faceObj.mouthMesh;
 
                 if (!isHalloweenActive) {
+                    // Peinado urbano texturizado (Fade moderno + volumen superior)
                     const hairMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.45 });
                     const hairCap = new THREE.Mesh(new THREE.SphereGeometry(0.355, 24, 24, 0, Math.PI * 2, 0, Math.PI * 0.52), hairMat);
                     hairCap.scale.set(0.97, 1.08, 1.0);
                     hairCap.position.y = 0.04;
                     avatar.head.add(hairCap);
 
+                    // Mechones superiores juveniles con toques neón
                     for (let i = -2; i <= 2; i++) {
                         const curl = new THREE.Mesh(new THREE.SphereGeometry(0.085, 14, 14), i % 2 === 0 ? hairMat : accentMat);
                         curl.scale.set(1.1, 0.85, 1.3);
@@ -2041,6 +2445,7 @@
                         avatar.head.add(curl);
                     }
 
+                    // Gafas urbanas translúcidas estilo Cyberpunk sobre la frente
                     const glassesGlass = new THREE.Mesh(
                         new THREE.BoxGeometry(0.50, 0.11, 0.06),
                         new THREE.MeshStandardMaterial({ color: 0x22d3ee, emissive: 0x22d3ee, emissiveIntensity: 0.4, transparent: true, opacity: 0.82 })
@@ -2051,6 +2456,7 @@
                 }
                 avatar.bodyGroup.add(avatar.head);
 
+                // Cuello y Cadena Cubana
                 avatar.neck = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.125, 0.24, 18), skin);
                 avatar.neck.position.y = 3.44;
                 avatar.bodyGroup.add(avatar.neck);
@@ -2060,6 +2466,7 @@
                 chain.position.set(0, 3.30, 0.05);
                 avatar.bodyGroup.add(chain);
 
+                // Torso Atlético con Chaqueta Bomber Abierta + Camiseta Interior con Logo Neón
                 const innerTorso = new THREE.Mesh(new THREE.CylinderGeometry(0.41, 0.33, 1.14, 24), innerShirtMat);
                 innerTorso.scale.set(1.05, 1, 0.78);
                 innerTorso.position.y = 2.75;
@@ -2071,6 +2478,7 @@
                 chestLogo.position.set(0, 2.92, 0.31);
                 avatar.bodyGroup.add(chestLogo);
 
+                // Paneles laterales de la chaqueta urbana
                 [-1, 1].forEach(side => {
                     const jacketPanel = new THREE.Mesh(new THREE.CylinderGeometry(0.44, 0.36, 1.12, 16, 1, false, side > 0 ? 0.25 : Math.PI + 0.25, Math.PI * 0.75), jacketMat);
                     jacketPanel.scale.set(1.06, 1, 0.82);
@@ -2078,17 +2486,20 @@
                     jacketPanel.castShadow = true;
                     avatar.bodyGroup.add(jacketPanel);
 
+                    // Solapa luminosa de cierre
                     const lapel = new THREE.Mesh(new THREE.BoxGeometry(0.04, 1.08, 0.04), accentMat);
                     lapel.position.set(side * 0.14, 2.76, 0.31);
                     avatar.bodyGroup.add(lapel);
                 });
 
+                // Cuello alto de la chaqueta
                 const collar = new THREE.Mesh(new THREE.TorusGeometry(0.20, 0.045, 12, 24, Math.PI * 1.35), jacketMat);
                 collar.rotation.x = Math.PI / 2;
                 collar.rotation.z = Math.PI * 0.82;
                 collar.position.set(0, 3.32, -0.02);
                 avatar.bodyGroup.add(collar);
 
+                // Cinturón táctico y cadera articulada
                 const belt = new THREE.Mesh(new THREE.CylinderGeometry(0.365, 0.365, 0.10, 24), matDarkFabric);
                 belt.scale.set(1.04, 1, 0.8);
                 belt.position.y = 2.16;
@@ -2104,6 +2515,7 @@
                 hips.castShadow = true;
                 avatar.bodyGroup.add(hips);
 
+                // Brazos articulados con hombreras redondeadas, mangas bomber, reloj neón y manos esculpidas
                 function buildMaleArm(isLeft) {
                     const armGroup = new THREE.Group();
                     armGroup.position.set(isLeft ? -0.54 : 0.54, 3.22, 0);
@@ -2158,6 +2570,7 @@
                 avatar.rightArm = rightArmObj.armGroup; avatar.rightElbow = rightArmObj.elbowGroup;
                 avatar.bodyGroup.add(avatar.rightArm);
 
+                // Piernas Cargo Joggers con bolsillos laterales, rodilleras y sneakers LED
                 function buildMaleLeg(isLeft) {
                     const legGroup = new THREE.Group();
                     legGroup.position.set(isLeft ? -0.20 : 0.20, 1.74, 0);
@@ -2167,6 +2580,7 @@
                     thigh.castShadow = true;
                     legGroup.add(thigh);
 
+                    // Bolsillo cargo lateral + cinta neón
                     const pocket = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.24, 0.16), matDarkFabric);
                     pocket.position.set(isLeft ? -0.15 : 0.15, -0.42, 0);
                     legGroup.add(pocket);
@@ -2220,12 +2634,14 @@
                 avatar.currentMouth = faceObj.mouthMesh;
 
                 if (!isHalloweenActive) {
+                    // Cabello juvenil K-Pop / Cyber Idol con Space Buns dobles y mechones largos
                     const matHair = new THREE.MeshStandardMaterial({ color: 0x581c87, roughness: 0.28, metalness: 0.25, emissive: 0x3b0764, emissiveIntensity: 0.2 });
                     const hairDom = new THREE.Mesh(new THREE.SphereGeometry(0.355, 28, 28, 0, Math.PI * 2, 0, Math.PI * 0.56), matHair);
                     hairDom.scale.set(0.98, 1.06, 1.02);
                     hairDom.position.y = 0.04;
                     avatar.head.add(hairDom);
 
+                    // Dos Space Buns superiores con aros de neón
                     [-1, 1].forEach(side => {
                         const bun = new THREE.Mesh(new THREE.SphereGeometry(0.14, 20, 20), matHair);
                         bun.position.set(side * 0.26, 0.36, -0.04);
@@ -2237,12 +2653,14 @@
                         bunRing.rotation.x = 0.8;
                         avatar.head.add(bunRing);
 
+                        // Mechones frontales que enmarcan el rostro
                         const strand = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.012, 0.38, 12), accentMat);
                         strand.position.set(side * 0.26, -0.06, 0.20);
                         strand.rotation.z = side * 0.12;
                         avatar.head.add(strand);
                     });
 
+                    // Cabello largo trasero con caída suave
                     const hairBack = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.34, 0.95, 20), matHair);
                     hairBack.scale.set(1.0, 1.0, 0.55);
                     hairBack.position.set(0, -0.32, -0.22);
@@ -2250,6 +2668,7 @@
                 }
                 avatar.bodyGroup.add(avatar.head);
 
+                // Cuello y Choker con dije luminoso
                 avatar.neck = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.105, 0.24, 18), skin);
                 avatar.neck.position.y = 3.44;
                 avatar.bodyGroup.add(avatar.neck);
@@ -2262,6 +2681,7 @@
                 pendant.position.set(0, 3.36, 0.11);
                 avatar.bodyGroup.add(pendant);
 
+                // Torso estilizado: Crop-Top Neón + Chaqueta Bolero Corta + Cintura anatómica
                 const upperChest = new THREE.Mesh(new THREE.CylinderGeometry(0.37, 0.29, 0.58, 24), outfitMat);
                 upperChest.scale.set(1.04, 1, 0.78);
                 upperChest.position.y = 3.02;
@@ -2274,12 +2694,14 @@
                 chestTrim.position.y = 2.73;
                 avatar.bodyGroup.add(chestTrim);
 
+                // Cintura descubierta realista
                 const midriff = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.29, 0.34, 24), skin);
                 midriff.scale.set(1.0, 1, 0.74);
                 midriff.position.y = 2.56;
                 midriff.castShadow = true;
                 avatar.bodyGroup.add(midriff);
 
+                // Cinturón holográfico y caderas estilizadas
                 const beltRing = new THREE.Mesh(new THREE.TorusGeometry(0.32, 0.032, 12, 32), accentMat);
                 beltRing.scale.set(1.05, 0.80, 1);
                 beltRing.rotation.x = Math.PI / 2;
@@ -2292,6 +2714,7 @@
                 hips.castShadow = true;
                 avatar.bodyGroup.add(hips);
 
+                // Brazos femeninos estilizados con mangas cortas puff, pulseras neón y manos detalladas
                 function buildFemaleArm(isLeft) {
                     const armGroup = new THREE.Group();
                     armGroup.position.set(isLeft ? -0.46 : 0.46, 3.22, 0);
@@ -2342,6 +2765,7 @@
                 avatar.rightArm = rightArmObj.armGroup; avatar.rightElbow = rightArmObj.elbowGroup;
                 avatar.bodyGroup.add(avatar.rightArm);
 
+                // Piernas estilizadas con pantalones cargo/techwear de tiro alto, líneas LED y sneakers plataforma
                 function buildFemaleLeg(isLeft) {
                     const legGroup = new THREE.Group();
                     legGroup.position.set(isLeft ? -0.18 : 0.18, 1.84, 0);
@@ -2380,6 +2804,7 @@
                 avatar.root.add(avatar.rightLeg);
 
             } else if (type === 'robot') {
+                // Androide Juvenil Next-Gen con placas de titanio perlado, visor OLED curvo y alas holográficas
                 const matArmor = new THREE.MeshStandardMaterial({ color: isHalloweenActive ? 0x18181b : 0xe2e8f0, roughness: 0.18, metalness: 0.85 });
                 const matCarbon = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.35, metalness: 0.75 });
                 const matAccent = new THREE.MeshStandardMaterial({ color: isHalloweenActive ? 0xff6600 : 0x06b6d4, emissive: isHalloweenActive ? 0xff4400 : 0x22d3ee, emissiveIntensity: 0.75, metalness: 0.5, roughness: 0.15 });
@@ -2393,6 +2818,7 @@
                 helmet.castShadow = true;
                 avatar.head.add(helmet);
 
+                // Pantalla facial curva OLED + ojos digitales expresivos
                 const faceScreen = new THREE.Mesh(new THREE.SphereGeometry(0.37, 24, 24, -Math.PI * 0.35, Math.PI * 0.7, Math.PI * 0.25, Math.PI * 0.45), matCarbon);
                 faceScreen.position.z = 0.05;
                 avatar.head.add(faceScreen);
@@ -2404,6 +2830,7 @@
                     avatar.head.add(digiEye);
                 });
 
+                // Audífonos DJ Holográficos
                 const hpBand = new THREE.Mesh(new THREE.TorusGeometry(0.44, 0.045, 16, 32, Math.PI), matNeonPink);
                 hpBand.position.y = 0.04;
                 avatar.head.add(hpBand);
@@ -2429,6 +2856,7 @@
                 avatar.neck.position.y = 3.42;
                 avatar.bodyGroup.add(avatar.neck);
 
+                // Torso cibernético esculpido con reactor central y aletas holográficas traseras
                 const chestArmor = new THREE.Mesh(new THREE.CylinderGeometry(0.48, 0.34, 0.90, 24), matArmor);
                 chestArmor.scale.set(1.06, 1, 0.8);
                 chestArmor.position.y = 2.88;
@@ -2528,14 +2956,46 @@
         }
 
         function createAvatar(type) {
-            if (avatarRoot) scene.remove(avatarRoot);
+            if (avatarRoot) {
+                scene.remove(avatarRoot);
+                disposeObject3D(avatarRoot);
+            }
             let obj = buildAvatarModel(type);
             avatarRoot = obj.root; bodyGroup = obj.bodyGroup; leftArm = obj.leftArm; leftElbow = obj.leftElbow; rightArm = obj.rightArm; rightElbow = obj.rightElbow; leftLeg = obj.leftLeg; leftKnee = obj.leftKnee; rightLeg = obj.rightLeg; rightKnee = obj.rightKnee; head = obj.head; neck = obj.neck; currentMouth = obj.currentMouth;
+
+            // Aros de energía en el suelo y estelas en las manos estilo videojuego rítmico
+            avatarVfxGroup = new THREE.Group();
+            const vfxRing = new THREE.Mesh(
+                new THREE.TorusGeometry(0.95, 0.025, 12, 36),
+                new THREE.MeshBasicMaterial({ color: 0x22d3ee, transparent: true, opacity: 0.65 })
+            );
+            vfxRing.rotation.x = Math.PI / 2;
+            vfxRing.position.y = 0.05;
+            avatarVfxGroup.add(vfxRing);
+            avatarRoot.add(avatarVfxGroup);
+
+            if (leftElbow) {
+                avatarLeftTrail = new THREE.Mesh(
+                    new THREE.TorusGeometry(0.14, 0.015, 8, 20),
+                    new THREE.MeshBasicMaterial({ color: 0xec4899, transparent: true, opacity: 0.75 })
+                );
+                avatarLeftTrail.position.y = -0.58;
+                leftElbow.add(avatarLeftTrail);
+            }
+            if (rightElbow) {
+                avatarRightTrail = new THREE.Mesh(
+                    new THREE.TorusGeometry(0.14, 0.015, 8, 20),
+                    new THREE.MeshBasicMaterial({ color: 0x22d3ee, transparent: true, opacity: 0.75 })
+                );
+                avatarRightTrail.position.y = -0.58;
+                rightElbow.add(avatarRightTrail);
+            }
+
             scene.add(avatarRoot);
         }
 
         function spawnBots() {
-            botsArray.forEach(b => scene.remove(b.root)); botsArray = [];
+            botsArray.forEach(b => { scene.remove(b.root); disposeObject3D(b.root); }); botsArray = [];
             let bot1 = buildAvatarModel('chica'); bot1.root.position.set(-4, 0, -2); let sign1 = createFloatingTextMesh("Servicios Digitales\nModel Bolivia", "#06b6d4"); sign1.position.set(0, 5, 0); bot1.root.add(sign1); bot1.sign = sign1; bot1.danceType = 'twerk'; botsArray.push(bot1); scene.add(bot1.root);
             let bot2 = buildAvatarModel('robot'); bot2.root.position.set(4, 0, -2); let sign2 = createFloatingTextMesh("¡Suscríbete y deja\ntu Like para más!", "#facc15"); sign2.position.set(0, 5, 0); bot2.root.add(sign2); bot2.sign = sign2; bot2.danceType = 'robot_dance'; botsArray.push(bot2); scene.add(bot2.root);
         }
@@ -2549,14 +3009,12 @@
         }
 
         function changeScenario(index) {
-            playSynthSound('step');
             currentScenarioIndex = index; const conf = SCENARIOS[index];
             scene.fog.color.setHex(conf.bg); renderer.setClearColor(conf.bg); spotLight1.color.setHex(conf.light1); spotLight2.color.setHex(conf.light2);
             createEnvironment(); showNotification("Vibe de escenario actualizado 🔥", "text-cyan-400");
         }
 
         function changeAvatar(type) {
-            playSynthSound('step');
             currentAvatarType = type;
             createAvatar(type);
             showNotification(`Outfit actualizado: ${type.toUpperCase()}`, "text-cyan-300");
@@ -2564,6 +3022,11 @@
 
         function trigger3DAction(config) {
             currentDanceState = config.action;
+            isTrioChoreoState = currentDanceState.startsWith('trio_');
+            isDirectRotY = currentDanceState.startsWith('extra_') || isTrioChoreoState || ['spin', 'freestyle', 'breakdance', 'swag'].includes(currentDanceState);
+            isDirectRotX = currentDanceState.startsWith('extra_') || ['epic_flip', 'breakdance'].includes(currentDanceState);
+            isDirectRotZ = currentDanceState.startsWith('extra_');
+
             spotLight1.color.setHex(config.color || SCENARIOS[currentScenarioIndex].light1);
             spotLight2.color.setHex(config.isSuper ? 0xfacc15 : SCENARIOS[currentScenarioIndex].light2);
 
@@ -2587,23 +3050,22 @@
 
             if (config.isSuper) {
                 superGiftBurstTimer = 3.0;
-                renderSuperGiftsMenu('all');
             }
+            highlightActiveSuperGiftButton(config.action);
         }
 
         function getResponsiveCameraRadius() {
-            const aspect = window.innerWidth / Math.max(window.innerHeight, 1);
-            if (aspect < 0.65) return 16.5;
-            if (aspect < 1.0) return 14.5;
-            return 12.2;
+            return cachedCamRadius;
         }
 
         function onWindowResize() {
-            if (!camera || !renderer) return;
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.fov = window.innerWidth < 640 ? 52 : 48;
+            viewportW = window.innerWidth;
+            viewportH = window.innerHeight;
+            cachedCamRadius = computeResponsiveCameraRadius(viewportW, viewportH);
+            camera.aspect = viewportW / viewportH;
+            camera.fov = viewportW < 640 ? 52 : 48;
             camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setSize(viewportW, viewportH);
         }
 
         let targets = { lArmX: 0, lArmZ: 0, rArmX: 0, rArmZ: 0, lElbowX: 0, rElbowX: 0, lLegX: 0, rLegX: 0, lKneeX: 0, rKneeX: 0, bodyY: 0, bodyRotY: 0, bodyRotX: 0, bodyRotZ: 0, rootPosY: 0, rootRotY: 0, rootRotX: 0, rootRotZ: 0, mouthScaleY: 1 };
@@ -2615,8 +3077,8 @@
         function computeCoherentTrioPose(state, time, dancerIndex) {
             // dancerIndex: 0 = Bot Izquierdo, 1 = Avatar Central, 2 = Bot Derecho
             const beat = time * 8;
-            const phraseSection = Math.floor(time * 0.75) % 3; // Cambia de figura cada ~1.3s para dinamismo
-            const wavePhase = (dancerIndex - 1) * 0.35; // Desfase armónico para efecto ola cuando toca
+            const phraseSection = Math.floor(time * 0.75) % 3;
+            const wavePhase = (dancerIndex - 1) * 0.35;
 
             let pose = {
                 offsetX: 0,
@@ -2635,7 +3097,6 @@
             };
 
             if (state === 'trio_suscribete') {
-                // Coreografía "Hype Bell & Wave": Paso lateral sincronizado + campana arriba + ola grupal
                 pose.offsetX = Math.sin(beat * 0.5) * 0.45;
                 pose.offsetZ = Math.cos(beat * 0.5) * 0.22;
                 pose.rootPosY = Math.abs(Math.sin(beat + (phraseSection === 1 ? wavePhase : 0))) * 0.55;
@@ -2643,19 +3104,16 @@
                 pose.bodyRotZ = Math.cos(beat * 0.5) * 0.16;
 
                 if (phraseSection === 0) {
-                    // Fase 1: Unísono señalando al frente y tocando la campana arriba
                     pose.lArmX = -Math.PI * 0.85 + Math.sin(beat * 2) * 0.35;
                     pose.rArmX = -Math.PI * 0.85 - Math.sin(beat * 2) * 0.35;
                     pose.lArmZ = 0.4; pose.rArmZ = -0.4;
                     pose.lElbowX = -0.6; pose.rElbowX = -0.6;
                 } else if (phraseSection === 1) {
-                    // Fase 2: Ola K-Pop de izquierda a derecha con cruce de pecho
                     pose.lArmX = -Math.PI * 0.5 + Math.sin(beat + wavePhase) * 0.7;
                     pose.rArmX = -Math.PI * 0.5 + Math.cos(beat + wavePhase) * 0.7;
                     pose.lArmZ = 0.75; pose.rArmZ = -0.75;
                     pose.lElbowX = -1.1; pose.rElbowX = -1.1;
                 } else {
-                    // Fase 3: Giro elegante sincronizado de 360°
                     pose.rootRotY = (time * 6) % (Math.PI * 2);
                     pose.lArmZ = 1.25; pose.rArmZ = -1.25;
                     pose.lElbowX = -0.8; pose.rElbowX = -0.8;
@@ -2668,14 +3126,12 @@
                 pose.headRotY = Math.sin(beat * 0.5) * 0.25;
 
             } else if (state === 'trio_like') {
-                // Coreografía "K-Pop Heart & Shuffle Sync": Corazón sobre la cabeza + juego de pies sincronizado
                 pose.offsetX = Math.cos(beat * 0.5) * 0.4;
                 pose.rootPosY = Math.abs(Math.sin(beat * 1.2)) * 0.48;
                 pose.bodyRotZ = Math.sin(beat * 0.5) * 0.22;
                 pose.bodyRotY = Math.cos(beat * 0.5) * 0.3;
 
                 if (phraseSection !== 2) {
-                    // Arco de Corazón Gigante sobre la cabeza en perfecto unísono
                     pose.lArmX = -Math.PI * 0.82;
                     pose.rArmX = -Math.PI * 0.82;
                     pose.lArmZ = -0.35 + Math.sin(beat) * 0.15;
@@ -2683,7 +3139,6 @@
                     pose.lElbowX = -0.95;
                     pose.rElbowX = -0.95;
                 } else {
-                    // Lanzamiento de besos / corazones al público en canon
                     pose.lArmX = -Math.PI * 0.45;
                     pose.rArmX = -Math.PI * 0.55 + Math.sin(beat * 1.5 + wavePhase) * 0.5;
                     pose.lArmZ = 0.35;
@@ -2699,7 +3154,6 @@
                 pose.headRotX = Math.sin(beat) * 0.18;
 
             } else {
-                // 'trio_comparte': Coreografía "Viral Party Formation": Cambio de filas + molino de brazos y salto grupal
                 const mirrorSign = dancerIndex === 0 ? -1 : (dancerIndex === 2 ? 1 : 0);
                 pose.offsetX = Math.sin(beat * 0.5) * 0.55;
                 pose.offsetZ = mirrorSign * Math.sin(beat * 0.5) * 0.4;
@@ -2728,7 +3182,6 @@
 
         function animate() {
             requestAnimationFrame(animate);
-            if (!clock || !renderer) return;
             const rawDt = clock.getDelta(); const dt = Math.min(rawDt, 0.05); const time = clock.getElapsedTime();
 
             if(particleSystem) {
@@ -2780,11 +3233,16 @@
             if (stageFloorRings.length > 0) {
                 const conf = SCENARIOS[currentScenarioIndex];
                 const activeColor = currentDanceState !== 'idle' ? spotLight1.color.getHex() : conf.light1;
-                stageFloorRings.forEach((ring, idx) => {
+                const colorChanged = activeColor !== lastStageRingHex;
+                if (colorChanged) lastStageRingHex = activeColor;
+                for (let idx = 0; idx < stageFloorRings.length; idx++) {
+                    const ring = stageFloorRings[idx];
                     const pulse = 1 + Math.sin(time * 6.5 + idx) * 0.035;
                     ring.scale.set(pulse, pulse, 1);
-                    ring.material.color.setHex(idx % 2 === 0 ? activeColor : conf.light2);
-                });
+                    if (colorChanged) {
+                        ring.material.color.setHex(idx % 2 === 0 ? activeColor : conf.light2);
+                    }
+                }
             }
 
             dynamicPointLights.forEach((pLight, idx) => {
@@ -2803,7 +3261,7 @@
             camera.position.x = Math.sin(manualCameraAzimuth) * camRadius + shakeX;
             camera.position.z = Math.cos(manualCameraAzimuth) * camRadius + shakeZ;
             camera.position.y = 4.1 + Math.sin(time * 1.4) * 0.18 + shakeY;
-            camera.lookAt(shakeX * 0.5, (window.innerWidth < 640 ? 1.85 : 2.2) + shakeY * 0.5, 0);
+            camera.lookAt(shakeX * 0.5, (viewportW < 640 ? 1.85 : 2.2) + shakeY * 0.5, 0);
 
             for (let i = activeAdSigns.length - 1; i >= 0; i--) {
                 const signObj = activeAdSigns[i]; signObj.life -= dt;
@@ -2813,7 +3271,7 @@
                 if (signObj.life <= 0) { scene.remove(signObj.mesh); if (signObj.mesh.material.map) signObj.mesh.material.map.dispose(); signObj.mesh.material.dispose(); signObj.mesh.geometry.dispose(); activeAdSigns.splice(i, 1); }
             }
 
-            const isTrioChoreo = currentDanceState.startsWith('trio_');
+            const isTrioChoreo = isTrioChoreoState;
 
             botsArray.forEach((bot, idx) => {
                 let bt = time + bot.danceOffset;
@@ -2869,54 +3327,63 @@
                     bot.root.rotation.y = THREE.MathUtils.lerp(bot.root.rotation.y, 0, 5 * dt);
                     bot.bodyGroup.rotation.z = THREE.MathUtils.lerp(bot.bodyGroup.rotation.z, 0, 5 * dt);
 
-                    if(bot.danceType === 'twerk') {
-                        bot.bodyGroup.rotation.y = Math.sin(bt * 15) * 0.3; bot.bodyGroup.rotation.x = 0.5; bot.root.position.y = Math.abs(Math.sin(bt * 15)) * 0.2;
-                        if(bot.leftArm) { bot.leftArm.rotation.z = Math.PI - 0.5; bot.rightArm.rotation.z = -Math.PI + 0.5; bot.leftArm.rotation.x = 0; bot.rightArm.rotation.x = 0; }
-                        if(bot.leftLeg) { bot.leftLeg.rotation.x = -0.4; bot.rightLeg.rotation.x = -0.4; bot.leftKnee.rotation.x = 0.8; bot.rightKnee.rotation.x = 0.8; }
+                    if (bot.danceType === 'twerk') {
+                        bot.bodyGroup.rotation.y = Math.sin(bt * 15) * 0.3;
+                        bot.bodyGroup.rotation.x = 0.5;
+                        bot.root.position.y = Math.abs(Math.sin(bt * 15)) * 0.2;
+                        if (bot.leftArm) { bot.leftArm.rotation.z = Math.PI - 0.5; bot.rightArm.rotation.z = -Math.PI + 0.5; bot.leftArm.rotation.x = 0; bot.rightArm.rotation.x = 0; }
+                        if (bot.leftLeg) { bot.leftLeg.rotation.x = -0.4; bot.rightLeg.rotation.x = -0.4; bot.leftKnee.rotation.x = 0.8; bot.rightKnee.rotation.x = 0.8; }
                     } else {
                         bot.root.position.y = THREE.MathUtils.lerp(bot.root.position.y, 0, 5 * dt);
                         bot.bodyGroup.position.y = Math.abs(Math.sin(bt * 4)) * 0.2;
-                        if(bot.leftArm) { bot.leftArm.rotation.x = Math.sin(bt * 8) * 1.5; bot.rightArm.rotation.x = Math.cos(bt * 8) * 1.5; bot.leftArm.rotation.z = 0; bot.rightArm.rotation.z = 0; }
-                        if(bot.head) bot.head.rotation.y = Math.sin(bt * 2) * 0.3;
+                        bot.bodyGroup.rotation.x = 0;
+                        if (bot.leftArm) { bot.leftArm.rotation.x = Math.sin(bt * 8) * 1.5; bot.rightArm.rotation.x = Math.cos(bt * 8) * 1.5; bot.leftArm.rotation.z = 0; bot.rightArm.rotation.z = 0; }
+                        if (bot.head) bot.head.rotation.y = Math.sin(bt * 2) * 0.3;
                     }
                 }
             });
 
-            if(avatarRoot) {
+            if (avatarRoot) {
                 resetTargets();
                 if (head) { head.rotation.x = 0; head.rotation.y = 0; }
 
-                switch(currentDanceState) {
+                switch (currentDanceState) {
                     case 'idle':
                         targets.bodyY = Math.sin(time * 4) * 0.05;
                         targets.lArmX = Math.sin(time) * 0.1; targets.rArmX = -Math.sin(time) * 0.1;
                         targets.lArmZ = 0.15; targets.rArmZ = -0.15;
                         targets.lElbowX = -0.1; targets.rElbowX = -0.1;
-                        if(head) head.rotation.y = Math.sin(time * 1.5) * 0.1;
+                        if (head) head.rotation.y = Math.sin(time * 1.5) * 0.1;
                         break;
                     case 'talk_happy':
                         targets.mouthScaleY = 1 + Math.abs(Math.sin(time * 15)) * 1.5;
-                        if(head) head.rotation.x = Math.sin(time * 5) * 0.1;
-                        targets.lArmZ = 0.4; targets.rArmZ = -0.4; targets.lElbowX = -0.2; targets.rElbowX = -0.2;
+                        if (head) head.rotation.x = Math.sin(time * 5) * 0.1;
+                        targets.lArmZ = 0.4; targets.rArmZ = -0.4;
+                        targets.lElbowX = -0.2; targets.rElbowX = -0.2;
                         targets.bodyY = Math.sin(time * 6) * 0.05;
                         break;
                     case 'talk_explain':
                         targets.mouthScaleY = 1 + Math.abs(Math.sin(time * 12)) * 1.0;
-                        if(head) head.rotation.y = Math.sin(time * 2) * 0.2;
+                        if (head) head.rotation.y = Math.sin(time * 2) * 0.2;
                         targets.rArmX = -Math.PI / 4 + Math.sin(time * 4) * 0.2;
-                        targets.rArmZ = -0.2; targets.rElbowX = -Math.PI / 2; targets.lArmZ = 0.1;
+                        targets.rArmZ = -0.2; targets.rElbowX = -Math.PI / 2;
+                        targets.lArmZ = 0.1;
                         break;
                     case 'talk_shout':
                         targets.mouthScaleY = 2.0 + Math.sin(time * 20) * 0.8;
-                        if(head) head.rotation.x = -0.2;
+                        if (head) head.rotation.x = -0.2;
                         targets.lArmX = -Math.PI / 2; targets.rArmX = -Math.PI / 2;
                         targets.lArmZ = 0.3; targets.rArmZ = -0.3;
                         targets.lElbowX = -Math.PI / 2; targets.rElbowX = -Math.PI / 2;
                         targets.bodyRotX = 0.1;
                         break;
+
+                    // 20 PASOS SOSTENIDOS DEL PANEL INFERIOR
                     case 'trend_tiktok':
-                        targets.bodyRotY = Math.sin(time * 12) * 0.3; targets.rootPosY = Math.abs(Math.sin(time * 12)) * 0.1;
-                        targets.lArmX = -Math.PI / 3 + Math.sin(time * 12) * 0.4; targets.rArmX = -Math.PI / 3 - Math.sin(time * 12) * 0.4;
+                        targets.bodyRotY = Math.sin(time * 12) * 0.3;
+                        targets.rootPosY = Math.abs(Math.sin(time * 12)) * 0.1;
+                        targets.lArmX = -Math.PI / 3 + Math.sin(time * 12) * 0.4;
+                        targets.rArmX = -Math.PI / 3 - Math.sin(time * 12) * 0.4;
                         targets.lElbowX = -Math.PI / 1.5; targets.rElbowX = -Math.PI / 1.5;
                         targets.lLegX = Math.sin(time * 12) * 0.3; targets.rLegX = -Math.sin(time * 12) * 0.3;
                         targets.lKneeX = Math.max(0, Math.sin(time * 12)) * 0.4; targets.rKneeX = Math.max(0, -Math.sin(time * 12)) * 0.4;
@@ -2926,7 +3393,8 @@
                         targets.rootPosY = -0.5 + Math.abs(Math.sin(time * 25)) * 0.2;
                         targets.lArmZ = Math.PI - 0.5; targets.rArmZ = -Math.PI + 0.5;
                         targets.lElbowX = -0.5; targets.rElbowX = -0.5;
-                        targets.lLegX = -0.4; targets.rLegX = -0.4; targets.lKneeX = 0.8; targets.rKneeX = 0.8;
+                        targets.lLegX = -0.4; targets.rLegX = -0.4;
+                        targets.lKneeX = 0.8; targets.rKneeX = 0.8;
                         break;
                     case 'wave':
                         targets.bodyRotZ = Math.sin(time * 4) * 0.15; targets.bodyRotY = Math.sin(time * 2) * 0.2;
@@ -2934,49 +3402,55 @@
                         targets.lElbowX = Math.sin(time * 8 - 1) * 0.8; targets.rElbowX = Math.cos(time * 8 - 1) * 0.8;
                         targets.lLegX = Math.sin(time * 4) * 0.1; targets.rLegX = -Math.sin(time * 4) * 0.1;
                         break;
-                    case 'robot_dance':
+                    case 'robot_dance': {
                         let st = Math.floor(time * 8);
                         targets.lArmX = Math.sin(st) * 1.5; targets.rArmX = Math.cos(st) * 1.5;
                         targets.lElbowX = -Math.abs(Math.sin(st + 1)) * 1.5; targets.rElbowX = -Math.abs(Math.cos(st + 1)) * 1.5;
-                        if(head) head.rotation.y = Math.sin(st) * 0.4; targets.bodyRotY = Math.cos(st) * 0.3;
+                        if (head) head.rotation.y = Math.sin(st) * 0.4;
+                        targets.bodyRotY = Math.cos(st) * 0.3;
                         break;
+                    }
                     case 'moonwalk':
                         targets.lLegX = Math.sin(time * 8) * 0.6; targets.rLegX = Math.cos(time * 8) * 0.6;
                         targets.lKneeX = Math.max(0, Math.sin(time * 8)) * 0.4; targets.rKneeX = Math.max(0, Math.cos(time * 8)) * 0.4;
                         targets.lArmX = Math.cos(time * 8) * 0.5; targets.rArmX = Math.sin(time * 8) * 0.5;
+                        targets.rootPosY = 0;
                         break;
-                    case 'hype_dance':
+                    case 'hype_dance': {
                         let step = Math.floor(time * 4) % 4;
-                        if(step===0) { targets.lArmX = -Math.PI; targets.rArmX = -Math.PI; }
-                        else if(step===1) { targets.lArmX = -Math.PI/1.5; targets.rArmX = -Math.PI/1.5; targets.lArmZ = 0.5; targets.rArmZ = -0.5;}
-                        else if(step===2) { targets.lArmX = -Math.PI/4; targets.rArmX = -Math.PI/4; targets.lElbowX = -Math.PI/2; targets.rElbowX = -Math.PI/2; }
-                        else { targets.lArmX = 0; targets.rArmX = 0; targets.lElbowX = -Math.PI/2; targets.rElbowX = -Math.PI/2; }
+                        if (step === 0) { targets.lArmX = -Math.PI; targets.rArmX = -Math.PI; }
+                        else if (step === 1) { targets.lArmX = -Math.PI / 1.5; targets.rArmX = -Math.PI / 1.5; targets.lArmZ = 0.5; targets.rArmZ = -0.5; }
+                        else if (step === 2) { targets.lArmX = -Math.PI / 4; targets.rArmX = -Math.PI / 4; targets.lElbowX = -Math.PI / 2; targets.rElbowX = -Math.PI / 2; }
+                        else { targets.lArmX = 0; targets.rArmX = 0; targets.lElbowX = -Math.PI / 2; targets.rElbowX = -Math.PI / 2; }
                         targets.rootPosY = Math.abs(Math.sin(time * 8)) * 0.2;
                         break;
+                    }
                     case 'hiphop':
                         targets.bodyY = Math.abs(Math.sin(time * 6)) * 0.4;
                         targets.lArmZ = Math.PI / 4; targets.rArmZ = -Math.PI / 4;
                         targets.lArmX = -Math.PI / 4; targets.rArmX = -Math.PI / 4;
                         targets.lElbowX = -Math.PI / 1.5; targets.rElbowX = -Math.PI / 1.5;
-                        if(head) head.rotation.x = Math.sin(time * 6) * 0.4;
+                        if (head) head.rotation.x = Math.sin(time * 6) * 0.4;
                         break;
                     case 'freestyle':
-                        targets.rootPosY = 0.3; targets.lArmZ = Math.PI - 0.2; targets.rArmZ = -Math.PI + 0.2;
-                        targets.lElbowX = -0.8; targets.rElbowX = -0.8; targets.rootRotY = time * 4;
+                        targets.rootPosY = 0.3;
+                        targets.lArmZ = Math.PI - 0.2; targets.rArmZ = -Math.PI + 0.2;
+                        targets.lElbowX = -0.8; targets.rElbowX = -0.8;
+                        targets.rootRotY = time * 4;
                         targets.lLegX = -0.2; targets.lKneeX = 0.5;
                         break;
                     case 'disco':
-                        targets.lArmX = 0; targets.lArmZ = 0.2; targets.lElbowX = -Math.PI/2;
-                        targets.rArmX = -Math.PI/2 + Math.sin(time * 8) * Math.PI/2;
-                        targets.rArmZ = -Math.sin(time * 8) * Math.PI/4;
+                        targets.lArmX = 0; targets.lArmZ = 0.2; targets.lElbowX = -Math.PI / 2;
+                        targets.rArmX = -Math.PI / 2 + Math.sin(time * 8) * Math.PI / 2;
+                        targets.rArmZ = -Math.sin(time * 8) * Math.PI / 4;
                         targets.bodyRotY = Math.sin(time * 8) * 0.3;
                         targets.lLegX = Math.sin(time * 8) > 0 ? 0.3 : 0;
                         break;
                     case 'floss':
                         targets.bodyRotY = Math.sin(time * 16) * 0.5;
                         targets.lArmZ = 0.2; targets.rArmZ = -0.2;
-                        targets.lArmX = -Math.PI/4 + Math.sin(time * 16) * 0.6;
-                        targets.rArmX = -Math.PI/4 + Math.sin(time * 16) * 0.6;
+                        targets.lArmX = -Math.PI / 4 + Math.sin(time * 16) * 0.6;
+                        targets.rArmX = -Math.PI / 4 + Math.sin(time * 16) * 0.6;
                         targets.lElbowX = -0.3; targets.rElbowX = -0.3;
                         break;
                     case 'shuffle_pro':
@@ -2992,14 +3466,14 @@
                         targets.lArmX = -Math.PI / 2 + Math.sin(time * 16) * 0.8;
                         targets.rArmX = -Math.PI / 2 - Math.sin(time * 16) * 0.8;
                         targets.lElbowX = -0.5; targets.rElbowX = -0.5;
-                        targets.lLegX = -0.4; targets.rLegX = -0.4; targets.lKneeX = 0.7; targets.rKneeX = 0.7;
+                        targets.lLegX = -0.4; targets.rLegX = -0.4;
+                        targets.lKneeX = 0.7; targets.rKneeX = 0.7;
                         targets.rootPosY = -0.4 + Math.abs(Math.sin(time * 8)) * 0.2;
                         break;
                     case 'swag':
                         targets.rootRotY = time * 2;
                         targets.rArmZ = -Math.PI / 4; targets.rArmX = -0.2; targets.rElbowX = -Math.PI / 2;
-                        targets.lArmX = -Math.PI + 0.5; targets.lArmZ = 0.5;
-                        targets.lElbowX = -0.2 + Math.sin(time * 8) * 0.4;
+                        targets.lArmX = -Math.PI + 0.5; targets.lArmZ = 0.5; targets.lElbowX = -0.2 + Math.sin(time * 8) * 0.4;
                         targets.lLegX = -0.2; targets.rLegX = 0.2; targets.bodyRotX = 0.1;
                         break;
                     case 'shuffle':
@@ -3012,7 +3486,8 @@
                         targets.lArmZ = 0.2; targets.rArmZ = -0.2;
                         targets.lElbowX = -0.1; targets.rElbowX = -0.1;
                         targets.bodyRotY = Math.sin(time * 3) * 0.3;
-                        targets.lLegX = -0.1; targets.rLegX = -0.1; targets.rootRotY = Math.sin(time) * 0.2;
+                        targets.lLegX = -0.1; targets.rLegX = -0.1;
+                        targets.rootRotY = Math.sin(time) * 0.2;
                         break;
                     case 'samba':
                         targets.bodyRotY = Math.sin(time * 20) * 0.4;
@@ -3026,7 +3501,7 @@
                         if (head) { head.rotation.y = 1.0; head.rotation.x = 0.5; }
                         targets.lLegX = -0.2; targets.rLegX = 0.2;
                         break;
-                    case 'kpop':
+                    case 'kpop': {
                         let step2 = Math.floor(time * 4) % 2;
                         targets.lArmX = step2 === 0 ? -Math.PI + 0.2 : -Math.PI / 2;
                         targets.rArmX = step2 === 0 ? -Math.PI + 0.2 : -Math.PI / 2;
@@ -3034,6 +3509,7 @@
                         targets.rArmZ = step2 === 0 ? -0.6 : -0.3;
                         targets.bodyRotY = Math.sin(time * 8) * 0.3;
                         break;
+                    }
                     case 'jumpstyle':
                         targets.rootPosY = Math.abs(Math.sin(time * 16)) * 0.8;
                         targets.lLegX = Math.sin(time * 16) > 0 ? -0.6 : 0.2;
@@ -3047,197 +3523,7 @@
                         targets.lKneeX = 0.5; targets.rKneeX = 0.5;
                         break;
 
-                    // PASOS EXTRAORDINARIOS DEL MENÚ DE SUPER REGALOS TIKTOK LIVE
-                    case 'extra_tornado':
-                        targets.rootRotY = time * 16;
-                        targets.rootPosY = 0.6 + Math.sin(time * 8) * 0.3;
-                        targets.lArmZ = Math.PI / 2; targets.rArmZ = -Math.PI / 2;
-                        targets.lLegX = -0.3; targets.rLegX = 0.4; targets.rKneeX = 0.8;
-                        break;
-                    case 'extra_heart_float':
-                        targets.rootPosY = 1.6 + Math.sin(time * 5) * 0.4;
-                        targets.rootRotY = Math.sin(time * 3) * 0.8;
-                        targets.lArmX = -Math.PI * 0.85; targets.rArmX = -Math.PI * 0.85;
-                        targets.lArmZ = -0.4; targets.rArmZ = 0.4;
-                        targets.lElbowX = -0.8; targets.rElbowX = -0.8;
-                        targets.lLegX = 0.25; targets.rLegX = -0.25; targets.lKneeX = 0.6; targets.rKneeX = 0.6;
-                        break;
-                    case 'extra_fire_spin':
-                        targets.rootPosY = -0.6 + Math.abs(Math.sin(time * 12)) * 0.3;
-                        targets.rootRotY = time * 18;
-                        targets.rootRotX = Math.PI / 2.2;
-                        targets.rootRotZ = Math.sin(time * 10) * 0.4;
-                        targets.lLegX = -0.7; targets.rLegX = 0.7;
-                        targets.lArmZ = 1.2; targets.rArmZ = -1.2;
-                        break;
-                    case 'extra_matrix_dodge':
-                        targets.bodyRotX = -0.85 + Math.sin(time * 4) * 0.25;
-                        targets.rootPosY = -0.35;
-                        targets.rootRotY = time * 5;
-                        targets.lKneeX = 1.1; targets.rKneeX = 1.1;
-                        targets.lLegX = -0.6; targets.rLegX = -0.6;
-                        targets.lArmX = -Math.PI / 2 + Math.sin(time * 12) * 0.7;
-                        targets.rArmX = -Math.PI / 2 + Math.cos(time * 12) * 0.7;
-                        break;
-                    case 'extra_cyber_glitch':
-                        let glitchTick = Math.floor(time * 18);
-                        targets.rootPosY = (glitchTick % 3 === 0) ? 0.9 : 0;
-                        targets.rootRotY = Math.sin(glitchTick * 2.5) * 1.6;
-                        targets.bodyRotZ = Math.cos(glitchTick * 3) * 0.35;
-                        targets.lArmX = Math.sin(glitchTick * 4) * 2.2;
-                        targets.rArmX = Math.cos(glitchTick * 4) * 2.2;
-                        targets.lLegX = Math.cos(glitchTick * 2) * 0.8;
-                        targets.rLegX = -Math.cos(glitchTick * 2) * 0.8;
-                        break;
-                    case 'extra_zero_gravity':
-                        targets.rootPosY = 2.0 + Math.sin(time * 3) * 0.5;
-                        targets.rootRotX = 0.35 * Math.sin(time * 2);
-                        targets.rootRotY = time * 2.5;
-                        targets.lLegX = Math.sin(time * 5) * 0.9; targets.rLegX = -Math.sin(time * 5) * 0.9;
-                        targets.lArmZ = 1.1 + Math.sin(time * 4) * 0.3; targets.rArmZ = -1.1 - Math.sin(time * 4) * 0.3;
-                        break;
-                    case 'extra_party_blast':
-                        targets.rootPosY = Math.abs(Math.sin(time * 11)) * 2.6;
-                        targets.rootRotY = Math.sin(time * 5.5) * Math.PI;
-                        targets.lArmZ = Math.PI * 0.8; targets.rArmZ = -Math.PI * 0.8;
-                        targets.lLegX = -0.5; targets.rLegX = -0.5; targets.lKneeX = 0.9; targets.rKneeX = 0.9;
-                        break;
-                    case 'extra_headspin':
-                        targets.rootPosY = 1.9;
-                        targets.rootRotX = Math.PI;
-                        targets.rootRotY = time * 16;
-                        targets.lLegX = -0.5 + Math.sin(time * 10) * 0.4;
-                        targets.rLegX = 0.5 - Math.sin(time * 10) * 0.4;
-                        targets.lArmZ = 0.8; targets.rArmZ = -0.8;
-                        break;
-                    case 'extra_butterfly_fly':
-                        targets.rootPosY = 1.8 + Math.sin(time * 6) * 0.45;
-                        targets.rootRotY = Math.sin(time * 2.5) * 1.2;
-                        targets.lArmZ = 1.4 + Math.sin(time * 18) * 0.65;
-                        targets.rArmZ = -1.4 - Math.sin(time * 18) * 0.65;
-                        targets.lLegX = 0.2; targets.rLegX = 0.2; targets.lKneeX = 0.7; targets.rKneeX = 0.7;
-                        break;
-                    case 'extra_disco_fever':
-                        targets.rootPosY = Math.abs(Math.sin(time * 10)) * 1.1;
-                        targets.rootRotY = time * 6;
-                        targets.rArmX = -Math.PI + Math.sin(time * 14) * 0.5;
-                        targets.lArmZ = 0.6; targets.lElbowX = -Math.PI / 2;
-                        targets.lLegX = Math.sin(time * 14) * 0.7; targets.rLegX = -Math.sin(time * 14) * 0.7;
-                        break;
-                    case 'extra_mega_jump':
-                        targets.rootPosY = Math.abs(Math.sin(time * 9)) * 3.2;
-                        targets.lArmZ = Math.PI - 0.25; targets.rArmZ = -Math.PI + 0.25;
-                        targets.lLegX = -0.6; targets.rLegX = -0.6; targets.lKneeX = 1.1; targets.rKneeX = 1.1;
-                        break;
-                    case 'extra_candy_twirl':
-                        targets.rootRotY = time * 14;
-                        targets.bodyRotZ = Math.sin(time * 10) * 0.35;
-                        targets.rootPosY = Math.abs(Math.sin(time * 10)) * 0.8;
-                        targets.lArmX = -Math.PI / 2; targets.rArmX = -Math.PI / 2;
-                        targets.lElbowX = -1.2; targets.rElbowX = -1.2;
-                        break;
-                    case 'extra_sonic_feet':
-                        targets.rootPosY = Math.abs(Math.sin(time * 28)) * 0.35;
-                        targets.lLegX = Math.sin(time * 32) * 1.1;
-                        targets.rLegX = -Math.sin(time * 32) * 1.1;
-                        targets.lKneeX = Math.max(0, Math.cos(time * 32)) * 1.3;
-                        targets.rKneeX = Math.max(0, -Math.cos(time * 32)) * 1.3;
-                        targets.lArmX = Math.cos(time * 32) * 1.2;
-                        targets.rArmX = -Math.cos(time * 32) * 1.2;
-                        break;
-                    case 'extra_volcano_drop':
-                        targets.rootPosY = -0.55 + Math.abs(Math.sin(time * 20)) * 0.9;
-                        targets.bodyRotX = 0.65;
-                        targets.bodyRotY = Math.sin(time * 28) * 0.55;
-                        targets.lLegX = -0.65; targets.rLegX = -0.65;
-                        targets.lKneeX = 1.2; targets.rKneeX = 1.2;
-                        targets.lArmZ = 1.4; targets.rArmZ = -1.4;
-                        break;
-                    case 'extra_swag_levitate':
-                        targets.rootPosY = 1.4 + Math.sin(time * 4) * 0.25;
-                        targets.rootRotY = time * 3.5;
-                        targets.bodyRotX = -0.25;
-                        targets.lArmX = -Math.PI / 2; targets.lElbowX = -1.4;
-                        targets.rArmZ = -0.6; targets.rElbowX = -1.1;
-                        targets.lLegX = -0.35; targets.lKneeX = 0.85;
-                        break;
-                    case 'extra_skate_flip':
-                        targets.rootPosY = Math.abs(Math.sin(time * 7)) * 2.8;
-                        targets.rootRotY = time * 14;
-                        targets.rootRotZ = Math.sin(time * 7) * 0.8;
-                        targets.lArmZ = 1.3; targets.rArmZ = -1.3;
-                        targets.lLegX = -0.5; targets.rLegX = 0.5;
-                        break;
-                    case 'extra_thriller_king':
-                        targets.rootPosY = Math.abs(Math.sin(time * 8)) * 0.4;
-                        targets.bodyRotZ = Math.sin(time * 8) * 0.4;
-                        targets.lArmX = -Math.PI / 2 + Math.sin(time * 16) * 0.4;
-                        targets.rArmX = -Math.PI / 2 - Math.sin(time * 16) * 0.4;
-                        targets.lLegX = Math.sin(time * 8) * 0.6;
-                        targets.rLegX = -Math.sin(time * 8) * 0.6;
-                        break;
-                    case 'extra_carnaval_spin':
-                        targets.rootRotY = time * 10;
-                        targets.rootPosY = Math.abs(Math.sin(time * 18)) * 0.65;
-                        targets.bodyRotY = Math.sin(time * 26) * 0.6;
-                        targets.lArmZ = 1.8 + Math.sin(time * 20) * 0.4;
-                        targets.rArmZ = -1.8 - Math.sin(time * 20) * 0.4;
-                        targets.lLegX = Math.sin(time * 26) * 0.75;
-                        targets.rLegX = -Math.sin(time * 26) * 0.75;
-                        break;
-                    case 'extra_kpop_star':
-                        targets.rootPosY = 1.1 + Math.sin(time * 8) * 0.35;
-                        targets.rootRotY = Math.sin(time * 4) * 1.5;
-                        targets.lArmX = -Math.PI * 0.85; targets.rArmX = -Math.PI * 0.85;
-                        targets.lArmZ = 0.5; targets.rArmZ = -0.5;
-                        targets.lLegX = Math.sin(time * 12) * 0.5;
-                        targets.rLegX = -Math.sin(time * 12) * 0.5;
-                        break;
-                    case 'extra_thunder_god':
-                        targets.rootPosY = 1.5 + Math.sin(time * 18) * 0.25;
-                        targets.lArmX = Math.sin(time * 28) * 2.0;
-                        targets.rArmX = -Math.sin(time * 28) * 2.0;
-                        targets.lLegX = -Math.sin(time * 28) * 1.0;
-                        targets.rLegX = Math.sin(time * 28) * 1.0;
-                        targets.rootRotY = time * 9;
-                        break;
-                    case 'extra_diamond_spin':
-                        targets.rootPosY = 1.8 + Math.sin(time * 5) * 0.3;
-                        targets.rootRotY = time * 18;
-                        targets.lArmZ = Math.PI * 0.9; targets.rArmZ = -Math.PI * 0.9;
-                        targets.lLegX = -0.2; targets.rLegX = 0.5; targets.rKneeX = 1.1;
-                        break;
-                    case 'extra_rocket_launch':
-                        targets.rootPosY = 2.8 + Math.sin(time * 6) * 0.8;
-                        targets.rootRotY = time * 15;
-                        targets.rootRotX = 0.35;
-                        targets.lArmZ = Math.PI * 0.95; targets.rArmZ = -Math.PI * 0.95;
-                        targets.lLegX = 0.2; targets.rLegX = 0.2;
-                        break;
-                    case 'extra_royal_flip':
-                        targets.rootRotX = -time * 10;
-                        targets.rootPosY = 2.3 + Math.sin(time * 10) * 1.2;
-                        targets.lLegX = -1.1; targets.rLegX = -1.1;
-                        targets.lKneeX = 1.4; targets.rKneeX = 1.4;
-                        targets.lArmX = Math.PI; targets.rArmX = Math.PI;
-                        break;
-                    case 'extra_lion_roar':
-                        targets.rootPosY = 1.2 + Math.abs(Math.sin(time * 12)) * 1.4;
-                        targets.rootRotY = time * 14;
-                        targets.rootRotZ = Math.sin(time * 8) * 0.9;
-                        targets.lArmZ = 1.5; targets.rArmZ = -1.5;
-                        targets.lLegX = -0.8; targets.rLegX = 0.8;
-                        break;
-                    case 'extra_universe_god':
-                        targets.rootPosY = 2.6 + Math.sin(time * 4) * 0.6;
-                        targets.rootRotY = time * 12;
-                        targets.rootRotX = Math.sin(time * 5) * 0.7;
-                        targets.rootRotZ = Math.cos(time * 5) * 0.7;
-                        targets.lArmZ = Math.PI * 0.85; targets.rArmZ = -Math.PI * 0.85;
-                        targets.lLegX = -0.45; targets.rLegX = 0.45;
-                        targets.lKneeX = 0.8; targets.rKneeX = 0.8;
-                        break;
-
+                    // COREOGRAFÍAS EN TRÍO LIVE (SUSCRÍBETE / LIKE / COMPARTE)
                     case 'trio_suscribete':
                     case 'trio_like':
                     case 'trio_comparte': {
@@ -3261,6 +3547,196 @@
                         }
                         break;
                     }
+
+                    // 25 PASOS EXTRAORDINARIOS DEL MENÚ DE SUPER REGALOS TIKTOK
+                    case 'extra_tornado':
+                        targets.rootRotY = time * 18;
+                        targets.rootPosY = 0.6 + Math.abs(Math.sin(time * 12)) * 1.2;
+                        targets.lArmZ = Math.PI * 0.6; targets.rArmZ = -Math.PI * 0.6;
+                        targets.lLegX = -0.4; targets.rLegX = 0.4;
+                        targets.lKneeX = 0.8; targets.rKneeX = 0.8;
+                        break;
+                    case 'extra_heart_float':
+                        targets.rootPosY = 1.5 + Math.sin(time * 5) * 0.6;
+                        targets.rootRotY = Math.sin(time * 3) * 0.6;
+                        targets.lArmX = -Math.PI * 0.85; targets.rArmX = -Math.PI * 0.85;
+                        targets.lArmZ = 0.7; targets.rArmZ = -0.7;
+                        targets.lElbowX = -1.1; targets.rElbowX = -1.1;
+                        targets.lLegX = 0.25; targets.rLegX = -0.25;
+                        break;
+                    case 'extra_fire_spin':
+                        targets.rootPosY = -0.5;
+                        targets.rootRotY = time * 16;
+                        targets.rootRotX = Math.PI / 2.2;
+                        targets.lArmZ = Math.PI / 2; targets.rArmZ = -Math.PI / 2;
+                        targets.lLegX = Math.sin(time * 20) * 0.9; targets.rLegX = -Math.sin(time * 20) * 0.9;
+                        break;
+                    case 'extra_matrix_dodge':
+                        targets.bodyRotX = -0.95 + Math.sin(time * 6) * 0.25;
+                        targets.rootRotY = time * 5;
+                        targets.lArmX = -Math.PI / 2 + Math.sin(time * 14) * 0.8;
+                        targets.rArmX = -Math.PI / 2 - Math.sin(time * 14) * 0.8;
+                        targets.lKneeX = 1.1; targets.rKneeX = 1.1;
+                        targets.rootPosY = -0.35;
+                        break;
+                    case 'extra_cyber_glitch': {
+                        const gStep = Math.floor(time * 18);
+                        targets.rootPosY = (gStep % 3) * 0.45;
+                        targets.rootRotY = (gStep % 4) * (Math.PI / 2);
+                        targets.lArmX = Math.sin(gStep * 2) * 1.8;
+                        targets.rArmX = Math.cos(gStep * 2) * 1.8;
+                        targets.bodyRotZ = Math.sin(gStep) * 0.35;
+                        break;
+                    }
+                    case 'extra_zero_gravity':
+                        targets.rootPosY = 1.8 + Math.sin(time * 3.5) * 0.7;
+                        targets.rootRotX = Math.sin(time * 2) * 0.4;
+                        targets.rootRotY = time * 2.5;
+                        targets.lLegX = Math.sin(time * 6) * 0.8; targets.rLegX = -Math.sin(time * 6) * 0.8;
+                        targets.lArmZ = 0.8 + Math.sin(time * 4) * 0.4;
+                        targets.rArmZ = -0.8 - Math.sin(time * 4) * 0.4;
+                        break;
+                    case 'extra_party_blast':
+                        targets.rootPosY = Math.abs(Math.sin(time * 12)) * 2.4;
+                        targets.rootRotY = time * 7;
+                        targets.lArmX = -Math.PI; targets.rArmX = -Math.PI;
+                        targets.lArmZ = 0.6; targets.rArmZ = -0.6;
+                        targets.lLegX = -0.6; targets.rLegX = -0.6;
+                        targets.lKneeX = 1.2; targets.rKneeX = 1.2;
+                        break;
+                    case 'extra_headspin':
+                        targets.rootPosY = 1.2;
+                        targets.rootRotX = Math.PI;
+                        targets.rootRotY = time * 18;
+                        targets.lArmZ = 0.4; targets.rArmZ = -0.4;
+                        targets.lLegX = Math.sin(time * 12) * 0.7; targets.rLegX = -Math.sin(time * 12) * 0.7;
+                        break;
+                    case 'extra_butterfly_fly':
+                        targets.rootPosY = 1.6 + Math.sin(time * 6) * 0.5;
+                        targets.rootRotY = Math.sin(time * 2.5) * 0.8;
+                        targets.lArmZ = Math.PI / 2 + Math.sin(time * 18) * 0.75;
+                        targets.rArmZ = -Math.PI / 2 - Math.sin(time * 18) * 0.75;
+                        targets.lLegX = 0.2; targets.rLegX = 0.2;
+                        targets.lKneeX = 0.6; targets.rKneeX = 0.6;
+                        break;
+                    case 'extra_disco_fever':
+                        targets.rootPosY = 0.5 + Math.abs(Math.sin(time * 10)) * 0.8;
+                        targets.rootRotY = time * 6;
+                        targets.rArmX = -Math.PI + Math.sin(time * 12) * 0.5;
+                        targets.lArmZ = 0.8;
+                        targets.lLegX = Math.sin(time * 12) * 0.7; targets.rLegX = -Math.sin(time * 12) * 0.7;
+                        break;
+                    case 'extra_mega_jump':
+                        targets.rootPosY = Math.abs(Math.sin(time * 9)) * 2.8;
+                        targets.lArmZ = Math.PI - 0.2; targets.rArmZ = -Math.PI + 0.2;
+                        targets.lLegX = -0.5; targets.rLegX = -0.5;
+                        targets.lKneeX = 1.0; targets.rKneeX = 1.0;
+                        break;
+                    case 'extra_candy_twirl':
+                        targets.rootRotY = time * 14;
+                        targets.bodyRotZ = Math.sin(time * 10) * 0.35;
+                        targets.lArmX = -Math.PI / 2; targets.rArmX = -Math.PI / 2;
+                        targets.lElbowX = -1.2; targets.rElbowX = -1.2;
+                        targets.rootPosY = Math.abs(Math.sin(time * 10)) * 0.9;
+                        break;
+                    case 'extra_sonic_feet':
+                        targets.rootPosY = Math.abs(Math.sin(time * 28)) * 0.35;
+                        targets.lLegX = Math.sin(time * 32) * 1.1;
+                        targets.rLegX = -Math.sin(time * 32) * 1.1;
+                        targets.lKneeX = Math.abs(Math.cos(time * 32)) * 1.2;
+                        targets.rKneeX = Math.abs(Math.sin(time * 32)) * 1.2;
+                        targets.lArmX = Math.cos(time * 32) * 1.2;
+                        targets.rArmX = -Math.cos(time * 32) * 1.2;
+                        break;
+                    case 'extra_volcano_drop':
+                        targets.rootPosY = -0.6 + Math.abs(Math.sin(time * 18)) * 1.4;
+                        targets.bodyRotX = 0.45;
+                        targets.bodyRotY = Math.sin(time * 22) * 0.55;
+                        targets.lArmX = -Math.PI * 0.7; targets.rArmX = -Math.PI * 0.7;
+                        targets.lKneeX = 1.1; targets.rKneeX = 1.1;
+                        break;
+                    case 'extra_swag_levitate':
+                        targets.rootPosY = 1.3 + Math.sin(time * 4) * 0.35;
+                        targets.rootRotY = time * 3.5;
+                        targets.rArmZ = -Math.PI / 3; targets.rElbowX = -Math.PI / 2;
+                        targets.lArmX = -Math.PI * 0.8; targets.lArmZ = 0.6;
+                        targets.bodyRotX = -0.15;
+                        break;
+                    case 'extra_skate_flip':
+                        targets.rootPosY = Math.abs(Math.sin(time * 8)) * 2.2;
+                        targets.rootRotZ = time * 10;
+                        targets.rootRotY = time * 5;
+                        targets.lArmZ = 0.9; targets.rArmZ = -0.9;
+                        targets.lKneeX = 0.9; targets.rKneeX = 0.9;
+                        break;
+                    case 'extra_thriller_king':
+                        targets.rootPosY = Math.abs(Math.sin(time * 10)) * 0.6;
+                        targets.bodyRotY = Math.sin(time * 10) * 0.6;
+                        targets.lArmX = -Math.PI / 2; targets.rArmX = -Math.PI / 2;
+                        targets.lElbowX = Math.sin(time * 10) * 0.8;
+                        targets.rElbowX = -Math.sin(time * 10) * 0.8;
+                        targets.lLegX = Math.sin(time * 10) * 0.7; targets.rLegX = -Math.sin(time * 10) * 0.7;
+                        break;
+                    case 'extra_carnaval_spin':
+                        targets.rootRotY = time * 12;
+                        targets.bodyRotY = Math.sin(time * 24) * 0.5;
+                        targets.lArmZ = Math.PI * 0.75; targets.rArmZ = -Math.PI * 0.75;
+                        targets.lLegX = Math.sin(time * 24) * 0.8; targets.rLegX = -Math.sin(time * 24) * 0.8;
+                        targets.rootPosY = Math.abs(Math.sin(time * 12)) * 0.7;
+                        break;
+                    case 'extra_kpop_star':
+                        targets.rootPosY = 0.8 + Math.abs(Math.sin(time * 12)) * 1.1;
+                        targets.rootRotY = time * 6;
+                        targets.lArmX = -Math.PI + 0.3; targets.rArmX = -Math.PI + 0.3;
+                        targets.lArmZ = 0.55; targets.rArmZ = -0.55;
+                        targets.lLegX = Math.sin(time * 12) * 0.65; targets.rLegX = -Math.sin(time * 12) * 0.65;
+                        break;
+                    case 'extra_thunder_god':
+                        targets.rootPosY = 1.4 + Math.sin(time * 14) * 0.4;
+                        targets.rootRotY = time * 15;
+                        targets.lArmX = -Math.PI + Math.sin(time * 25) * 0.8;
+                        targets.rArmX = -Math.PI - Math.sin(time * 25) * 0.8;
+                        targets.lLegX = -0.5; targets.rLegX = 0.4;
+                        break;
+                    case 'extra_diamond_spin':
+                        targets.rootPosY = 1.2 + Math.sin(time * 6) * 0.3;
+                        targets.rootRotY = time * 14;
+                        targets.lArmX = -Math.PI / 1.2; targets.lArmZ = 1.0; targets.lElbowX = -1.5;
+                        targets.rArmX = -Math.PI / 1.5; targets.rArmZ = 1.5;
+                        break;
+                    case 'extra_rocket_launch':
+                        targets.rootPosY = 2.2 + Math.sin(time * 8) * 1.2;
+                        targets.rootRotY = time * 16;
+                        targets.lArmX = -Math.PI; targets.rArmX = -Math.PI;
+                        targets.lArmZ = 0.15; targets.rArmZ = -0.15;
+                        targets.lLegX = 0.15; targets.rLegX = 0.15;
+                        break;
+                    case 'extra_royal_flip':
+                        targets.rootPosY = 1.9 + Math.abs(Math.sin(time * 8)) * 1.5;
+                        targets.rootRotX = -time * 10;
+                        targets.rootRotY = time * 4;
+                        targets.lArmX = Math.PI; targets.rArmX = Math.PI;
+                        targets.lLegX = -1.1; targets.rLegX = -1.1;
+                        targets.lKneeX = 1.4; targets.rKneeX = 1.4;
+                        break;
+                    case 'extra_lion_roar':
+                        targets.rootPosY = 0.9 + Math.abs(Math.sin(time * 12)) * 1.3;
+                        targets.rootRotY = time * 14;
+                        targets.rootRotX = Math.sin(time * 6) * 0.8;
+                        targets.lArmZ = Math.PI * 0.65; targets.rArmZ = -Math.PI * 0.65;
+                        targets.mouthScaleY = 2.4;
+                        break;
+                    case 'extra_universe_god':
+                        targets.rootPosY = 2.0 + Math.sin(time * 5) * 0.8;
+                        targets.rootRotY = time * 12;
+                        targets.rootRotX = Math.sin(time * 4) * 0.65;
+                        targets.rootRotZ = Math.cos(time * 4) * 0.45;
+                        targets.lArmZ = Math.PI * 0.75 + Math.sin(time * 10) * 0.3;
+                        targets.rArmZ = -Math.PI * 0.75 - Math.sin(time * 10) * 0.3;
+                        targets.lLegX = -0.5; targets.rLegX = 0.5;
+                        targets.lKneeX = 0.9; targets.rKneeX = 0.9;
+                        targets.mouthScaleY = 2.0 + Math.abs(Math.sin(time * 16));
+                        break;
                 }
 
                 if (!isTrioChoreo) {
@@ -3269,14 +3745,11 @@
                 }
 
                 const lerpSpeed = Math.min(11 * dt, 0.55); 
-                const usesDirectRotY = currentDanceState.startsWith('extra_') || currentDanceState.startsWith('trio_') || ['spin', 'freestyle', 'breakdance', 'swag'].includes(currentDanceState);
-                const usesDirectRotX = currentDanceState.startsWith('extra_') || ['epic_flip', 'breakdance'].includes(currentDanceState);
-                const usesDirectRotZ = currentDanceState.startsWith('extra_');
 
                 avatarRoot.position.y = THREE.MathUtils.lerp(avatarRoot.position.y, targets.rootPosY, lerpSpeed);
-                avatarRoot.rotation.y = usesDirectRotY ? targets.rootRotY : THREE.MathUtils.lerp(avatarRoot.rotation.y, 0, lerpSpeed);
-                avatarRoot.rotation.x = usesDirectRotX ? targets.rootRotX : THREE.MathUtils.lerp(avatarRoot.rotation.x, 0, lerpSpeed);
-                avatarRoot.rotation.z = usesDirectRotZ ? targets.rootRotZ : THREE.MathUtils.lerp(avatarRoot.rotation.z, 0, lerpSpeed);
+                avatarRoot.rotation.y = isDirectRotY ? targets.rootRotY : THREE.MathUtils.lerp(avatarRoot.rotation.y, 0, lerpSpeed);
+                avatarRoot.rotation.x = isDirectRotX ? targets.rootRotX : THREE.MathUtils.lerp(avatarRoot.rotation.x, 0, lerpSpeed);
+                avatarRoot.rotation.z = isDirectRotZ ? targets.rootRotZ : THREE.MathUtils.lerp(avatarRoot.rotation.z, 0, lerpSpeed);
                 
                 bodyGroup.position.y = THREE.MathUtils.lerp(bodyGroup.position.y, targets.bodyY, lerpSpeed);
                 bodyGroup.rotation.y = THREE.MathUtils.lerp(bodyGroup.rotation.y, targets.bodyRotY, lerpSpeed);
@@ -3294,12 +3767,41 @@
                     if(leftKnee) leftKnee.rotation.x = THREE.MathUtils.lerp(leftKnee.rotation.x, targets.lKneeX, lerpSpeed); if(rightKnee) rightKnee.rotation.x = THREE.MathUtils.lerp(rightKnee.rotation.x, targets.rKneeX, lerpSpeed);
                 }
 
-                if (head) {
-                    const vector = new THREE.Vector3(); head.getWorldPosition(vector); vector.y += 0.8; vector.project(camera); 
-                    const x = (vector.x * 0.5 + 0.5) * window.innerWidth; const y = (vector.y * -0.5 + 0.5) * window.innerHeight;
-                    const nameTag = document.getElementById('avatar-name-tag'); if (nameTag.style.display !== 'none') { nameTag.style.left = `${x}px`; nameTag.style.top = `${y}px`; }
+                if (head && cachedNameTagEl && cachedNameTagEl.style.display !== 'none') {
+                    head.getWorldPosition(tempProjVec);
+                    tempProjVec.y += 0.8;
+                    tempProjVec.project(camera);
+                    const x = (tempProjVec.x * 0.5 + 0.5) * viewportW;
+                    const y = (tempProjVec.y * -0.5 + 0.5) * viewportH;
+                    cachedNameTagEl.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) translate(-50%, -50%)`;
+                }
+
+                // Animar aros de energía estilo videojuego y estelas en las manos mientras ejecuta el baile
+                if (avatarVfxGroup) {
+                    avatarVfxGroup.rotation.y = time * (currentDanceState === 'idle' ? 1.5 : 5.5);
+                    const dancePulse = currentDanceState === 'idle' ? 1.0 : (1.18 + Math.sin(time * 12) * 0.18);
+                    avatarVfxGroup.scale.set(dancePulse, 1, dancePulse);
+                }
+                if (avatarLeftTrail) avatarLeftTrail.rotation.x = time * 10;
+                if (avatarRightTrail) avatarRightTrail.rotation.y = time * 10;
+            }
+
+            // Telemetría ligera de FPS y auto-ajuste de resolución para máxima fluidez en GitHub Pages
+            perfFrameCount++;
+            const nowPerf = performance.now();
+            if (nowPerf - perfLastCheck >= 1000) {
+                currentFpsValue = Math.min(60, Math.round((perfFrameCount * 1000) / (nowPerf - perfLastCheck)));
+                perfFrameCount = 0;
+                perfLastCheck = nowPerf;
+                if (perfHudBadgeEl) {
+                    perfHudBadgeEl.innerText = `${currentFpsValue} FPS • GitHub Ready`;
+                }
+                // Si un dispositivo móvil baja de 42 FPS, reduce suavemente el pixelRatio para recuperar 60 FPS
+                if (currentFpsValue < 42 && renderer.getPixelRatio() > 1) {
+                    renderer.setPixelRatio(1);
                 }
             }
+
             renderer.render(scene, camera);
         }
     </script>
