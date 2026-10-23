@@ -53,6 +53,84 @@
             transform: scale(1.05);
         }
 
+        .kbd-badge {
+            display: inline-block;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(34, 211, 238, 0.65);
+            color: #67e8f9;
+            font-family: monospace;
+            font-size: 8px;
+            font-weight: 900;
+            padding: 0px 3px;
+            border-radius: 3px;
+            margin-right: 3px;
+            box-shadow: 0 0 6px rgba(34, 211, 238, 0.35);
+        }
+
+        /* OVERLAY PANTALLA COMPLETA MUJER JOVEN SONRIENTE ("LIKE POR FAVOR") */
+        #woman-like-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 85;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at center, rgba(236, 72, 153, 0.28) 0%, rgba(15, 23, 42, 0.72) 70%, rgba(2, 6, 23, 0.88) 100%);
+            backdrop-filter: blur(4px);
+            opacity: 0;
+            transform: scale(0.92);
+            transition: opacity 0.28s ease, transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        #woman-like-overlay.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .woman-portrait-stage {
+            position: relative;
+            width: min(86vw, 520px);
+            height: min(76vh, 540px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            filter: drop-shadow(0 0 35px rgba(236, 72, 153, 0.75)) drop-shadow(0 0 70px rgba(34, 211, 238, 0.45));
+        }
+        .syllable-pill {
+            transition: all 0.12s ease;
+        }
+        .syllable-pill.speaking {
+            transform: scale(1.18) translateY(-4px);
+            background: linear-gradient(135deg, #ec4899, #facc15);
+            color: #0f172a;
+            box-shadow: 0 0 25px rgba(250, 204, 21, 0.95);
+        }
+
+        /* EXPLOSIÓN DE COTILLONES 2D EN PANTALLA */
+        @keyframes cotillonBurst {
+            0% {
+                transform: translate(0, 0) scale(0.2) rotate(0deg);
+                opacity: 1;
+            }
+            25% {
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--tx, 120px), var(--ty, -220px)) scale(1.25) rotate(var(--rot, 540deg));
+                opacity: 0;
+            }
+        }
+        .cotillon-burst-item {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            pointer-events: none;
+            z-index: 95;
+            font-size: var(--size, 2.2rem);
+            filter: drop-shadow(0 0 12px rgba(250, 204, 21, 0.8));
+            animation: cotillonBurst var(--dur, 2.6s) cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         .notification { animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
 
@@ -235,6 +313,131 @@
         <div id="banners-container" class="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden z-10"></div>
         <div id="avatar-name-tag" class="absolute px-4 py-1.5 bg-slate-900/80 text-white rounded-full text-sm font-black pointer-events-none transform -translate-x-1/2 -translate-y-1/2 backdrop-blur-md border-2 border-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.6)] z-10" style="display: none; transition: top 0.05s, left 0.05s;">@Usuario</div>
 
+        <!-- OVERLAY PANTALLA COMPLETA: ROSTRO DE MUJER JOVEN SONRIENTE + VOZ SINCRONIZADA "LIKE POR FAVOR" -->
+        <div id="woman-like-overlay">
+            <div class="woman-portrait-stage">
+                <svg viewBox="0 0 500 540" class="w-full h-full overflow-visible">
+                    <defs>
+                        <radialGradient id="skinGlowGrad" cx="50%" cy="42%" r="55%">
+                            <stop offset="0%" stop-color="#ffe4d6"/>
+                            <stop offset="65%" stop-color="#f7c4aa"/>
+                            <stop offset="100%" stop-color="#e39d7e"/>
+                        </radialGradient>
+                        <linearGradient id="hairGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#1e1b4b"/>
+                            <stop offset="50%" stop-color="#3b0764"/>
+                            <stop offset="100%" stop-color="#831843"/>
+                        </linearGradient>
+                        <linearGradient id="neonRimGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#22d3ee"/>
+                            <stop offset="50%" stop-color="#ec4899"/>
+                            <stop offset="100%" stop-color="#facc15"/>
+                        </linearGradient>
+                        <linearGradient id="lipGlossGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#fb7185"/>
+                            <stop offset="50%" stop-color="#e11d48"/>
+                            <stop offset="100%" stop-color="#9f1239"/>
+                        </linearGradient>
+                    </defs>
+
+                    <!-- Halo Neón de Pantalla Completa -->
+                    <circle cx="250" cy="250" r="215" fill="none" stroke="url(#neonRimGrad)" stroke-width="5" stroke-dasharray="18 10" opacity="0.85">
+                        <animateTransform attributeName="transform" type="rotate" from="0 250 250" to="360 250 250" dur="12s" repeatCount="indefinite"/>
+                    </circle>
+                    <circle cx="250" cy="250" r="195" fill="rgba(236, 72, 153, 0.12)" stroke="#22d3ee" stroke-width="2" opacity="0.6"/>
+
+                    <!-- Cabello Largo Posterior con Ondas Juveniles -->
+                    <path d="M 95 220 C 65 320, 85 445, 135 500 C 185 520, 315 520, 365 500 C 415 445, 435 320, 405 220 C 390 110, 330 60, 250 60 C 170 60, 110 110, 95 220 Z" fill="url(#hairGrad)" stroke="#ec4899" stroke-width="3"/>
+
+                    <!-- Cuello y Hombros Glamour -->
+                    <path d="M 205 375 L 205 445 L 125 480 C 165 515, 335 515, 375 480 L 295 445 L 295 375 Z" fill="url(#skinGlowGrad)"/>
+                    <!-- Collar Choker Neón VIP -->
+                    <path d="M 203 422 Q 250 442 297 422" fill="none" stroke="url(#neonRimGrad)" stroke-width="8" stroke-linecap="round"/>
+                    <polygon points="250,435 240,452 250,464 260,452" fill="#22d3ee"/>
+
+                    <!-- Orejas y Aretes de Corazón -->
+                    <ellipse cx="122" cy="260" rx="18" ry="32" fill="url(#skinGlowGrad)"/>
+                    <ellipse cx="378" cy="260" rx="18" ry="32" fill="url(#skinGlowGrad)"/>
+                    <circle cx="118" cy="292" r="10" fill="none" stroke="#facc15" stroke-width="4"/>
+                    <circle cx="382" cy="292" r="10" fill="none" stroke="#facc15" stroke-width="4"/>
+
+                    <!-- Rostro Femenino Joven y Carismático -->
+                    <path d="M 132 210 C 132 125, 368 125, 368 210 C 368 305, 322 392, 250 404 C 178 392, 132 305, 132 210 Z" fill="url(#skinGlowGrad)" stroke="#fda4af" stroke-width="2"/>
+
+                    <!-- Rubor de Mejillas Sonrientes (Se elevan al sonreír/hablar) -->
+                    <g id="woman-cheeks-group">
+                        <ellipse cx="172" cy="285" rx="28" ry="16" fill="#fb7185" opacity="0.42"/>
+                        <ellipse cx="328" cy="285" rx="28" ry="16" fill="#fb7185" opacity="0.42"/>
+                    </g>
+
+                    <!-- Cejas Expresivas -->
+                    <g id="woman-brows-group">
+                        <path d="M 155 198 Q 190 180 222 195" fill="none" stroke="#2e1065" stroke-width="6" stroke-linecap="round"/>
+                        <path d="M 278 195 Q 310 180 345 198" fill="none" stroke="#2e1065" stroke-width="6" stroke-linecap="round"/>
+                    </g>
+
+                    <!-- Ojos Grandes, Brillantes y Expresivos -->
+                    <g id="woman-eyes-group">
+                        <!-- Ojo Izquierdo -->
+                        <ellipse cx="190" cy="232" rx="28" ry="20" fill="#ffffff"/>
+                        <circle cx="192" cy="232" r="14" fill="#0891b2"/>
+                        <circle cx="192" cy="232" r="7" fill="#090d16"/>
+                        <circle cx="198" cy="226" r="4.5" fill="#ffffff"/>
+                        <circle cx="185" cy="237" r="2.2" fill="#ffffff"/>
+                        <path d="M 158 228 Q 190 202 222 228" fill="none" stroke="#090d16" stroke-width="6" stroke-linecap="round"/>
+                        <path d="M 154 222 L 145 212 M 168 214 L 163 203 M 212 215 L 219 205" stroke="#090d16" stroke-width="3.5" stroke-linecap="round"/>
+
+                        <!-- Ojo Derecho -->
+                        <ellipse cx="310" cy="232" rx="28" ry="20" fill="#ffffff"/>
+                        <circle cx="308" cy="232" r="14" fill="#0891b2"/>
+                        <circle cx="308" cy="232" r="7" fill="#090d16"/>
+                        <circle cx="314" cy="226" r="4.5" fill="#ffffff"/>
+                        <circle cx="301" cy="237" r="2.2" fill="#ffffff"/>
+                        <path d="M 278 228 Q 310 202 342 228" fill="none" stroke="#090d16" stroke-width="6" stroke-linecap="round"/>
+                        <path d="M 346 222 L 355 212 M 332 214 L 337 203 M 288 215 L 281 205" stroke="#090d16" stroke-width="3.5" stroke-linecap="round"/>
+                    </g>
+
+                    <!-- Nariz Fina y Delicada -->
+                    <path d="M 250 238 L 246 282 Q 250 290 258 284" fill="none" stroke="#d97757" stroke-width="3.5" stroke-linecap="round"/>
+                    <circle cx="253" cy="276" r="3" fill="#ffffff" opacity="0.6"/>
+
+                    <!-- GRAN SONRISA RADIANTE COORDINADA CON EL AUDIO "SUSCRÍBETE, COMENTA DEJANDO TU LIKE APOYAS AL CANAL" -->
+                    <g id="woman-mouth-group" transform="translate(250, 332)">
+                        <!-- Cavidad Vocal Interna de Gran Sonrisa -->
+                        <ellipse id="woman-mouth-cavity" cx="0" cy="6" rx="54" ry="12" fill="#4c0519"/>
+                        <!-- Dientes Superiores Blancos Radiantes (Sonrisa Amplia) -->
+                        <path id="woman-mouth-teeth" d="M -46 -3 Q 0 9 46 -3 L 40 11 Q 0 18 -40 11 Z" fill="#ffffff"/>
+                        <!-- Lengua -->
+                        <ellipse id="woman-mouth-tongue" cx="0" cy="15" rx="26" ry="7" fill="#fb7185"/>
+                        <!-- Labio Superior Arco de Cupido Elevado en Gran Sonrisa -->
+                        <path id="woman-lip-upper" d="M -62 -6 Q -26 -22 -9 -10 Q 0 -4 9 -10 Q 26 -22 62 -6 Q 0 12 -62 -6 Z" fill="url(#lipGlossGrad)"/>
+                        <!-- Labio Inferior Glossy (Se desplaza verticalmente con cada palabra) -->
+                        <path id="woman-lip-lower" d="M -62 -6 Q 0 42 62 -6 Q 0 20 -62 -6 Z" fill="url(#lipGlossGrad)"/>
+                        <!-- Brillo de Labios -->
+                        <ellipse id="woman-lip-shine" cx="0" cy="15" rx="20" ry="4" fill="#ffffff" opacity="0.65"/>
+                        <!-- Hoyuelos y Comisuras de Gran Sonrisa Carismática -->
+                        <path d="M -64 -7 Q -74 -16 -66 -24" fill="none" stroke="#be123c" stroke-width="3.5" stroke-linecap="round"/>
+                        <path d="M 64 -7 Q 74 -16 66 -24" fill="none" stroke="#be123c" stroke-width="3.5" stroke-linecap="round"/>
+                    </g>
+
+                    <!-- Flequillo y Mechones Superiores con Brillo Neón -->
+                    <path d="M 115 215 C 125 115, 210 95, 250 115 C 290 95, 375 115, 385 215 C 355 150, 305 135, 250 145 C 195 135, 145 150, 115 215 Z" fill="url(#hairGrad)"/>
+                    <path d="M 135 160 C 115 230, 118 310, 145 370" fill="none" stroke="#22d3ee" stroke-width="5" stroke-linecap="round" opacity="0.8"/>
+                    <path d="M 365 160 C 385 230, 382 310, 355 370" fill="none" stroke="#ec4899" stroke-width="5" stroke-linecap="round" opacity="0.8"/>
+                </svg>
+            </div>
+
+            <!-- Burbuja de Voz Sincronizada: "Suscríbete, Comenta dejando tu Like apoyas al canal" -->
+            <div class="glass-panel px-5 py-3 rounded-3xl border-2 border-pink-400 shadow-[0_0_40px_rgba(236,72,153,0.9)] flex flex-wrap items-center justify-center gap-2 -mt-4 max-w-2xl mx-4 text-center">
+                <span class="text-2xl animate-bounce">🎉</span>
+                <span id="syl-suscribete" class="syllable-pill px-3 py-1 rounded-full text-sm sm:text-xl font-black text-pink-300 uppercase tracking-wider">¡SUSCRÍBETE,</span>
+                <span id="syl-comenta" class="syllable-pill px-3 py-1 rounded-full text-sm sm:text-xl font-black text-cyan-300 uppercase tracking-wider">COMENTA,</span>
+                <span id="syl-like" class="syllable-pill px-3 py-1 rounded-full text-sm sm:text-xl font-black text-amber-300 uppercase tracking-wider">DEJANDO TU LIKE</span>
+                <span id="syl-apoyas" class="syllable-pill px-3 py-1 rounded-full text-sm sm:text-xl font-black text-emerald-300 uppercase tracking-wider">APOYAS AL CANAL!</span>
+                <span class="text-2xl animate-bounce">🎊</span>
+            </div>
+        </div>
+
         <!-- Header Superior con Menús Desplegables -->
         <div class="p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-3 pointer-events-auto z-20 w-full">
             
@@ -276,10 +479,10 @@
                         <div class="glass-panel px-3 py-1.5 rounded-xl flex flex-wrap gap-1.5 justify-center items-center border border-amber-400/50 shadow-[0_0_15px_rgba(251,191,36,0.25)]">
                             <span class="text-[10px] font-black text-amber-300 uppercase">Show Trío Live:</span>
                             <button onclick="triggerTrioLiveAction('suscribete')" class="bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white px-2.5 py-1 rounded-lg text-[10px] font-black transition-transform active:scale-95 shadow-md border border-pink-300/50 flex items-center gap-1">
-                                🔔 Suscríbete
+                                <span class="kbd-badge">O</span>🔔 Suscríbete
                             </button>
                             <button onclick="triggerTrioLiveAction('like')" class="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white px-2.5 py-1 rounded-lg text-[10px] font-black transition-transform active:scale-95 shadow-md border border-cyan-300/50 flex items-center gap-1">
-                                ❤️ Dale Like
+                                <span class="kbd-badge">P</span>❤️ Dale Like
                             </button>
                             <button onclick="triggerTrioLiveAction('comparte')" class="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white px-2.5 py-1 rounded-lg text-[10px] font-black transition-transform active:scale-95 shadow-md border border-amber-300/50 flex items-center gap-1">
                                 📲 Comparte a tus amigos
@@ -289,9 +492,14 @@
                 </div>
             </div>
 
-            <!-- PANEL DERECHO: Salida, Dinámicas y Menú Desplegable de Super Regalos -->
+            <!-- PANEL DERECHO: Salida, Sonido, Dinámicas y Menú Desplegable de Super Regalos -->
             <div class="flex flex-col items-end gap-2 absolute top-4 right-4 md:static z-30 pointer-events-auto">
                 <div class="flex items-center gap-2">
+                    <!-- Control de Sonidos Sintetizados -->
+                    <button onclick="toggleSoundEffects()" id="btn-sound-toggle" class="glass-panel px-3 py-1.5 rounded-xl flex items-center gap-1.5 text-xs font-bold text-emerald-300 border border-emerald-500/40 hover:bg-emerald-900/40 transition-colors shadow-lg" title="Activar/Desactivar Efectos de Sonido">
+                        <span>🔊</span> <span class="hidden sm:inline">SFX ON</span>
+                    </button>
+
                     <!-- Botón Desplegable del Nuevo Menú de Super Regalos TikTok -->
                     <button onclick="toggleSuperGiftsMenu()" id="btn-toggle-super-gifts" class="bg-gradient-to-r from-pink-600 via-fuchsia-600 to-amber-500 text-white px-3.5 py-1.5 rounded-xl text-xs font-black shadow-[0_0_20px_rgba(236,72,153,0.6)] border border-amber-300/70 hover:scale-105 transition-transform flex items-center gap-1.5">
                         <span>🎁</span> Super Regalos TikTok ▲
@@ -408,7 +616,7 @@
 
                 <!-- Selector de Categorías de Regalos TikTok -->
                 <div class="flex gap-1 text-[9px] font-black uppercase">
-                    <button onclick="filterSuperGifts('all')" id="tab-gift-all" class="flex-1 bg-pink-600 text-white py-1 rounded-md transition-colors">Todos (25)</button>
+                    <button onclick="filterSuperGifts('all')" id="tab-gift-all" class="flex-1 bg-pink-600 text-white py-1 rounded-md transition-colors">Todos (30)</button>
                     <button onclick="filterSuperGifts('popular')" id="tab-gift-popular" class="flex-1 bg-slate-800 hover:bg-slate-700 text-gray-300 py-1 rounded-md transition-colors">Populares</button>
                     <button onclick="filterSuperGifts('luxury')" id="tab-gift-luxury" class="flex-1 bg-slate-800 hover:bg-slate-700 text-amber-300 py-1 rounded-md transition-colors">Épicos VIP</button>
                 </div>
@@ -428,90 +636,90 @@
             
             <div class="glass-panel w-full px-3 py-2 rounded-t-xl flex flex-col gap-1.5 border-t border-x border-cyan-500/40 shadow-[0_0_25px_rgba(6,182,212,0.25)] pb-2.5">
                 
-                <!-- Barra Superior Compacta: Estado Sostenido + Expresiones -->
+                <!-- Barra Superior Compacta: Estado Sostenido + Teclado PC + Expresiones -->
                 <div class="flex flex-wrap items-center justify-between gap-1.5 border-b border-slate-700/80 pb-1.5">
                     <div class="flex items-center gap-1.5">
                         <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-                        <span class="text-[9px] font-black text-cyan-300 uppercase tracking-wider">Pasos Sostenidos</span>
+                        <span class="text-[9px] font-black text-cyan-300 uppercase tracking-wider">Pasos Sostenidos (Clic o Teclado PC A-Z)</span>
                     </div>
 
                     <div class="flex flex-wrap items-center gap-1">
                         <button id="step-btn-idle" onclick="triggerSustainedStep('idle', 0x22d3ee, 'Pose Base')" class="compact-step-btn step-active bg-slate-700 hover:bg-slate-600 text-white px-2 py-0.5 rounded text-[9px] font-bold border border-slate-500">
-                            Pose Base
+                            <span class="kbd-badge">Q</span>Pose Base
                         </button>
                         <button id="step-btn-talk_happy" onclick="triggerSustainedStep('talk_happy', 0x10b981, 'Chill Vibe')" class="compact-step-btn bg-emerald-900/80 hover:bg-emerald-700 text-emerald-200 px-2 py-0.5 rounded text-[9px] font-bold border border-emerald-500/40">
-                            Chill Vibe
+                            <span class="kbd-badge">W</span>Chill Vibe
                         </button>
                         <button id="step-btn-talk_explain" onclick="triggerSustainedStep('talk_explain', 0x3b82f6, 'Modo Creador')" class="compact-step-btn bg-blue-900/80 hover:bg-blue-700 text-blue-200 px-2 py-0.5 rounded text-[9px] font-bold border border-blue-500/40">
-                            Modo Creador
+                            <span class="kbd-badge">E</span>Modo Creador
                         </button>
                         <button id="step-btn-talk_shout" onclick="triggerSustainedStep('talk_shout', 0xef4444, 'Grito Hype')" class="compact-step-btn bg-red-900/80 hover:bg-red-700 text-red-200 px-2 py-0.5 rounded text-[9px] font-bold border border-red-500/40">
-                            Grito Hype
+                            <span class="kbd-badge">R</span>Grito Hype
                         </button>
                     </div>
                 </div>
 
-                <!-- Cuadrícula Compacta de 20 Botones Pequeños (Sin Emojis) para Pasos Sostenidos -->
+                <!-- Cuadrícula Compacta de 20 Botones Pequeños (Sin Emojis + Atajo de Teclado A-Z) para Pasos Sostenidos -->
                 <div class="grid grid-cols-5 sm:grid-cols-10 gap-1">
                     <button id="step-btn-trend_tiktok" onclick="triggerSustainedStep('trend_tiktok', 0xff00ff, 'Trend Viral')" class="compact-step-btn bg-purple-900/70 hover:bg-purple-700 text-white py-1 px-1.5 rounded text-[9px] font-bold border border-purple-500/40 truncate">
-                        Trend Viral
+                        <span class="kbd-badge">A</span>Trend Viral
                     </button>
                     <button id="step-btn-twerk" onclick="triggerSustainedStep('twerk', 0xff3366, 'Twerk')" class="compact-step-btn bg-pink-900/70 hover:bg-pink-700 text-white py-1 px-1.5 rounded text-[9px] font-bold border border-pink-500/40 truncate">
-                        Twerk
+                        <span class="kbd-badge">S</span>Twerk
                     </button>
                     <button id="step-btn-wave" onclick="triggerSustainedStep('wave', 0x33ccff, 'Wave')" class="compact-step-btn bg-cyan-900/70 hover:bg-cyan-700 text-white py-1 px-1.5 rounded text-[9px] font-bold border border-cyan-500/40 truncate">
-                        Wave
+                        <span class="kbd-badge">D</span>Wave
                     </button>
                     <button id="step-btn-robot_dance" onclick="triggerSustainedStep('robot_dance', 0x00ff00, 'Electro')" class="compact-step-btn bg-green-900/70 hover:bg-green-700 text-white py-1 px-1.5 rounded text-[9px] font-bold border border-green-500/40 truncate">
-                        Electro
+                        <span class="kbd-badge">F</span>Electro
                     </button>
                     <button id="step-btn-moonwalk" onclick="triggerSustainedStep('moonwalk', 0xcccccc, 'Moonwalk')" class="compact-step-btn bg-slate-800 hover:bg-slate-600 text-white py-1 px-1.5 rounded text-[9px] font-bold border border-gray-500/40 truncate">
-                        Moonwalk
+                        <span class="kbd-badge">G</span>Moonwalk
                     </button>
                     <button id="step-btn-hype_dance" onclick="triggerSustainedStep('hype_dance', 0xffaa00, 'Hype')" class="compact-step-btn bg-orange-900/70 hover:bg-orange-700 text-white py-1 px-1.5 rounded text-[9px] font-bold border border-orange-500/40 truncate">
-                        Hype
+                        <span class="kbd-badge">H</span>Hype
                     </button>
                     <button id="step-btn-hiphop" onclick="triggerSustainedStep('hiphop', 0xff4400, 'HipHop')" class="compact-step-btn bg-red-900/70 hover:bg-red-700 text-white py-1 px-1.5 rounded text-[9px] font-bold border border-red-500/40 truncate">
-                        HipHop
+                        <span class="kbd-badge">J</span>HipHop
                     </button>
                     <button id="step-btn-freestyle" onclick="triggerSustainedStep('freestyle', 0xffbbff, 'Freestyle')" class="compact-step-btn bg-fuchsia-900/70 hover:bg-fuchsia-700 text-white py-1 px-1.5 rounded text-[9px] font-bold border border-fuchsia-500/40 truncate">
-                        Freestyle
+                        <span class="kbd-badge">K</span>Freestyle
                     </button>
                     <button id="step-btn-disco" onclick="triggerSustainedStep('disco', 0xffff00, 'Retro 80s')" class="compact-step-btn bg-yellow-900/70 hover:bg-yellow-700 text-white py-1 px-1.5 rounded text-[9px] font-bold border border-yellow-500/40 truncate">
-                        Retro 80s
+                        <span class="kbd-badge">L</span>Retro 80s
                     </button>
                     <button id="step-btn-floss" onclick="triggerSustainedStep('floss', 0x00ffff, 'Floss')" class="compact-step-btn bg-teal-900/70 hover:bg-teal-700 text-white py-1 px-1.5 rounded text-[9px] font-bold border border-teal-500/40 truncate">
-                        Floss
+                        <span class="kbd-badge">Z</span>Floss
                     </button>
                     <button id="step-btn-shuffle_pro" onclick="triggerSustainedStep('shuffle_pro', 0xffcc00, 'Shuffle Pro')" class="compact-step-btn bg-amber-900/70 hover:bg-amber-700 text-white py-1 px-1.5 rounded text-[9px] font-bold border border-amber-500/40 truncate">
-                        Shuffle Pro
+                        <span class="kbd-badge">X</span>Shuffle Pro
                     </button>
                     <button id="step-btn-perreo" onclick="triggerSustainedStep('perreo', 0xff2222, 'Perreo')" class="compact-step-btn bg-rose-900/70 hover:bg-rose-700 text-white py-1 px-1.5 rounded text-[9px] font-bold border border-rose-500/40 truncate">
-                        Perreo
+                        <span class="kbd-badge">C</span>Perreo
                     </button>
                     <button id="step-btn-swag" onclick="triggerSustainedStep('swag', 0xffffff, 'Swag')" class="compact-step-btn bg-zinc-800 hover:bg-zinc-600 text-white py-1 px-1.5 rounded text-[9px] font-bold border border-zinc-500/40 truncate">
-                        Swag
+                        <span class="kbd-badge">V</span>Swag
                     </button>
                     <button id="step-btn-shuffle" onclick="triggerSustainedStep('shuffle', 0x00ff88, 'C-Walk')" class="compact-step-btn bg-lime-900/70 hover:bg-lime-700 text-white py-1 px-1.5 rounded text-[9px] font-bold border border-lime-500/40 truncate">
-                        C-Walk
+                        <span class="kbd-badge">B</span>C-Walk
                     </button>
                     <button id="step-btn-zombie" onclick="triggerSustainedStep('zombie', 0x55aa55, 'Thriller')" class="compact-step-btn bg-emerald-950 hover:bg-emerald-800 text-white py-1 px-1.5 rounded text-[9px] font-bold border border-emerald-500/40 truncate">
-                        Thriller
+                        <span class="kbd-badge">N</span>Thriller
                     </button>
                     <button id="step-btn-samba" onclick="triggerSustainedStep('samba', 0xff55aa, 'Latino')" class="compact-step-btn bg-pink-950 hover:bg-pink-800 text-white py-1 px-1.5 rounded text-[9px] font-bold border border-pink-500/40 truncate">
-                        Latino
+                        <span class="kbd-badge">M</span>Latino
                     </button>
                     <button id="step-btn-dab" onclick="triggerSustainedStep('dab', 0x3355ff, 'Dab Base')" class="compact-step-btn bg-blue-950 hover:bg-blue-800 text-white py-1 px-1.5 rounded text-[9px] font-bold border border-blue-500/40 truncate">
-                        Dab Base
+                        <span class="kbd-badge">T</span>Dab Base
                     </button>
                     <button id="step-btn-kpop" onclick="triggerSustainedStep('kpop', 0xffbbdd, 'K-Pop Idol')" class="compact-step-btn bg-fuchsia-950 hover:bg-fuchsia-800 text-white py-1 px-1.5 rounded text-[9px] font-bold border border-fuchsia-500/40 truncate">
-                        K-Pop Idol
+                        <span class="kbd-badge">Y</span>K-Pop Idol
                     </button>
                     <button id="step-btn-jumpstyle" onclick="triggerSustainedStep('jumpstyle', 0xffaa33, 'Jumpstyle')" class="compact-step-btn bg-orange-950 hover:bg-orange-800 text-white py-1 px-1.5 rounded text-[9px] font-bold border border-orange-500/40 truncate">
-                        Jumpstyle
+                        <span class="kbd-badge">U</span>Jumpstyle
                     </button>
                     <button id="step-btn-breakdance" onclick="triggerSustainedStep('breakdance', 0x8844ff, 'B-Boy')" class="compact-step-btn bg-violet-950 hover:bg-violet-800 text-white py-1 px-1.5 rounded text-[9px] font-bold border border-violet-500/40 truncate">
-                        B-Boy
+                        <span class="kbd-badge">I</span>B-Boy
                     </button>
                 </div>
             </div>
@@ -533,6 +741,75 @@
     <div id="notifications-container" class="absolute top-24 left-4 w-64 flex flex-col gap-2 pointer-events-none z-50"></div>
 
     <script>
+        // ============================================================================
+        // 🔊 MOTOR DE EFECTOS DE SONIDO SINTETIZADOS (WEB AUDIO API)
+        // ============================================================================
+        let soundEffectsEnabled = true;
+        let audioCtx = null;
+
+        function toggleSoundEffects() {
+            soundEffectsEnabled = !soundEffectsEnabled;
+            const btn = document.getElementById('btn-sound-toggle');
+            if (btn) {
+                btn.innerHTML = soundEffectsEnabled
+                    ? '<span>🔊</span> <span class="hidden sm:inline">SFX ON</span>'
+                    : '<span>🔇</span> <span class="hidden sm:inline">SFX OFF</span>';
+                btn.className = soundEffectsEnabled
+                    ? 'glass-panel px-3 py-1.5 rounded-xl flex items-center gap-1.5 text-xs font-bold text-emerald-300 border border-emerald-500/40 hover:bg-emerald-900/40 transition-colors shadow-lg'
+                    : 'glass-panel px-3 py-1.5 rounded-xl flex items-center gap-1.5 text-xs font-bold text-gray-400 border border-gray-600/40 hover:bg-gray-800/40 transition-colors shadow-lg';
+            }
+            if (soundEffectsEnabled) playSynthSound('step');
+        }
+
+        function playSynthSound(type = 'step') {
+            if (!soundEffectsEnabled) return;
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+
+                const now = audioCtx.currentTime;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                if (type === 'welcome') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(440, now);
+                    osc.frequency.setValueAtTime(554.37, now + 0.09);
+                    osc.frequency.setValueAtTime(659.25, now + 0.18);
+                    gain.gain.setValueAtTime(0.14, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.38);
+                    osc.start(now);
+                    osc.stop(now + 0.38);
+                } else if (type === 'gift') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, now);
+                    osc.frequency.exponentialRampToValueAtTime(1046.5, now + 0.22);
+                    gain.gain.setValueAtTime(0.16, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.26);
+                    osc.start(now);
+                    osc.stop(now + 0.26);
+                } else if (type === 'epic') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, now);
+                    osc.frequency.exponentialRampToValueAtTime(880, now + 0.42);
+                    gain.gain.setValueAtTime(0.18, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.48);
+                    osc.start(now);
+                    osc.stop(now + 0.48);
+                } else {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(380, now);
+                    osc.frequency.exponentialRampToValueAtTime(580, now + 0.12);
+                    gain.gain.setValueAtTime(0.1, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
+                    osc.start(now);
+                    osc.stop(now + 0.14);
+                }
+            } catch (e) {}
+        }
+
         function customAlert(message, title = "Aviso") {
             document.getElementById('alert-title').innerText = title;
             document.getElementById('alert-message').innerText = message;
@@ -551,23 +828,36 @@
         // ============================================================================
         // 🔗 CONFIGURACIÓN FIREBASE Y DB (BASE OFICIAL DEL PROTOTIPO)
         // ============================================================================
-      	const firebaseConfig = {
-    	    apiKey: "AIzaSyDzDUQ1v740C9S-3On-wLm7YwtFaRIVMWM",
-    	    authDomain: "tik-tok-dance-225cb.firebaseapp.com",
-	        databaseURL: "https://tik-tok-dance-225cb-default-rtdb.firebaseio.com/",
-   	        projectId: "tik-tok-dance-225cb",
-   	        storageBucket: "tik-tok-dance-225cb.firebasestorage.app",
-   	        messagingSenderId: "668301493985",
-   	        appId: "1:668301493985:web:d221f79f019945ef8f59a0"
- 	    };
+        const firebaseConfig = {
+            apiKey: "AIzaSyDzDUQ1v740C9S-3On-wLm7YwtFaRIVMWM",
+            authDomain: "tik-tok-dance-225cb.firebaseapp.com",
+            databaseURL: "https://tik-tok-dance-225cb-default-rtdb.firebaseio.com/",
+            projectId: "tik-tok-dance-225cb",
+            storageBucket: "tik-tok-dance-225cb.firebasestorage.app",
+            messagingSenderId: "668301493985",
+            appId: "1:668301493985:web:d221f79f019945ef8f59a0"
+        };
 
-        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
-        const database = firebase.database();
+        let database = null;
+        try {
+            if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+            database = firebase.database();
+        } catch (e) {
+            console.warn("Firebase en modo local de respaldo:", e);
+        }
 
         const SUPER_ADMIN_EMAIL = 'copauyunifreddy@gmail.com';
-        const defaultDB = [{ name: SUPER_ADMIN_EMAIL, password: 'V7#Luna!Roca$94_Sol@Nebula%815*Bosque&Rio?Fenix=27', role: 'admin', hasGiftAccess: true, hasGameAccess: true, canManageGifts: true, canCreateSubAdmins: true }];
+        const defaultDB = [{
+            name: SUPER_ADMIN_EMAIL,
+            password: 'V7#Luna!Roca$94_Sol@Nebula%815*Bosque&Rio?Fenix=27',
+            role: 'admin',
+            hasGiftAccess: true,
+            hasGameAccess: true,
+            canManageGifts: true,
+            canCreateSubAdmins: true
+        }];
 
-        let playersDB = [];
+        let playersDB = [...defaultDB];
         let playerAdsDB = {};
         let globalAdsDB = null;
         let currentBanners = [
@@ -603,11 +893,18 @@
         let superAuraGroup = null;
         let superGiftBurstTimer = 0;
         let screenShakeTimer = 0;
+        let suddenWomanTimer = 14.0; // Temporizador para aparición repentina durante el baile
+
+        function normalizePlayersList(raw) {
+            if (!raw) return null;
+            const arr = Array.isArray(raw) ? raw.filter(Boolean) : Object.values(raw).filter(Boolean);
+            return arr.length > 0 ? arr : null;
+        }
 
         function triggerScreenShake(durationSeconds = 1.35) {
             screenShakeTimer = durationSeconds;
             document.body.classList.remove('screen-shake-active');
-            void document.body.offsetWidth; // Reiniciar animación CSS
+            void document.body.offsetWidth;
             document.body.classList.add('screen-shake-active');
             setTimeout(() => {
                 document.body.classList.remove('screen-shake-active');
@@ -644,24 +941,224 @@
             }
         }
 
+        // ============================================================================
+        // 🎉 EXPLOSIÓN DE COTILLONES (2D Y 3D) + ROSTRO CON GRAN SONRISA Y VOZ
+        // "Suscríbete, Comenta dejando tu Like apoyas al canal"
+        // ============================================================================
+        let womanOverlayHideTimeout = null;
+        let womanLipSyncTimeouts = [];
+
+        function triggerCotillonesExplosion() {
+            // Activar también los cotillones 3D y fuegos artificiales en el escenario
+            triggerGranPresentacion();
+
+            // Explosión radial 2D de cotillones (serpentinas, confeti, globos, trompetas de fiesta)
+            const cotillonIcons = ['🎉', '🎊', '🎈', '🥳', '✨', '🪅', '🎀', '⭐', '💖', '🪩'];
+            const totalPieces = 48;
+            for (let i = 0; i < totalPieces; i++) {
+                setTimeout(() => {
+                    const el = document.createElement('div');
+                    el.className = 'cotillon-burst-item';
+                    el.innerText = cotillonIcons[i % cotillonIcons.length];
+
+                    const angle = (Math.PI * 2 * i) / totalPieces + (Math.random() - 0.5) * 0.35;
+                    const dist = 160 + Math.random() * (Math.min(window.innerWidth, window.innerHeight) * 0.48);
+                    const tx = Math.cos(angle) * dist;
+                    const ty = Math.sin(angle) * dist - 40;
+                    const rot = Math.floor((Math.random() - 0.5) * 920) + 'deg';
+                    const size = (1.6 + Math.random() * 1.6).toFixed(2) + 'rem';
+                    const dur = (2.1 + Math.random() * 1.1).toFixed(2) + 's';
+
+                    el.style.setProperty('--tx', `${tx.toFixed(0)}px`);
+                    el.style.setProperty('--ty', `${ty.toFixed(0)}px`);
+                    el.style.setProperty('--rot', rot);
+                    el.style.setProperty('--size', size);
+                    el.style.setProperty('--dur', dur);
+
+                    document.body.appendChild(el);
+                    setTimeout(() => el.remove(), parseFloat(dur) * 1000 + 100);
+                }, (i % 8) * 35);
+            }
+        }
+
+        function setWomanMouthShape(openness = 0, widthScale = 1.08, activeSylId = null) {
+            const cavity = document.getElementById('woman-mouth-cavity');
+            const lowerLip = document.getElementById('woman-lip-lower');
+            const tongue = document.getElementById('woman-mouth-tongue');
+            const shine = document.getElementById('woman-lip-shine');
+            const cheeks = document.getElementById('woman-cheeks-group');
+            const brows = document.getElementById('woman-brows-group');
+
+            // Mantiene una gran sonrisa constante mientras articula cada sílaba
+            const ry = 9 + openness * 25;
+            const rx = 50 * widthScale;
+            const lipDrop = 38 + openness * 34;
+
+            if (cavity) {
+                cavity.setAttribute('ry', ry.toFixed(1));
+                cavity.setAttribute('rx', rx.toFixed(1));
+                cavity.setAttribute('cy', (5 + openness * 10).toFixed(1));
+            }
+            if (lowerLip) {
+                lowerLip.setAttribute('d', `M -${(62 * widthScale).toFixed(1)} -6 Q 0 ${lipDrop.toFixed(1)} ${(62 * widthScale).toFixed(1)} -6 Q 0 ${(18 + openness * 24).toFixed(1)} -${(62 * widthScale).toFixed(1)} -6 Z`);
+            }
+            if (tongue) {
+                tongue.setAttribute('cy', (13 + openness * 14).toFixed(1));
+                tongue.setAttribute('ry', (6 + openness * 7).toFixed(1));
+            }
+            if (shine) {
+                shine.setAttribute('cy', (14 + openness * 18).toFixed(1));
+            }
+            if (cheeks) {
+                cheeks.setAttribute('transform', `translate(0, ${(-2 - openness * 6).toFixed(1)})`);
+            }
+            if (brows) {
+                brows.setAttribute('transform', `translate(0, ${(-2 - openness * 7).toFixed(1)})`);
+            }
+
+            ['syl-suscribete', 'syl-comenta', 'syl-like', 'syl-apoyas'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    if (id === activeSylId) el.classList.add('speaking');
+                    else el.classList.remove('speaking');
+                }
+            });
+        }
+
+        function playFormantSyllable(f1, f2, pitchFreq, durationSec) {
+            if (!soundEffectsEnabled) return;
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+
+                const now = audioCtx.currentTime;
+                const osc = audioCtx.createOscillator();
+                const subOsc = audioCtx.createOscillator();
+                osc.type = 'sawtooth';
+                subOsc.type = 'triangle';
+                osc.frequency.setValueAtTime(pitchFreq, now);
+                osc.frequency.exponentialRampToValueAtTime(pitchFreq * 1.05, now + durationSec);
+                subOsc.frequency.setValueAtTime(pitchFreq * 2, now);
+
+                const filter1 = audioCtx.createBiquadFilter();
+                filter1.type = 'bandpass';
+                filter1.frequency.setValueAtTime(f1, now);
+                filter1.Q.setValueAtTime(4.5, now);
+
+                const filter2 = audioCtx.createBiquadFilter();
+                filter2.type = 'bandpass';
+                filter2.frequency.setValueAtTime(f2, now);
+                filter2.Q.setValueAtTime(5.5, now);
+
+                const masterGain = audioCtx.createGain();
+                masterGain.gain.setValueAtTime(0.01, now);
+                masterGain.gain.linearRampToValueAtTime(0.20, now + 0.035);
+                masterGain.gain.exponentialRampToValueAtTime(0.001, now + durationSec);
+
+                osc.connect(filter1);
+                osc.connect(filter2);
+                subOsc.connect(filter1);
+                filter1.connect(masterGain);
+                filter2.connect(masterGain);
+                masterGain.connect(audioCtx.destination);
+
+                osc.start(now);
+                subOsc.start(now);
+                osc.stop(now + durationSec);
+                subOsc.stop(now + durationSec);
+            } catch (e) {}
+        }
+
+        function triggerWomanLikePorFavorOverlay() {
+            const overlay = document.getElementById('woman-like-overlay');
+            if (!overlay) return;
+
+            if (womanOverlayHideTimeout) clearTimeout(womanOverlayHideTimeout);
+            womanLipSyncTimeouts.forEach(t => clearTimeout(t));
+            womanLipSyncTimeouts = [];
+
+            // Explosión espectacular de cotillones al aparecer de manera repentina
+            triggerCotillonesExplosion();
+
+            overlay.classList.add('active');
+            setWomanMouthShape(0.22, 1.12, null);
+
+            // Síntesis de voz femenina alegre diciendo: "Suscríbete, Comenta dejando tu Like apoyas al canal"
+            try {
+                if ('speechSynthesis' in window && soundEffectsEnabled) {
+                    window.speechSynthesis.cancel();
+                    const utter = new SpeechSynthesisUtterance("¡Suscríbete, comenta, dejando tu Like apoyas al canal!");
+                    utter.lang = 'es-MX';
+                    utter.pitch = 1.32;
+                    utter.rate = 1.04;
+                    utter.volume = 1.0;
+                    const voices = window.speechSynthesis.getVoices();
+                    const femVoice = voices.find(v => v.lang.startsWith('es') && /paulina|monica|helena|sabina|lucia|female|mujer|google/i.test(v.name)) || voices.find(v => v.lang.startsWith('es'));
+                    if (femVoice) utter.voice = femVoice;
+                    window.speechSynthesis.speak(utter);
+                }
+            } catch (e) {}
+
+            // Cronograma labial y vocal coordinado para: "¡Suscríbete, comenta, dejando tu Like apoyas al canal!"
+            const syllableTimeline = [
+                // "SUS-CRÍ-BE-TE"
+                { delay: 50,   open: 0.45, width: 0.96, syl: 'syl-suscribete', f1: 380, f2: 950,  pitch: 310, dur: 0.16 },
+                { delay: 220,  open: 0.85, width: 1.14, syl: 'syl-suscribete', f1: 420, f2: 2350, pitch: 370, dur: 0.22 },
+                { delay: 450,  open: 0.60, width: 1.08, syl: 'syl-suscribete', f1: 550, f2: 1850, pitch: 340, dur: 0.16 },
+                { delay: 620,  open: 0.55, width: 1.10, syl: 'syl-suscribete', f1: 530, f2: 1900, pitch: 330, dur: 0.18 },
+                // "CO-MEN-TA"
+                { delay: 860,  open: 0.65, width: 0.95, syl: 'syl-comenta',    f1: 520, f2: 980,  pitch: 349, dur: 0.16 },
+                { delay: 1040, open: 0.78, width: 1.08, syl: 'syl-comenta',    f1: 580, f2: 1820, pitch: 392, dur: 0.20 },
+                { delay: 1260, open: 0.92, width: 1.14, syl: 'syl-comenta',    f1: 850, f2: 1550, pitch: 360, dur: 0.20 },
+                // "DE-JAN-DO TU LIKE"
+                { delay: 1520, open: 0.62, width: 1.06, syl: 'syl-like',       f1: 540, f2: 1850, pitch: 350, dur: 0.15 },
+                { delay: 1690, open: 0.88, width: 1.12, syl: 'syl-like',       f1: 840, f2: 1600, pitch: 380, dur: 0.18 },
+                { delay: 1890, open: 0.55, width: 0.94, syl: 'syl-like',       f1: 480, f2: 960,  pitch: 340, dur: 0.15 },
+                { delay: 2060, open: 0.96, width: 1.16, syl: 'syl-like',       f1: 820, f2: 1980, pitch: 440, dur: 0.28 },
+                // "A-PO-YAS AL CA-NAL"
+                { delay: 2380, open: 0.85, width: 1.10, syl: 'syl-apoyas',     f1: 860, f2: 1500, pitch: 370, dur: 0.16 },
+                { delay: 2560, open: 0.72, width: 0.96, syl: 'syl-apoyas',     f1: 520, f2: 980,  pitch: 392, dur: 0.18 },
+                { delay: 2760, open: 0.82, width: 1.12, syl: 'syl-apoyas',     f1: 840, f2: 1620, pitch: 415, dur: 0.18 },
+                { delay: 2960, open: 0.75, width: 1.08, syl: 'syl-apoyas',     f1: 820, f2: 1550, pitch: 380, dur: 0.16 },
+                { delay: 3140, open: 0.95, width: 1.16, syl: 'syl-apoyas',     f1: 880, f2: 1520, pitch: 466, dur: 0.34 },
+                // Gran sonrisa radiante final
+                { delay: 3520, open: 0.26, width: 1.18, syl: null,             f1: 0,   f2: 0,    pitch: 0,   dur: 0    }
+            ];
+
+            syllableTimeline.forEach(step => {
+                const tid = setTimeout(() => {
+                    setWomanMouthShape(step.open, step.width, step.syl);
+                    if (step.dur > 0) {
+                        playFormantSyllable(step.f1, step.f2, step.pitch, step.dur);
+                    }
+                }, step.delay);
+                womanLipSyncTimeouts.push(tid);
+            });
+
+            womanOverlayHideTimeout = setTimeout(() => {
+                overlay.classList.remove('active');
+                setWomanMouthShape(0.2, 1.12, null);
+            }, 4600);
+        }
+
         function triggerTrioLiveAction(type) {
             const configs = {
                 'suscribete': {
-                    phrase: '🔔 ¡SUSCRÍBETE! 🔥',
+                    phrase: '🔔 ¡SUSCRÍBETE, COMENTA Y DEJA TU LIKE! 🔥',
                     action: 'trio_suscribete',
                     stepLabel: 'Trío Live: ¡Suscríbete!',
                     lightColor: 0xff007f,
                     colors: ['#ff007f', '#f43f5e', '#facc15', '#ec4899']
                 },
                 'like': {
-                    phrase: '❤️ ¡DALE LIKE! 👍',
+                    phrase: '❤️ ¡DEJANDO TU LIKE APOYAS AL CANAL! 👍',
                     action: 'trio_like',
-                    stepLabel: 'Trío Live: ¡Dale Like!',
+                    stepLabel: 'Trío Live: ¡Apoya con tu Like!',
                     lightColor: 0x00f2fe,
                     colors: ['#22d3ee', '#38bdf8', '#f472b6', '#a855f7']
                 },
                 'comparte': {
-                    phrase: '📲 COMPARTE A TUS AMIGOS 🚀',
+                    phrase: '📲 ¡SUSCRÍBETE, COMENTA Y APOYA AL CANAL! 🚀',
                     action: 'trio_comparte',
                     stepLabel: 'Trío Live: ¡Comparte!',
                     lightColor: 0xf59e0b,
@@ -674,13 +1171,66 @@
 
             triggerScreenShake(1.4);
             spawnWordRain(cfg.phrase, cfg.colors);
+            triggerWomanLikePorFavorOverlay();
             updateActiveStepUI(cfg.action, cfg.stepLabel);
             trigger3DAction({ action: cfg.action, color: cfg.lightColor, isSuper: true });
         }
 
         // ============================================================================
-        // 🎁 CATÁLOGO COMPLETO DE SUPER REGALOS DE TIKTOK LIVE (25 REGALOS CON TODOS LOS EMOJIS)
-        // Cada regalo ejecuta un paso extraordinario sostenido + efecto visual especial 3D
+        // ⌨️ DOBLE INGRESO DE COMANDOS: MAPEO ALFABÉTICO PC (TECLAS A-Z) PARA PASOS SOSTENIDOS
+        // ============================================================================
+        const KEYBOARD_SUSTAINED_MAP = {
+            'q': { action: 'idle',         color: 0x22d3ee, title: 'Pose Base' },
+            'w': { action: 'talk_happy',   color: 0x10b981, title: 'Chill Vibe' },
+            'e': { action: 'talk_explain', color: 0x3b82f6, title: 'Modo Creador' },
+            'r': { action: 'talk_shout',   color: 0xef4444, title: 'Grito Hype' },
+            'a': { action: 'trend_tiktok', color: 0xff00ff, title: 'Trend Viral' },
+            's': { action: 'twerk',        color: 0xff3366, title: 'Twerk' },
+            'd': { action: 'wave',         color: 0x33ccff, title: 'Wave' },
+            'f': { action: 'robot_dance',  color: 0x00ff00, title: 'Electro' },
+            'g': { action: 'moonwalk',     color: 0xcccccc, title: 'Moonwalk' },
+            'h': { action: 'hype_dance',   color: 0xffaa00, title: 'Hype' },
+            'j': { action: 'hiphop',       color: 0xff4400, title: 'HipHop' },
+            'k': { action: 'freestyle',    color: 0xffbbff, title: 'Freestyle' },
+            'l': { action: 'disco',        color: 0xffff00, title: 'Retro 80s' },
+            'z': { action: 'floss',        color: 0x00ffff, title: 'Floss' },
+            'x': { action: 'shuffle_pro',  color: 0xffcc00, title: 'Shuffle Pro' },
+            'c': { action: 'perreo',       color: 0xff2222, title: 'Perreo' },
+            'v': { action: 'swag',         color: 0xffffff, title: 'Swag' },
+            'b': { action: 'shuffle',      color: 0x00ff88, title: 'C-Walk' },
+            'n': { action: 'zombie',       color: 0x55aa55, title: 'Thriller' },
+            'm': { action: 'samba',        color: 0xff55aa, title: 'Latino' },
+            't': { action: 'dab',          color: 0x3355ff, title: 'Dab Base' },
+            'y': { action: 'kpop',         color: 0xffbbdd, title: 'K-Pop Idol' },
+            'u': { action: 'jumpstyle',    color: 0xffaa33, title: 'Jumpstyle' },
+            'i': { action: 'breakdance',   color: 0x8844ff, title: 'B-Boy' },
+            'o': { trio: 'suscribete' },
+            'p': { trio: 'like' }
+        };
+
+        window.addEventListener('keydown', (e) => {
+            // Ignorar si el usuario está escribiendo en un input o textarea
+            const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+            if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+            if (e.ctrlKey || e.altKey || e.metaKey) return;
+
+            const gameScreen = document.getElementById('game-screen');
+            if (!gameScreen || !gameScreen.classList.contains('active')) return;
+
+            const key = e.key.toLowerCase();
+            const mapped = KEYBOARD_SUSTAINED_MAP[key];
+            if (!mapped) return;
+
+            e.preventDefault();
+            if (mapped.trio) {
+                triggerTrioLiveAction(mapped.trio);
+            } else {
+                triggerSustainedStep(mapped.action, mapped.color, `${mapped.title} [${key.toUpperCase()}]`);
+            }
+        });
+
+        // ============================================================================
+        // 🎁 CATÁLOGO COMPLETO DE SUPER REGALOS DE TIKTOK LIVE (30 REGALOS CON TODOS LOS EMOJIS)
         // ============================================================================
         const SUPER_GIFTS_CATALOG = [
             { id: 'rosa', name: 'Rosa', emoji: '🌹', coins: 1, category: 'popular', stepTitle: 'Giro Tornado 360°', action: 'extra_tornado', color: 0xff69b4 },
@@ -696,6 +1246,8 @@
             { id: 'dona', name: 'Dona', emoji: '🍩', coins: 120, category: 'popular', stepTitle: 'Mega Salto Doble', action: 'extra_mega_jump', color: 0xffd700 },
             { id: 'paleta', name: 'Paleta Neón', emoji: '🍭', coins: 150, category: 'popular', stepTitle: 'Torbellino Candy', action: 'extra_candy_twirl', color: 0x2dd4bf },
             { id: 'sneaker', name: 'Sneaker LED', emoji: '👟', coins: 199, category: 'popular', stepTitle: 'Pies Supersónicos', action: 'extra_sonic_feet', color: 0xfbbf24 },
+            { id: 'microfono', name: 'Micrófono Oro', emoji: '🎤', coins: 210, category: 'popular', stepTitle: 'Popstar Encore', action: 'extra_kpop_star', color: 0x38bdf8 },
+            { id: 'audifonos', name: 'Audífonos DJ', emoji: '🎧', coins: 225, category: 'popular', stepTitle: 'Electro Drop 3D', action: 'extra_cyber_glitch', color: 0xa855f7 },
             { id: 'picante', name: 'Picante Urbano', emoji: '🌶️', coins: 250, category: 'luxury', stepTitle: 'Drop Volcánico', action: 'extra_volcano_drop', color: 0xf43f5e },
             { id: 'gafas', name: 'Gafas VIP', emoji: '🕶️', coins: 299, category: 'luxury', stepTitle: 'Swag Levitante', action: 'extra_swag_levitate', color: 0xffffff },
             { id: 'skate', name: 'Skate Urbano', emoji: '🛹', coins: 350, category: 'luxury', stepTitle: 'Kickflip Aéreo 720°', action: 'extra_skate_flip', color: 0x84cc16 },
@@ -703,10 +1255,13 @@
             { id: 'carnaval', name: 'Reina Carnaval', emoji: '🎭', coins: 450, category: 'luxury', stepTitle: 'Samba Acrobática', action: 'extra_carnaval_spin', color: 0xec4899 },
             { id: 'finger_heart', name: 'Finger Heart', emoji: '🫰', coins: 500, category: 'luxury', stepTitle: 'Idol Star Aéreo', action: 'extra_kpop_star', color: 0xf472b6 },
             { id: 'rayo', name: 'Rayo', emoji: '⚡', coins: 699, category: 'luxury', stepTitle: 'Dios del Trueno', action: 'extra_thunder_god', color: 0x00ffff },
+            { id: 'estrella_fugaz', name: 'Estrella Fugaz', emoji: '🌠', coins: 850, category: 'luxury', stepTitle: 'Órbita Astral', action: 'extra_zero_gravity', color: 0xfef08a },
             { id: 'diamante', name: 'Diamante Azul', emoji: '💎', coins: 1000, category: 'luxury', stepTitle: 'Giro Diamante 3D', action: 'extra_diamond_spin', color: 0x3b82f6 },
+            { id: 'supercar', name: 'Supercar Neon', emoji: '🏎️', coins: 1500, category: 'luxury', stepTitle: 'Turbo Drift 360°', action: 'extra_fire_spin', color: 0xef4444 },
             { id: 'cohete', name: 'Cohete Hype', emoji: '🚀', coins: 2000, category: 'luxury', stepTitle: 'Despegue Orbital', action: 'extra_rocket_launch', color: 0xf97316 },
             { id: 'corona', name: 'Corona', emoji: '👑', coins: 3000, category: 'luxury', stepTitle: 'Mortal Imperial', action: 'extra_royal_flip', color: 0xff8c00 },
             { id: 'leon', name: 'León Imperial', emoji: '🦁', coins: 5000, category: 'luxury', stepTitle: 'Hélice Rey León', action: 'extra_lion_roar', color: 0xa855f7 },
+            { id: 'fenix', name: 'Fénix Dorado', emoji: '🦅', coins: 10000, category: 'luxury', stepTitle: 'Vuelo de Fuego', action: 'extra_butterfly_fly', color: 0xf59e0b },
             { id: 'universo', name: 'TikTok Universe', emoji: '🌌', coins: 34999, category: 'luxury', stepTitle: 'Ascensión Cósmica', action: 'extra_universe_god', color: 0x06b6d4 }
         ];
 
@@ -715,7 +1270,6 @@
             if (!grid) return;
             grid.innerHTML = '';
 
-            // Actualizar pestañas activas
             ['all', 'popular', 'luxury'].forEach(tab => {
                 const btn = document.getElementById('tab-gift-' + tab);
                 if (btn) {
@@ -749,41 +1303,62 @@
         }
 
         function filterSuperGifts(category) {
+            playSynthSound('step');
             renderSuperGiftsMenu(category);
         }
 
         async function loadDB() {
             return new Promise((resolve) => {
+                let resolved = false;
+                const finish = (dbData) => {
+                    if (resolved) return;
+                    resolved = true;
+                    resolve(dbData);
+                };
+
+                // Timeout de seguridad (2 segundos) para evitar bloqueo en pantalla de carga
+                setTimeout(() => {
+                    finish(defaultDB);
+                }, 2000);
+
                 try {
+                    if (!database) {
+                        finish(defaultDB);
+                        return;
+                    }
                     database.ref('playersDB').once('value').then((snapshot) => {
-                        let db = snapshot.val();
-                        if (!db || !db.find(p => p.name.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase())) { db = defaultDB; database.ref('playersDB').set(db); }
-                        resolve(db);
-                    }).catch((error) => {
-                        let db = JSON.parse(localStorage.getItem('tiktokArenaDBFallback'));
-                        if (!db || !db.find(p => p.name.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase())) { db = defaultDB; localStorage.setItem('tiktokArenaDBFallback', JSON.stringify(db)); }
-                        resolve(db);
+                        let db = normalizePlayersList(snapshot.val());
+                        if (!db || !db.find(p => p && p.name && p.name.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase())) {
+                            db = [...defaultDB];
+                            database.ref('playersDB').set(db).catch(() => {});
+                        }
+                        finish(db);
+                    }).catch(() => {
+                        finish(defaultDB);
                     });
-                } catch(err) { resolve(defaultDB); }
+                } catch(err) {
+                    finish(defaultDB);
+                }
             });
         }
 
         async function saveDB() {
             return new Promise((resolve) => {
                 try {
-                    database.ref('playersDB').set(playersDB).then(() => { localStorage.setItem('tiktokArenaDBFallback', JSON.stringify(playersDB)); resolve(true);
-                    }).catch((error) => { localStorage.setItem('tiktokArenaDBFallback', JSON.stringify(playersDB)); resolve(false); });
-                } catch(err) { localStorage.setItem('tiktokArenaDBFallback', JSON.stringify(playersDB)); resolve(false); }
+                    if (!database) { resolve(false); return; }
+                    database.ref('playersDB').set(playersDB).then(() => resolve(true)).catch(() => resolve(false));
+                } catch(err) { resolve(false); }
             });
         }
 
         function setupRealtimeSync() {
+            if (!database) return;
             database.ref('playersDB').on('value', (snapshot) => {
-                const data = snapshot.val();
+                const data = normalizePlayersList(snapshot.val());
                 if (data) {
                     playersDB = data;
                     if (currentUser) {
-                        const me = playersDB.find(p => p.name.toLowerCase() === currentUser.toLowerCase());
+                        const me = playersDB.find(p => p && p.name && p.name.toLowerCase() === currentUser.toLowerCase());
                         if (me) {
                             if (!me.hasGameAccess && currentUserRole !== 'admin') { alert("Has sido desconectado de la sala. 🚫"); logout(); } 
                             else { updateTikTokPanelVisibility(); }
@@ -823,12 +1398,18 @@
         }
 
         window.onload = async () => {
+            // Permitir presionar Enter en los campos de usuario y contraseña
+            const userInp = document.getElementById('username');
+            const passInp = document.getElementById('password');
+            if (userInp) userInp.addEventListener('keydown', (e) => { if (e.key === 'Enter') login(); });
+            if (passInp) passInp.addEventListener('keydown', (e) => { if (e.key === 'Enter') login(); });
+
+            renderSuperGiftsMenu('all');
+            init3D();
             playersDB = await loadDB();
             setupRealtimeSync();
-            renderSuperGiftsMenu('all');
             document.getElementById('loading-screen').classList.remove('active');
             document.getElementById('login-screen').classList.add('active');
-            init3D(); 
         };
 
         async function login() {
@@ -839,7 +1420,11 @@
             if (!passwordInput) { alert("¡Te falta la clave para entrar!"); return; }
             if (!usernameInput.startsWith('@') && !usernameInput.includes('@gmail.com')) { usernameInput = '@' + usernameInput; }
 
-            let player = playersDB.find(p => p.name.toLowerCase() === usernameInput.toLowerCase());
+            if (!Array.isArray(playersDB)) {
+                playersDB = normalizePlayersList(playersDB) || [...defaultDB];
+            }
+
+            let player = playersDB.find(p => p && p.name && p.name.toLowerCase() === usernameInput.toLowerCase());
             
             if (player) {
                 if (player.password !== passwordInput) { alert("Clave incorrecta, intenta de nuevo."); return; }
@@ -847,13 +1432,14 @@
                 currentUserRole = player.role; currentUser = player.name; 
             } else {
                 playersDB.push({ name: usernameInput, password: passwordInput, role: 'player', hasGiftAccess: true, hasGameAccess: true, canManageGifts: false, canCreateSubAdmins: false });
-                await saveDB(); currentUserRole = 'player'; currentUser = usernameInput;
+                saveDB();
+                currentUserRole = 'player'; currentUser = usernameInput;
             }
 
             canManagePlatform = (currentUserRole === 'admin' || currentUserRole === 'subadmin');
 
             document.getElementById('ui-username').innerText = currentUser;
-            document.getElementById('user-avatar-letter').innerText = currentUser.charAt(0).toUpperCase();
+            document.getElementById('user-avatar-letter').innerText = currentUser.replace('@', '').charAt(0).toUpperCase() || 'U';
             
             const badge = document.getElementById('ui-role-badge');
             if(currentUserRole === 'admin') { badge.innerText = '👑 Admin'; badge.className = "text-[9px] bg-yellow-600 px-1.5 py-0.5 rounded text-white font-bold"; }
@@ -872,9 +1458,12 @@
                 const btnEditAds = document.getElementById('btn-edit-ads'); if(btnEditAds) btnEditAds.classList.add('hidden');
             }
 
-            document.getElementById('login-screen').classList.remove('active'); document.getElementById('game-screen').classList.add('active');
+            document.getElementById('login-screen').classList.remove('active');
+            document.getElementById('game-screen').classList.add('active');
+            playSynthSound('welcome');
             showNotification(`¡Qué onda ${currentUser}! Bienvenido a la pista 🔥`, "text-green-400"); 
-            startBannerSystem(); updateTikTokPanelVisibility(); 
+            startBannerSystem();
+            updateTikTokPanelVisibility(); 
 
             if (currentUser.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase() && passwordInput === 'admin') {
                 document.getElementById('force-pwd-modal').classList.add('active');
@@ -899,24 +1488,28 @@
         }
 
         function toggleCustomPanel() {
+            playSynthSound('step');
             const panel = document.getElementById('custom-panel'); const btn = document.getElementById('btn-toggle-custom');
             if (panel.classList.contains('scale-y-0')) { panel.classList.remove('scale-y-0', 'opacity-0', 'h-0'); panel.classList.add('scale-y-100', 'opacity-100', 'h-auto'); btn.innerHTML = '👗 Ocultar Menú de Apariencia ▲';
             } else { panel.classList.add('scale-y-0', 'opacity-0', 'h-0'); panel.classList.remove('scale-y-100', 'opacity-100', 'h-auto'); btn.innerHTML = '👗 Mostrar Menú de Apariencia ▼'; }
         }
 
         function toggleEffectsPanel() {
+            playSynthSound('step');
             const panel = document.getElementById('effects-panel'); const btn = document.getElementById('btn-toggle-effects');
             if (panel.classList.contains('scale-y-0')) { panel.classList.remove('scale-y-0', 'opacity-0', 'h-0'); panel.classList.add('scale-y-100', 'opacity-100', 'h-auto'); btn.innerHTML = '✨ Ocultar Menú DJ & Letreros 3D ▲';
             } else { panel.classList.add('scale-y-0', 'opacity-0', 'h-0'); panel.classList.remove('scale-y-100', 'opacity-100', 'h-auto'); btn.innerHTML = '✨ Mostrar Menú DJ & Letreros 3D ▼'; }
         }
 
         function toggleDancePanel() {
+            playSynthSound('step');
             const wrapper = document.getElementById('dance-wrapper'); const btn = document.getElementById('btn-toggle-dance');
             if (wrapper.classList.contains('translate-y-[100%]')) { wrapper.classList.remove('translate-y-[100%]'); btn.innerHTML = '<span>▼</span> Ocultar Panel de Pasos';
             } else { wrapper.classList.add('translate-y-[100%]'); btn.innerHTML = '<span>▲</span> Mostrar Panel de Pasos'; }
         }
 
         function toggleSuperGiftsMenu() {
+            playSynthSound('step');
             const wrapper = document.getElementById('gifts-wrapper');
             const btn = document.getElementById('btn-toggle-super-gifts');
             if (wrapper.classList.contains('translate-x-[120%]')) {
@@ -929,6 +1522,7 @@
         }
 
         function toggleAdPanel() {
+            playSynthSound('step');
             const panel = document.getElementById('ad-panel');
             if (panel.classList.contains('-translate-x-[150%]')) {
                 panel.classList.remove('-translate-x-[150%]');
@@ -954,8 +1548,12 @@
 
         function sendAd(text) {
             if (!currentUser) return;
+            playSynthSound('gift');
             const safeKey = sanitizeKey(currentUser);
-            database.ref('playerAds/' + safeKey).set({ user: currentUser, text: text, timestamp: Date.now() });
+            if (database) {
+                database.ref('playerAds/' + safeKey).set({ user: currentUser, text: text, timestamp: Date.now() }).catch(() => {});
+            }
+            create3DAdSign(text, currentUser);
             showNotification("¡Letrero HUD enviado a la pista! 🚀", "text-yellow-400"); toggleAdPanel(); 
         }
 
@@ -968,13 +1566,18 @@
             const mainText = document.getElementById('edit-main-sign').value.trim(); const bannersText = document.getElementById('edit-banners').value;
             const p1 = document.getElementById('edit-preset-1').value.trim(); const p2 = document.getElementById('edit-preset-2').value.trim(); const p3 = document.getElementById('edit-preset-3').value.trim();
             const bannersArr = bannersText.split('|').map(s => s.trim()).filter(s => s.length > 0);
-            database.ref('globalAds').set({ mainSignText: mainText, banners: bannersArr, preset1: p1, preset2: p2, preset3: p3 });
+            if (database) {
+                database.ref('globalAds').set({ mainSignText: mainText, banners: bannersArr, preset1: p1, preset2: p2, preset3: p3 }).catch(() => {});
+            }
+            createMainSign(mainText);
+            currentBanners = bannersArr;
             showNotification("Publicidad Global Actualizada", "text-green-400"); toggleEditAdsMode();
         }
 
         function requestSong() {
             const input = document.getElementById('song-request'); const songName = input.value.trim();
             if(!songName) { customAlert("Por favor, escribe el nombre de la canción.", "Falta Canción"); return; }
+            playSynthSound('gift');
             customAlert(`¡Tu canción "${songName}" ha sido enviada al DJ con éxito! 🎧🔥`, "Canción Solicitada");
             input.value = ''; toggleEffectsPanel(); 
         }
@@ -988,30 +1591,31 @@
             if (indicator) indicator.innerText = stepTitle;
         }
 
-        // Ejecutar paso sostenido desde los botones pequeños inferiores (sin emitir notificaciones)
+        // Ejecutar paso sostenido desde los botones pequeños inferiores
         function triggerSustainedStep(actionName, colorHex, stepTitle = 'Paso Activo') { 
             if (currentUser) {
-                const me = playersDB.find(p => p.name === currentUser);
+                const me = playersDB.find(p => p && p.name === currentUser);
                 if (me && !me.hasGameAccess) { logout(); return; }
             }
+            playSynthSound('step');
             updateActiveStepUI(actionName, stepTitle);
             if (superAuraGroup) superAuraGroup.visible = false;
             trigger3DAction({ action: actionName, color: colorHex, isSuper: false });
         }
 
-        // Ejecutar Super Regalo de TikTok con Paso Extraordinario Sostenido + Efectos 3D
+        // Ejecutar Super Regalo de TikTok con Paso Extraordinario Sostenido + Efectos 3D + Sonido
         function sendGift(giftId) { 
-            const me = playersDB.find(p => p.name === currentUser);
-            if (!me || !me.hasGameAccess) { logout(); return; } 
-            if (!me.hasGiftAccess) { showNotification("No puedes enviar Super Regalos ahora.", "text-red-400"); return; } 
+            const me = playersDB.find(p => p && p.name === currentUser);
+            if (me && !me.hasGameAccess) { logout(); return; } 
+            if (me && !me.hasGiftAccess) { showNotification("No puedes enviar Super Regalos ahora.", "text-red-400"); return; } 
             
             const gift = SUPER_GIFTS_CATALOG.find(g => g.id === giftId);
             if (!gift) return;
 
+            playSynthSound(gift.coins >= 250 ? 'epic' : 'gift');
             updateActiveStepUI(gift.action, `${gift.emoji} ${gift.stepTitle}`);
-            showNotification(`${currentUser} envió ${gift.name} ${gift.emoji} — ¡${gift.stepTitle}!`, "text-amber-300");
+            showNotification(`${currentUser || '@Dancer'} envió ${gift.name} ${gift.emoji} — ¡${gift.stepTitle}!`, "text-amber-300");
             
-            // Lluvia de emojis del Super Regalo
             for (let i = 0; i < 4; i++) {
                 setTimeout(() => spawnFlyingEmoji(gift.emoji), i * 180);
             }
@@ -1021,6 +1625,7 @@
 
         function toggleHalloween() {
             isHalloweenActive = !isHalloweenActive;
+            playSynthSound('epic');
             createAvatar(currentAvatarType);
             spawnBots();
             showNotification(isHalloweenActive ? "¡Modo Halloween Activado! 🎃🦇" : "¡Modo Casual Urbano! 😎👟", isHalloweenActive ? "text-orange-400" : "text-blue-400");
@@ -1050,7 +1655,7 @@
             sortedDB.forEach(p => {
                 if (p.role === 'admin' && currentUserRole !== 'admin') return;
                 const isMe = p.name === currentUser; const isTargetAdmin = p.role === 'admin'; const canEditBasic = currentUserRole === 'admin' || (currentUserRole === 'subadmin' && !isTargetAdmin);
-                let canToggleGifts = false; if (currentUserRole === 'admin') canToggleGifts = true; if (currentUserRole === 'subadmin' && meAdmin.canManageGifts && p.role === 'player') canToggleGifts = true; 
+                let canToggleGifts = false; if (currentUserRole === 'admin') canToggleGifts = true; if (currentUserRole === 'subadmin' && meAdmin && meAdmin.canManageGifts && p.role === 'player') canToggleGifts = true; 
                 const giftBtnColor = p.hasGiftAccess ? 'bg-emerald-600 hover:bg-emerald-500' : 'bg-rose-600 hover:bg-rose-500'; const giftBtnText = p.hasGiftAccess ? 'Regalos: 🔓' : 'Regalos: 🔒';
                 const gameBtnColor = p.hasGameAccess ? 'bg-emerald-600 hover:bg-emerald-500' : 'bg-rose-600 hover:bg-rose-500'; const gameBtnText = p.hasGameAccess ? 'Login: 🔓' : 'Login: 🔒';
                 let roleBadge = "Dancer"; let roleColor = "text-gray-400"; if(p.role === 'admin') { roleBadge = "👑 Admin"; roleColor = "text-yellow-400"; } if(p.role === 'subadmin') { roleBadge = "🎧 Mod"; roleColor = "text-cyan-400"; }
@@ -1061,7 +1666,7 @@
                     const permGiftColor = p.canManageGifts ? 'bg-indigo-600 hover:bg-indigo-500' : 'bg-gray-600 hover:bg-gray-500'; const permCreateColor = p.canCreateSubAdmins ? 'bg-violet-600 hover:bg-violet-500' : 'bg-gray-600 hover:bg-gray-500';
                     subAdminPermHTML = `<div class="flex gap-2 mt-2"><button onclick="toggleSubAdminGiftManager('${p.name}')" class="flex-1 ${permGiftColor} px-2 py-1.5 rounded text-[10px] font-bold text-white transition-colors shadow-md border border-indigo-400/50">⚙️ Gest. ${p.canManageGifts ? 'SI' : 'NO'}</button><button onclick="toggleSubAdminCreateManager('${p.name}')" class="flex-1 ${permCreateColor} px-2 py-1.5 rounded text-[10px] font-bold text-white transition-colors shadow-md border border-violet-400/50">⚙️ Perm. ${p.canCreateSubAdmins ? 'SI' : 'NO'}</button></div>`;
                 }
-                row.innerHTML = `<div class="flex justify-between items-center"><div class="flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center font-bold text-white shadow-inner">${p.name.charAt(1).toUpperCase()}</div><div class="flex flex-col"><div class="font-bold text-sm text-white">${p.name} ${isMe ? '<span class="text-xs text-cyan-300">(Tú)</span>' : ''}</div><div class="text-[9px] ${roleColor} font-bold uppercase tracking-wider">${roleBadge}</div></div></div></div><div class="grid grid-cols-1 sm:grid-cols-5 gap-2 mt-1 items-center"><div class="sm:col-span-2 flex items-center gap-2"><label class="text-[9px] text-gray-400">Pass:</label><input type="text" value="${p.password}" onchange="updatePlayerPassword('${p.name}', this.value)" class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1.5 text-xs text-white focus:border-pink-500 outline-none transition-colors" placeholder="Clave" ${disableBasicHtml}></div><div class="sm:col-span-3 flex gap-2"><button onclick="togglePlayerGiftAccess('${p.name}')" class="flex-1 ${giftBtnColor} px-2 py-1.5 rounded text-[10px] font-bold text-white transition-colors shadow-md flex justify-between items-center" ${disableGiftHtml}><span>Regalos</span> <span class="text-sm">${giftBtnText.split(' ')[1]}</span></button>${currentUserRole === 'admin' ? `<button onclick="togglePlayerGameAccess('${p.name}')" class="flex-1 ${gameBtnColor} px-2 py-1.5 rounded text-[10px] font-bold text-white transition-colors shadow-md flex justify-between items-center" ${disableBasicHtml}><span>Juego</span> <span class="text-sm">${gameBtnText.split(' ')[1]}</span></button>` : ''}</div></div>${subAdminPermHTML}`;
+                row.innerHTML = `<div class="flex justify-between items-center"><div class="flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center font-bold text-white shadow-inner">${p.name.replace('@','').charAt(0).toUpperCase()}</div><div class="flex flex-col"><div class="font-bold text-sm text-white">${p.name} ${isMe ? '<span class="text-xs text-cyan-300">(Tú)</span>' : ''}</div><div class="text-[9px] ${roleColor} font-bold uppercase tracking-wider">${roleBadge}</div></div></div></div><div class="grid grid-cols-1 sm:grid-cols-5 gap-2 mt-1 items-center"><div class="sm:col-span-2 flex items-center gap-2"><label class="text-[9px] text-gray-400">Pass:</label><input type="text" value="${p.password}" onchange="updatePlayerPassword('${p.name}', this.value)" class="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1.5 text-xs text-white focus:border-pink-500 outline-none transition-colors" placeholder="Clave" ${disableBasicHtml}></div><div class="sm:col-span-3 flex gap-2"><button onclick="togglePlayerGiftAccess('${p.name}')" class="flex-1 ${giftBtnColor} px-2 py-1.5 rounded text-[10px] font-bold text-white transition-colors shadow-md flex justify-between items-center" ${disableGiftHtml}><span>Regalos</span> <span class="text-sm">${giftBtnText.split(' ')[1]}</span></button>${currentUserRole === 'admin' ? `<button onclick="togglePlayerGameAccess('${p.name}')" class="flex-1 ${gameBtnColor} px-2 py-1.5 rounded text-[10px] font-bold text-white transition-colors shadow-md flex justify-between items-center" ${disableBasicHtml}><span>Juego</span> <span class="text-sm">${gameBtnText.split(' ')[1]}</span></button>` : ''}</div></div>${subAdminPermHTML}`;
                 container.appendChild(row);
             });
         }
@@ -1070,15 +1675,16 @@
         async function toggleSubAdminCreateManager(playerName) { if (currentUserRole !== 'admin') return; const player = playersDB.find(p => p.name === playerName); if(player && player.role === 'subadmin') { player.canCreateSubAdmins = !player.canCreateSubAdmins; await saveDB(); renderPlayerList(); } }
         async function updatePlayerPassword(playerName, newPassword) { const player = playersDB.find(p => p.name === playerName); if (player) { if (player.role === 'admin' && currentUserRole !== 'admin') return; player.password = newPassword.trim(); await saveDB(); showNotification(`Clave actualizada`, "text-cyan-300"); } }
         async function togglePlayerGameAccess(playerName) { if (currentUserRole !== 'admin') return; const player = playersDB.find(p => p.name === playerName); if(player) { if(player.role === 'admin' && player.name !== currentUser) return; player.hasGameAccess = !player.hasGameAccess; await saveDB(); renderPlayerList(); if (!player.hasGameAccess && playerName === currentUser) { logout(); } } }
-        async function togglePlayerGiftAccess(playerName) { const meAdmin = playersDB.find(p => p.name === currentUser); const player = playersDB.find(p => p.name === playerName); if (currentUserRole === 'subadmin' && !meAdmin.canManageGifts) return; if(player) { if (player.role === 'admin' && currentUserRole !== 'admin') return; player.hasGiftAccess = !player.hasGiftAccess; await saveDB(); renderPlayerList(); updateTikTokPanelVisibility(); } }
+        async function togglePlayerGiftAccess(playerName) { const meAdmin = playersDB.find(p => p.name === currentUser); const player = playersDB.find(p => p.name === playerName); if (currentUserRole === 'subadmin' && (!meAdmin || !meAdmin.canManageGifts)) return; if(player) { if (player.role === 'admin' && currentUserRole !== 'admin') return; player.hasGiftAccess = !player.hasGiftAccess; await saveDB(); renderPlayerList(); updateTikTokPanelVisibility(); } }
 
-        function updateTikTokPanelVisibility() { const tiktokPanel = document.getElementById('tiktok-gifts-panel'); const me = playersDB.find(p => p.name === currentUser); let hasAccess = false; if (me) { hasAccess = me.hasGiftAccess; } if (hasAccess) { tiktokPanel.style.opacity = '1'; tiktokPanel.style.pointerEvents = 'auto'; } else { tiktokPanel.style.opacity = '0.2'; tiktokPanel.style.pointerEvents = 'none'; } }
+        function updateTikTokPanelVisibility() { const tiktokPanel = document.getElementById('tiktok-gifts-panel'); const me = playersDB.find(p => p && p.name === currentUser); let hasAccess = true; if (me && typeof me.hasGiftAccess === 'boolean') { hasAccess = me.hasGiftAccess; } if (hasAccess) { tiktokPanel.style.opacity = '1'; tiktokPanel.style.pointerEvents = 'auto'; } else { tiktokPanel.style.opacity = '0.2'; tiktokPanel.style.pointerEvents = 'none'; } }
         function showNotification(text, colorClass = "text-white") { const container = document.getElementById('notifications-container'); const notif = document.createElement('div'); notif.className = `notification glass-panel p-2.5 rounded-lg border-l-4 border-cyan-500 shadow-lg`; notif.innerHTML = `<p class="text-xs font-bold ${colorClass}">${text}</p>`; container.appendChild(notif); setTimeout(() => { notif.style.opacity = "0"; setTimeout(() => notif.remove(), 300); }, 3500); }
         function spawnFlyingEmoji(emoji) { const el = document.createElement('div'); el.className = 'flying-emoji'; el.innerText = emoji; el.style.left = (45 + (Math.random() * 24 - 12)) + '%'; el.style.bottom = '22%'; document.body.appendChild(el); setTimeout(() => el.remove(), 2200); }
 
         function triggerGranPresentacion() {
             if (presTimer > 0) return; 
             presTimer = 6.0; 
+            playSynthSound('epic');
             showNotification("¡GRAN PRESENTACIÓN! 🎉✨🎈", "text-fuchsia-400 text-sm uppercase tracking-widest");
             if(!presParticles) {
                 const pCount = 300; const pGeo = new THREE.BufferGeometry(); const pPos = new Float32Array(pCount * 3); const pColor = new Float32Array(pCount * 3);
@@ -1124,6 +1730,7 @@
 
         function init3D() {
             const container = document.getElementById('canvas-container');
+            if (!container || scene) return;
             scene = new THREE.Scene(); scene.fog = new THREE.FogExp2(SCENARIOS[currentScenarioIndex].bg, 0.025);
             camera = new THREE.PerspectiveCamera(48, window.innerWidth / window.innerHeight, 0.1, 1000); camera.position.set(0, 4.2, 12.5); camera.lookAt(0, 2.2, 0);
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false }); renderer.setSize(window.innerWidth, window.innerHeight); renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); renderer.setClearColor(SCENARIOS[currentScenarioIndex].bg); renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap; container.appendChild(renderer.domElement);
@@ -1170,7 +1777,6 @@
             animate();
         }
 
-        // Aura holográfica 3D especial para Super Regalos Extraordinarios
         function createSuperAura() {
             if (superAuraGroup) scene.remove(superAuraGroup);
             superAuraGroup = new THREE.Group();
@@ -1338,23 +1944,44 @@
                 leftKnee: null, rightKnee: null,
                 head: null, neck: null,
                 currentMouth: null,
-                danceOffset: Math.random() * 10
+                danceOffset: Math.random() * 10,
+                vfxGroup: new THREE.Group(),
+                leftHandTrail: null,
+                rightHandTrail: null
             };
 
-            // Materiales realistas con acabado físico suave para piel, telas urbanas y detalles neón
-            const matSkinMale = new THREE.MeshStandardMaterial({ color: 0xe8b48a, roughness: 0.48, metalness: 0.04 });
-            const matSkinFemale = new THREE.MeshStandardMaterial({ color: 0xf4c6a4, roughness: 0.42, metalness: 0.04 });
-            const matDarkFabric = new THREE.MeshStandardMaterial({ color: 0x111827, roughness: 0.65, metalness: 0.15 });
-            const matDenimCargo = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.55, metalness: 0.2 });
-            const matWhiteSole = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.3, metalness: 0.1 });
-            const matSclera = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.15 });
+            // Materiales PBR de estética Videojuego Next-Gen (piel realista cálida + shaders neón juveniles)
+            const matSkinMale = new THREE.MeshStandardMaterial({ color: 0xeab68c, roughness: 0.36, metalness: 0.08, emissive: 0x2a1208, emissiveIntensity: 0.08 });
+            const matSkinFemale = new THREE.MeshStandardMaterial({ color: 0xf6c9a8, roughness: 0.32, metalness: 0.06, emissive: 0x33140c, emissiveIntensity: 0.08 });
+            const matDarkFabric = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.42, metalness: 0.35 });
+            const matDenimCargo = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.38, metalness: 0.35 });
+            const matWhiteSole = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.2, metalness: 0.25, emissive: 0x38bdf8, emissiveIntensity: 0.15 });
+            const matSclera = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.1 });
             const matPupil = new THREE.MeshBasicMaterial({ color: 0x050811 });
             const matEyeCatch = new THREE.MeshBasicMaterial({ color: 0xffffff });
-            const matSilverChain = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.92, roughness: 0.15 });
-            const hwOrange = new THREE.MeshStandardMaterial({ color: 0xff6600, emissive: 0xff4400, emissiveIntensity: 0.45, roughness: 0.35 });
-            const hwBlack = new THREE.MeshStandardMaterial({ color: 0x0f1016, metalness: 0.4, roughness: 0.45 });
+            const matSilverChain = new THREE.MeshStandardMaterial({ color: 0xf1f5f9, metalness: 0.95, roughness: 0.1 });
+            const hwOrange = new THREE.MeshStandardMaterial({ color: 0xff6600, emissive: 0xff4400, emissiveIntensity: 0.55, roughness: 0.3 });
+            const hwBlack = new THREE.MeshStandardMaterial({ color: 0x0f1016, metalness: 0.5, roughness: 0.35 });
 
-            // Constructor auxiliar de rostro humano realista y juvenil
+            // Aro de energía estilo Videojuego bajo los pies del personaje (se enciende al bailar)
+            const ringColorHex = type === 'chica' ? 0xec4899 : (type === 'robot' ? 0x00ffff : 0x38bdf8);
+            const groundHalo = new THREE.Mesh(
+                new THREE.RingGeometry(0.48, 0.62, 32),
+                new THREE.MeshBasicMaterial({ color: ringColorHex, side: THREE.DoubleSide, transparent: true, opacity: 0.75 })
+            );
+            groundHalo.rotation.x = -Math.PI / 2;
+            groundHalo.position.y = 0.03;
+            avatar.vfxGroup.add(groundHalo);
+
+            const innerHalo = new THREE.Mesh(
+                new THREE.RingGeometry(0.25, 0.30, 6),
+                new THREE.MeshBasicMaterial({ color: 0xfacc15, side: THREE.DoubleSide, transparent: true, opacity: 0.65 })
+            );
+            innerHalo.rotation.x = -Math.PI / 2;
+            innerHalo.position.y = 0.04;
+            avatar.vfxGroup.add(innerHalo);
+            avatar.root.add(avatar.vfxGroup);
+
             function buildRealisticHead(skinMat, irisHex, lipHex, isFemale) {
                 const headGroup = new THREE.Group();
                 headGroup.position.y = 3.85;
@@ -1381,7 +2008,117 @@
                     return { headGroup, mouthMesh };
                 }
 
-                // Cráneo y contorno mandibular esculpido
+                // Cráneo, pómulos y línea mandibular esculpida con estética Hero de videojuego
+                const cranium = new THREE.Mesh(new THREE.SphereGeometry(0.34, 32, 32), skinMat);
+                cranium.scale.set(0.96, 1.08, 0.98);
+                cranium.castShadow = true;
+                headGroup.add(cranium);
+
+                const jaw = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.16, 0.25, 24), skinMat);
+                jaw.position.set(0, -0.15, 0.03);
+                jaw.scale.set(0.95, 1, 0.88);
+                headGroup.add(jaw);
+
+                const chin = new THREE.Mesh(new THREE.SphereGeometry(0.11, 16, 16), skinMat);
+                chin.scale.set(1.1, 0.75, 0.9);
+                chin.position.set(0, -0.25, 0.11);
+                headGroup.add(chin);
+
+                // Pómulos juveniles con rubor/acento cyber-glow
+                const blushMat = new THREE.MeshBasicMaterial({ color: isFemale ? 0xfb7185 : 0x38bdf8, transparent: true, opacity: isFemale ? 0.35 : 0.25 });
+                [-1, 1].forEach(side => {
+                    const cheekGlow = new THREE.Mesh(new THREE.PlaneGeometry(0.085, 0.032), blushMat);
+                    cheekGlow.position.set(side * 0.18, -0.04, 0.31);
+                    cheekGlow.rotation.y = side * 0.35;
+                    headGroup.add(cheekGlow);
+
+                    const ear = new THREE.Mesh(new THREE.SphereGeometry(0.065, 16, 16), skinMat);
+                    ear.scale.set(0.45, 1.15, 0.7);
+                    ear.position.set(side * 0.33, -0.02, -0.02);
+                    headGroup.add(ear);
+
+                    const earring = new THREE.Mesh(
+                        new THREE.TorusGeometry(isFemale ? 0.048 : 0.024, 0.009, 8, 16),
+                        new THREE.MeshBasicMaterial({ color: isFemale ? 0x22d3ee : 0xfacc15 })
+                    );
+                    earring.position.set(side * 0.35, isFemale ? -0.10 : -0.07, -0.01);
+                    earring.rotation.y = Math.PI / 2;
+                    headGroup.add(earring);
+                });
+
+                // Micrófono Headset Gamer/Idol en la mejilla derecha
+                const micArm = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.22, 8), matSilverChain);
+                micArm.position.set(0.27, -0.11, 0.18);
+                micArm.rotation.x = Math.PI / 2.5;
+                micArm.rotation.z = 0.45;
+                const micTip = new THREE.Mesh(new THREE.SphereGeometry(0.022, 12, 12), new THREE.MeshBasicMaterial({ color: 0x00ffff }));
+                micTip.position.set(0.18, -0.14, 0.29);
+                headGroup.add(micArm, micTip);
+
+                // Ojos estilo Videojuego AAA con anillo de iris luminoso y doble reflejo
+                const matIris = new THREE.MeshStandardMaterial({ color: irisHex, emissive: irisHex, emissiveIntensity: 0.45, roughness: 0.15 });
+                const browMat = new THREE.MeshStandardMaterial({ color: isFemale ? 0x3b0764 : 0x0f172a, roughness: 0.4 });
+
+                [-1, 1].forEach(side => {
+                    const eyeGroup = new THREE.Group();
+                    eyeGroup.position.set(side * 0.115, 0.04, 0.298);
+
+                    const sclera = new THREE.Mesh(new THREE.SphereGeometry(0.055, 20, 20), matSclera);
+                    sclera.scale.set(1.18, 0.92, 0.65);
+
+                    const iris = new THREE.Mesh(new THREE.SphereGeometry(0.034, 16, 16), matIris);
+                    iris.scale.set(1.0, 1.0, 0.45);
+                    iris.position.z = 0.026;
+
+                    const pupil = new THREE.Mesh(new THREE.SphereGeometry(0.018, 12, 12), matPupil);
+                    pupil.scale.set(1.0, 1.0, 0.4);
+                    pupil.position.z = 0.035;
+
+                    const catchLight = new THREE.Mesh(new THREE.SphereGeometry(0.008, 8, 8), matEyeCatch);
+                    catchLight.position.set(0.013, 0.013, 0.040);
+
+                    const catchLight2 = new THREE.Mesh(new THREE.SphereGeometry(0.004, 8, 8), matEyeCatch);
+                    catchLight2.position.set(-0.010, -0.008, 0.040);
+
+                    eyeGroup.add(sclera, iris, pupil, catchLight, catchLight2);
+
+                    if (isFemale) {
+                        const lash = new THREE.Mesh(new THREE.BoxGeometry(0.125, 0.016, 0.02), new THREE.MeshBasicMaterial({ color: 0x090d16 }));
+                        lash.position.set(0, 0.040, 0.02);
+                        lash.rotation.z = side * -0.09;
+                        eyeGroup.add(lash);
+                    }
+                    headGroup.add(eyeGroup);
+
+                    const brow = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.024, 0.025), browMat);
+                    brow.position.set(side * 0.115, 0.118, 0.308);
+                    brow.rotation.z = side * (isFemale ? -0.07 : 0.06);
+                    headGroup.add(brow);
+                });
+
+                const noseBridge = new THREE.Mesh(new THREE.ConeGeometry(0.038, 0.135, 12), skinMat);
+                noseBridge.position.set(0, -0.02, 0.338);
+                noseBridge.rotation.x = 0.22;
+                headGroup.add(noseBridge);
+
+                // Boca sonriente con diente brillante superior
+                const mouthGroup = new THREE.Group();
+                mouthGroup.position.set(0, -0.145, 0.318);
+                const lipsMesh = new THREE.Mesh(
+                    new THREE.BoxGeometry(isFemale ? 0.118 : 0.125, 0.036, 0.045),
+                    new THREE.MeshStandardMaterial({ color: lipHex, roughness: 0.25, metalness: 0.1 })
+                );
+                const smileTeeth = new THREE.Mesh(
+                    new THREE.BoxGeometry(isFemale ? 0.09 : 0.095, 0.016, 0.048),
+                    matSclera
+                );
+                smileTeeth.position.y = 0.004;
+                mouthGroup.add(lipsMesh, smileTeeth);
+                headGroup.add(mouthGroup);
+
+                return { headGroup, mouthMesh: mouthGroup };
+            }
+
                 const cranium = new THREE.Mesh(new THREE.SphereGeometry(0.34, 32, 32), skinMat);
                 cranium.scale.set(0.96, 1.08, 0.98);
                 cranium.castShadow = true;
@@ -1392,7 +2129,6 @@
                 jaw.scale.set(0.95, 1, 0.88);
                 headGroup.add(jaw);
 
-                // Orejas detalladas + Aretes juveniles
                 [-1, 1].forEach(side => {
                     const ear = new THREE.Mesh(new THREE.SphereGeometry(0.065, 16, 16), skinMat);
                     ear.scale.set(0.45, 1.15, 0.7);
@@ -1408,7 +2144,6 @@
                     headGroup.add(earring);
                 });
 
-                // Ojos realistas con esclerótica, iris coloreado, pupila y brillo corneal
                 const matIris = new THREE.MeshStandardMaterial({ color: irisHex, roughness: 0.2 });
                 const browMat = new THREE.MeshStandardMaterial({ color: isFemale ? 0x3b0764 : 0x0f172a, roughness: 0.5 });
 
@@ -1440,20 +2175,17 @@
                     }
                     headGroup.add(eyeGroup);
 
-                    // Cejas expresivas
                     const brow = new THREE.Mesh(new THREE.BoxGeometry(0.115, 0.022, 0.025), browMat);
                     brow.position.set(side * 0.115, 0.115, 0.305);
                     brow.rotation.z = side * (isFemale ? -0.06 : 0.05);
                     headGroup.add(brow);
                 });
 
-                // Nariz 3D anatómica
                 const noseBridge = new THREE.Mesh(new THREE.ConeGeometry(0.038, 0.13, 12), skinMat);
                 noseBridge.position.set(0, -0.02, 0.335);
                 noseBridge.rotation.x = 0.22;
                 headGroup.add(noseBridge);
 
-                // Labios realistas con volumen
                 const mouthMesh = new THREE.Mesh(
                     new THREE.BoxGeometry(isFemale ? 0.11 : 0.12, 0.034, 0.045),
                     new THREE.MeshStandardMaterial({ color: lipHex, roughness: 0.3 })
@@ -1464,7 +2196,6 @@
                 return { headGroup, mouthMesh };
             }
 
-            // Constructor auxiliar de zapatillas urbanas LED detalladas
             function buildStreetSneaker(primaryMat, neonMat, isFemale) {
                 const shoeGroup = new THREE.Group();
                 const scaleW = isFemale ? 0.92 : 1.0;
@@ -1506,14 +2237,12 @@
                 avatar.currentMouth = faceObj.mouthMesh;
 
                 if (!isHalloweenActive) {
-                    // Peinado urbano texturizado (Fade moderno + volumen superior)
                     const hairMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.45 });
                     const hairCap = new THREE.Mesh(new THREE.SphereGeometry(0.355, 24, 24, 0, Math.PI * 2, 0, Math.PI * 0.52), hairMat);
                     hairCap.scale.set(0.97, 1.08, 1.0);
                     hairCap.position.y = 0.04;
                     avatar.head.add(hairCap);
 
-                    // Mechones superiores juveniles con toques neón
                     for (let i = -2; i <= 2; i++) {
                         const curl = new THREE.Mesh(new THREE.SphereGeometry(0.085, 14, 14), i % 2 === 0 ? hairMat : accentMat);
                         curl.scale.set(1.1, 0.85, 1.3);
@@ -1521,7 +2250,6 @@
                         avatar.head.add(curl);
                     }
 
-                    // Gafas urbanas translúcidas estilo Cyberpunk sobre la frente
                     const glassesGlass = new THREE.Mesh(
                         new THREE.BoxGeometry(0.50, 0.11, 0.06),
                         new THREE.MeshStandardMaterial({ color: 0x22d3ee, emissive: 0x22d3ee, emissiveIntensity: 0.4, transparent: true, opacity: 0.82 })
@@ -1532,7 +2260,6 @@
                 }
                 avatar.bodyGroup.add(avatar.head);
 
-                // Cuello y Cadena Cubana
                 avatar.neck = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.125, 0.24, 18), skin);
                 avatar.neck.position.y = 3.44;
                 avatar.bodyGroup.add(avatar.neck);
@@ -1542,7 +2269,6 @@
                 chain.position.set(0, 3.30, 0.05);
                 avatar.bodyGroup.add(chain);
 
-                // Torso Atlético con Chaqueta Bomber Abierta + Camiseta Interior con Logo Neón
                 const innerTorso = new THREE.Mesh(new THREE.CylinderGeometry(0.41, 0.33, 1.14, 24), innerShirtMat);
                 innerTorso.scale.set(1.05, 1, 0.78);
                 innerTorso.position.y = 2.75;
@@ -1554,7 +2280,6 @@
                 chestLogo.position.set(0, 2.92, 0.31);
                 avatar.bodyGroup.add(chestLogo);
 
-                // Paneles laterales de la chaqueta urbana
                 [-1, 1].forEach(side => {
                     const jacketPanel = new THREE.Mesh(new THREE.CylinderGeometry(0.44, 0.36, 1.12, 16, 1, false, side > 0 ? 0.25 : Math.PI + 0.25, Math.PI * 0.75), jacketMat);
                     jacketPanel.scale.set(1.06, 1, 0.82);
@@ -1562,20 +2287,17 @@
                     jacketPanel.castShadow = true;
                     avatar.bodyGroup.add(jacketPanel);
 
-                    // Solapa luminosa de cierre
                     const lapel = new THREE.Mesh(new THREE.BoxGeometry(0.04, 1.08, 0.04), accentMat);
                     lapel.position.set(side * 0.14, 2.76, 0.31);
                     avatar.bodyGroup.add(lapel);
                 });
 
-                // Cuello alto de la chaqueta
                 const collar = new THREE.Mesh(new THREE.TorusGeometry(0.20, 0.045, 12, 24, Math.PI * 1.35), jacketMat);
                 collar.rotation.x = Math.PI / 2;
                 collar.rotation.z = Math.PI * 0.82;
                 collar.position.set(0, 3.32, -0.02);
                 avatar.bodyGroup.add(collar);
 
-                // Cinturón táctico y cadera articulada
                 const belt = new THREE.Mesh(new THREE.CylinderGeometry(0.365, 0.365, 0.10, 24), matDarkFabric);
                 belt.scale.set(1.04, 1, 0.8);
                 belt.position.y = 2.16;
@@ -1591,7 +2313,6 @@
                 hips.castShadow = true;
                 avatar.bodyGroup.add(hips);
 
-                // Brazos articulados con hombreras redondeadas, mangas bomber, reloj neón y manos esculpidas
                 function buildMaleArm(isLeft) {
                     const armGroup = new THREE.Group();
                     armGroup.position.set(isLeft ? -0.54 : 0.54, 3.22, 0);
@@ -1629,24 +2350,31 @@
                     palm.position.y = -0.60;
                     elbowGroup.add(palm);
 
+                    // Orbe de energía de videojuego en la mano para estelas al bailar
+                    const handOrb = new THREE.Mesh(
+                        new THREE.TorusGeometry(0.11, 0.012, 8, 20),
+                        new THREE.MeshBasicMaterial({ color: 0x22d3ee, transparent: true, opacity: 0.75 })
+                    );
+                    handOrb.position.y = -0.60;
+                    elbowGroup.add(handOrb);
+
                     const thumb = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.018, 0.08, 8), skin);
                     thumb.position.set(isLeft ? 0.055 : -0.055, -0.59, 0.03);
                     thumb.rotation.z = isLeft ? -0.5 : 0.5;
                     elbowGroup.add(thumb);
 
                     armGroup.add(elbowGroup);
-                    return { armGroup, elbowGroup };
+                    return { armGroup, elbowGroup, handOrb };
                 }
 
                 const leftArmObj = buildMaleArm(true);
-                avatar.leftArm = leftArmObj.armGroup; avatar.leftElbow = leftArmObj.elbowGroup;
+                avatar.leftArm = leftArmObj.armGroup; avatar.leftElbow = leftArmObj.elbowGroup; avatar.leftHandTrail = leftArmObj.handOrb;
                 avatar.bodyGroup.add(avatar.leftArm);
 
                 const rightArmObj = buildMaleArm(false);
-                avatar.rightArm = rightArmObj.armGroup; avatar.rightElbow = rightArmObj.elbowGroup;
+                avatar.rightArm = rightArmObj.armGroup; avatar.rightElbow = rightArmObj.elbowGroup; avatar.rightHandTrail = rightArmObj.handOrb;
                 avatar.bodyGroup.add(avatar.rightArm);
 
-                // Piernas Cargo Joggers con bolsillos laterales, rodilleras y sneakers LED
                 function buildMaleLeg(isLeft) {
                     const legGroup = new THREE.Group();
                     legGroup.position.set(isLeft ? -0.20 : 0.20, 1.74, 0);
@@ -1656,7 +2384,6 @@
                     thigh.castShadow = true;
                     legGroup.add(thigh);
 
-                    // Bolsillo cargo lateral + cinta neón
                     const pocket = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.24, 0.16), matDarkFabric);
                     pocket.position.set(isLeft ? -0.15 : 0.15, -0.42, 0);
                     legGroup.add(pocket);
@@ -1710,14 +2437,12 @@
                 avatar.currentMouth = faceObj.mouthMesh;
 
                 if (!isHalloweenActive) {
-                    // Cabello juvenil K-Pop / Cyber Idol con Space Buns dobles y mechones largos
                     const matHair = new THREE.MeshStandardMaterial({ color: 0x581c87, roughness: 0.28, metalness: 0.25, emissive: 0x3b0764, emissiveIntensity: 0.2 });
                     const hairDom = new THREE.Mesh(new THREE.SphereGeometry(0.355, 28, 28, 0, Math.PI * 2, 0, Math.PI * 0.56), matHair);
                     hairDom.scale.set(0.98, 1.06, 1.02);
                     hairDom.position.y = 0.04;
                     avatar.head.add(hairDom);
 
-                    // Dos Space Buns superiores con aros de neón
                     [-1, 1].forEach(side => {
                         const bun = new THREE.Mesh(new THREE.SphereGeometry(0.14, 20, 20), matHair);
                         bun.position.set(side * 0.26, 0.36, -0.04);
@@ -1729,14 +2454,12 @@
                         bunRing.rotation.x = 0.8;
                         avatar.head.add(bunRing);
 
-                        // Mechones frontales que enmarcan el rostro
                         const strand = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.012, 0.38, 12), accentMat);
                         strand.position.set(side * 0.26, -0.06, 0.20);
                         strand.rotation.z = side * 0.12;
                         avatar.head.add(strand);
                     });
 
-                    // Cabello largo trasero con caída suave
                     const hairBack = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.34, 0.95, 20), matHair);
                     hairBack.scale.set(1.0, 1.0, 0.55);
                     hairBack.position.set(0, -0.32, -0.22);
@@ -1744,7 +2467,6 @@
                 }
                 avatar.bodyGroup.add(avatar.head);
 
-                // Cuello y Choker con dije luminoso
                 avatar.neck = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.105, 0.24, 18), skin);
                 avatar.neck.position.y = 3.44;
                 avatar.bodyGroup.add(avatar.neck);
@@ -1757,7 +2479,6 @@
                 pendant.position.set(0, 3.36, 0.11);
                 avatar.bodyGroup.add(pendant);
 
-                // Torso estilizado: Crop-Top Neón + Chaqueta Bolero Corta + Cintura anatómica
                 const upperChest = new THREE.Mesh(new THREE.CylinderGeometry(0.37, 0.29, 0.58, 24), outfitMat);
                 upperChest.scale.set(1.04, 1, 0.78);
                 upperChest.position.y = 3.02;
@@ -1770,14 +2491,12 @@
                 chestTrim.position.y = 2.73;
                 avatar.bodyGroup.add(chestTrim);
 
-                // Cintura descubierta realista
                 const midriff = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.29, 0.34, 24), skin);
                 midriff.scale.set(1.0, 1, 0.74);
                 midriff.position.y = 2.56;
                 midriff.castShadow = true;
                 avatar.bodyGroup.add(midriff);
 
-                // Cinturón holográfico y caderas estilizadas
                 const beltRing = new THREE.Mesh(new THREE.TorusGeometry(0.32, 0.032, 12, 32), accentMat);
                 beltRing.scale.set(1.05, 0.80, 1);
                 beltRing.rotation.x = Math.PI / 2;
@@ -1790,7 +2509,6 @@
                 hips.castShadow = true;
                 avatar.bodyGroup.add(hips);
 
-                // Brazos femeninos estilizados con mangas cortas puff, pulseras neón y manos detalladas
                 function buildFemaleArm(isLeft) {
                     const armGroup = new THREE.Group();
                     armGroup.position.set(isLeft ? -0.46 : 0.46, 3.22, 0);
@@ -1829,19 +2547,26 @@
                     hand.position.y = -0.58;
                     elbowGroup.add(hand);
 
+                    // Aro de luz Idol de videojuego en las manos al bailar
+                    const handOrb = new THREE.Mesh(
+                        new THREE.TorusGeometry(0.10, 0.012, 8, 20),
+                        new THREE.MeshBasicMaterial({ color: 0xec4899, transparent: true, opacity: 0.8 })
+                    );
+                    handOrb.position.y = -0.58;
+                    elbowGroup.add(handOrb);
+
                     armGroup.add(elbowGroup);
-                    return { armGroup, elbowGroup };
+                    return { armGroup, elbowGroup, handOrb };
                 }
 
                 const leftArmObj = buildFemaleArm(true);
-                avatar.leftArm = leftArmObj.armGroup; avatar.leftElbow = leftArmObj.elbowGroup;
+                avatar.leftArm = leftArmObj.armGroup; avatar.leftElbow = leftArmObj.elbowGroup; avatar.leftHandTrail = leftArmObj.handOrb;
                 avatar.bodyGroup.add(avatar.leftArm);
 
                 const rightArmObj = buildFemaleArm(false);
-                avatar.rightArm = rightArmObj.armGroup; avatar.rightElbow = rightArmObj.elbowGroup;
+                avatar.rightArm = rightArmObj.armGroup; avatar.rightElbow = rightArmObj.elbowGroup; avatar.rightHandTrail = rightArmObj.handOrb;
                 avatar.bodyGroup.add(avatar.rightArm);
 
-                // Piernas estilizadas con pantalones cargo/techwear de tiro alto, líneas LED y sneakers plataforma
                 function buildFemaleLeg(isLeft) {
                     const legGroup = new THREE.Group();
                     legGroup.position.set(isLeft ? -0.18 : 0.18, 1.84, 0);
@@ -1880,7 +2605,6 @@
                 avatar.root.add(avatar.rightLeg);
 
             } else if (type === 'robot') {
-                // Androide Juvenil Next-Gen con placas de titanio perlado, visor OLED curvo y alas holográficas
                 const matArmor = new THREE.MeshStandardMaterial({ color: isHalloweenActive ? 0x18181b : 0xe2e8f0, roughness: 0.18, metalness: 0.85 });
                 const matCarbon = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.35, metalness: 0.75 });
                 const matAccent = new THREE.MeshStandardMaterial({ color: isHalloweenActive ? 0xff6600 : 0x06b6d4, emissive: isHalloweenActive ? 0xff4400 : 0x22d3ee, emissiveIntensity: 0.75, metalness: 0.5, roughness: 0.15 });
@@ -1894,7 +2618,6 @@
                 helmet.castShadow = true;
                 avatar.head.add(helmet);
 
-                // Pantalla facial curva OLED + ojos digitales expresivos
                 const faceScreen = new THREE.Mesh(new THREE.SphereGeometry(0.37, 24, 24, -Math.PI * 0.35, Math.PI * 0.7, Math.PI * 0.25, Math.PI * 0.45), matCarbon);
                 faceScreen.position.z = 0.05;
                 avatar.head.add(faceScreen);
@@ -1906,7 +2629,6 @@
                     avatar.head.add(digiEye);
                 });
 
-                // Audífonos DJ Holográficos
                 const hpBand = new THREE.Mesh(new THREE.TorusGeometry(0.44, 0.045, 16, 32, Math.PI), matNeonPink);
                 hpBand.position.y = 0.04;
                 avatar.head.add(hpBand);
@@ -1932,7 +2654,6 @@
                 avatar.neck.position.y = 3.42;
                 avatar.bodyGroup.add(avatar.neck);
 
-                // Torso cibernético esculpido con reactor central y aletas holográficas traseras
                 const chestArmor = new THREE.Mesh(new THREE.CylinderGeometry(0.48, 0.34, 0.90, 24), matArmor);
                 chestArmor.scale.set(1.06, 1, 0.8);
                 chestArmor.position.y = 2.88;
@@ -2053,31 +2774,34 @@
         }
 
         function changeScenario(index) {
+            playSynthSound('step');
             currentScenarioIndex = index; const conf = SCENARIOS[index];
             scene.fog.color.setHex(conf.bg); renderer.setClearColor(conf.bg); spotLight1.color.setHex(conf.light1); spotLight2.color.setHex(conf.light2);
             createEnvironment(); showNotification("Vibe de escenario actualizado 🔥", "text-cyan-400");
         }
 
         function changeAvatar(type) {
+            playSynthSound('step');
             currentAvatarType = type;
             createAvatar(type);
             showNotification(`Outfit actualizado: ${type.toUpperCase()}`, "text-cyan-300");
         }
 
         function trigger3DAction(config) {
-            // El paso se mantiene sostenido indefinidamente hasta que se seleccione otro
             currentDanceState = config.action;
             spotLight1.color.setHex(config.color || SCENARIOS[currentScenarioIndex].light1);
             spotLight2.color.setHex(config.isSuper ? 0xfacc15 : SCENARIOS[currentScenarioIndex].light2);
 
-            const positions = particleSystem.geometry.attributes.position.array;
-            for (let i = 0; i < positions.length; i += 3) {
-                positions[i] = (Math.random() - 0.5) * (config.isSuper ? 8 : 5);
-                positions[i + 1] = Math.random() * (config.isSuper ? 9 : 5);
-                positions[i + 2] = (Math.random() - 0.5) * (config.isSuper ? 8 : 5);
+            if (particleSystem) {
+                const positions = particleSystem.geometry.attributes.position.array;
+                for (let i = 0; i < positions.length; i += 3) {
+                    positions[i] = (Math.random() - 0.5) * (config.isSuper ? 8 : 5);
+                    positions[i + 1] = Math.random() * (config.isSuper ? 9 : 5);
+                    positions[i + 2] = (Math.random() - 0.5) * (config.isSuper ? 8 : 5);
+                }
+                particleSystem.geometry.attributes.position.needsUpdate = true;
+                particleSystem.material.color.setHex(config.color || 0xffffff);
             }
-            particleSystem.geometry.attributes.position.needsUpdate = true;
-            particleSystem.material.color.setHex(config.color || 0xffffff);
 
             if (superAuraGroup) {
                 superAuraGroup.visible = !!config.isSuper;
@@ -2088,17 +2812,19 @@
 
             if (config.isSuper) {
                 superGiftBurstTimer = 3.0;
+                renderSuperGiftsMenu('all');
             }
         }
 
         function getResponsiveCameraRadius() {
             const aspect = window.innerWidth / Math.max(window.innerHeight, 1);
-            if (aspect < 0.65) return 16.5; // Smartphones en vertical (formato TikTok Live)
-            if (aspect < 1.0) return 14.5;  // Tablets verticales
-            return 12.2;                    // Laptops y Monitores
+            if (aspect < 0.65) return 16.5;
+            if (aspect < 1.0) return 14.5;
+            return 12.2;
         }
 
         function onWindowResize() {
+            if (!camera || !renderer) return;
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.fov = window.innerWidth < 640 ? 52 : 48;
             camera.updateProjectionMatrix();
@@ -2108,8 +2834,126 @@
         let targets = { lArmX: 0, lArmZ: 0, rArmX: 0, rArmZ: 0, lElbowX: 0, rElbowX: 0, lLegX: 0, rLegX: 0, lKneeX: 0, rKneeX: 0, bodyY: 0, bodyRotY: 0, bodyRotX: 0, bodyRotZ: 0, rootPosY: 0, rootRotY: 0, rootRotX: 0, rootRotZ: 0, mouthScaleY: 1 };
         function resetTargets() { for (let key in targets) targets[key] = (key === 'mouthScaleY' ? 1 : 0); }
 
+        // ============================================================================
+        // 💃🕺 MOTOR DE COREOGRAFÍA COHERENTE Y ATRACTIVA PARA EL TRÍO LIVE (3 BAILARINES)
+        // ============================================================================
+        function computeCoherentTrioPose(state, time, dancerIndex) {
+            // dancerIndex: 0 = Bot Izquierdo, 1 = Avatar Central, 2 = Bot Derecho
+            const beat = time * 8;
+            const phraseSection = Math.floor(time * 0.75) % 3; // Cambia de figura cada ~1.3s para dinamismo
+            const wavePhase = (dancerIndex - 1) * 0.35; // Desfase armónico para efecto ola cuando toca
+
+            let pose = {
+                offsetX: 0,
+                offsetZ: 0,
+                rootPosY: 0,
+                rootRotY: 0,
+                bodyY: 0,
+                bodyRotX: 0,
+                bodyRotY: 0,
+                bodyRotZ: 0,
+                lArmX: 0, lArmZ: 0.2, lElbowX: -0.2,
+                rArmX: 0, rArmZ: -0.2, rElbowX: -0.2,
+                lLegX: 0, rLegX: 0, lKneeX: 0, rKneeX: 0,
+                headRotX: 0, headRotY: 0,
+                mouthScaleY: 1.5
+            };
+
+            if (state === 'trio_suscribete') {
+                // Coreografía "Hype Bell & Wave": Paso lateral sincronizado + campana arriba + ola grupal
+                pose.offsetX = Math.sin(beat * 0.5) * 0.45;
+                pose.offsetZ = Math.cos(beat * 0.5) * 0.22;
+                pose.rootPosY = Math.abs(Math.sin(beat + (phraseSection === 1 ? wavePhase : 0))) * 0.55;
+                pose.bodyRotY = Math.sin(beat * 0.5) * 0.35;
+                pose.bodyRotZ = Math.cos(beat * 0.5) * 0.16;
+
+                if (phraseSection === 0) {
+                    // Fase 1: Unísono señalando al frente y tocando la campana arriba
+                    pose.lArmX = -Math.PI * 0.85 + Math.sin(beat * 2) * 0.35;
+                    pose.rArmX = -Math.PI * 0.85 - Math.sin(beat * 2) * 0.35;
+                    pose.lArmZ = 0.4; pose.rArmZ = -0.4;
+                    pose.lElbowX = -0.6; pose.rElbowX = -0.6;
+                } else if (phraseSection === 1) {
+                    // Fase 2: Ola K-Pop de izquierda a derecha con cruce de pecho
+                    pose.lArmX = -Math.PI * 0.5 + Math.sin(beat + wavePhase) * 0.7;
+                    pose.rArmX = -Math.PI * 0.5 + Math.cos(beat + wavePhase) * 0.7;
+                    pose.lArmZ = 0.75; pose.rArmZ = -0.75;
+                    pose.lElbowX = -1.1; pose.rElbowX = -1.1;
+                } else {
+                    // Fase 3: Giro elegante sincronizado de 360°
+                    pose.rootRotY = (time * 6) % (Math.PI * 2);
+                    pose.lArmZ = 1.25; pose.rArmZ = -1.25;
+                    pose.lElbowX = -0.8; pose.rElbowX = -0.8;
+                }
+
+                pose.lLegX = Math.sin(beat) * 0.65;
+                pose.rLegX = -Math.sin(beat) * 0.65;
+                pose.lKneeX = Math.max(0, -Math.sin(beat)) * 0.85;
+                pose.rKneeX = Math.max(0, Math.sin(beat)) * 0.85;
+                pose.headRotY = Math.sin(beat * 0.5) * 0.25;
+
+            } else if (state === 'trio_like') {
+                // Coreografía "K-Pop Heart & Shuffle Sync": Corazón sobre la cabeza + juego de pies sincronizado
+                pose.offsetX = Math.cos(beat * 0.5) * 0.4;
+                pose.rootPosY = Math.abs(Math.sin(beat * 1.2)) * 0.48;
+                pose.bodyRotZ = Math.sin(beat * 0.5) * 0.22;
+                pose.bodyRotY = Math.cos(beat * 0.5) * 0.3;
+
+                if (phraseSection !== 2) {
+                    // Arco de Corazón Gigante sobre la cabeza en perfecto unísono
+                    pose.lArmX = -Math.PI * 0.82;
+                    pose.rArmX = -Math.PI * 0.82;
+                    pose.lArmZ = -0.35 + Math.sin(beat) * 0.15;
+                    pose.rArmZ = 0.35 - Math.sin(beat) * 0.15;
+                    pose.lElbowX = -0.95;
+                    pose.rElbowX = -0.95;
+                } else {
+                    // Lanzamiento de besos / corazones al público en canon
+                    pose.lArmX = -Math.PI * 0.45;
+                    pose.rArmX = -Math.PI * 0.55 + Math.sin(beat * 1.5 + wavePhase) * 0.5;
+                    pose.lArmZ = 0.35;
+                    pose.rArmZ = -0.65;
+                    pose.lElbowX = -1.2;
+                    pose.rElbowX = -0.4;
+                }
+
+                pose.lLegX = Math.sin(beat * 1.5) * 0.75;
+                pose.rLegX = -Math.sin(beat * 1.5) * 0.75;
+                pose.lKneeX = Math.max(0, Math.cos(beat * 1.5)) * 0.95;
+                pose.rKneeX = Math.max(0, -Math.cos(beat * 1.5)) * 0.95;
+                pose.headRotX = Math.sin(beat) * 0.18;
+
+            } else {
+                // 'trio_comparte': Coreografía "Viral Party Formation": Cambio de filas + molino de brazos y salto grupal
+                const mirrorSign = dancerIndex === 0 ? -1 : (dancerIndex === 2 ? 1 : 0);
+                pose.offsetX = Math.sin(beat * 0.5) * 0.55;
+                pose.offsetZ = mirrorSign * Math.sin(beat * 0.5) * 0.4;
+                pose.rootPosY = Math.abs(Math.sin(beat + wavePhase * 0.5)) * 0.75;
+                pose.rootRotY = phraseSection === 1 ? Math.sin(beat * 0.5) * 0.8 : 0;
+                pose.bodyRotY = Math.sin(beat) * 0.4;
+                pose.bodyRotX = 0.12;
+
+                pose.lArmX = -Math.PI * 0.55 + Math.sin(beat * 1.5) * 0.75;
+                pose.rArmX = -Math.PI * 0.55 - Math.sin(beat * 1.5) * 0.75;
+                pose.lArmZ = 1.1 + Math.cos(beat) * 0.35;
+                pose.rArmZ = -1.1 - Math.cos(beat) * 0.35;
+                pose.lElbowX = -0.75;
+                pose.rElbowX = -0.75;
+
+                pose.lLegX = Math.sin(beat * 1.2) * 0.7;
+                pose.rLegX = -Math.sin(beat * 1.2) * 0.7;
+                pose.lKneeX = Math.max(0, -Math.sin(beat * 1.2)) * 0.95;
+                pose.rKneeX = Math.max(0, Math.sin(beat * 1.2)) * 0.95;
+                pose.headRotY = Math.cos(beat * 0.5) * 0.3;
+            }
+
+            pose.mouthScaleY = 1.4 + Math.abs(Math.sin(time * 14)) * 0.9;
+            return pose;
+        }
+
         function animate() {
             requestAnimationFrame(animate);
+            if (!clock || !renderer) return;
             const rawDt = clock.getDelta(); const dt = Math.min(rawDt, 0.05); const time = clock.getElapsedTime();
 
             if(particleSystem) {
@@ -2125,6 +2969,22 @@
 
             if (superGiftBurstTimer > 0) {
                 superGiftBurstTimer -= dt;
+            }
+
+            // APARICIÓN REPENTINA DE LA MUJER SONRIENTE CON EXPLOSIÓN DE COTILLONES DURANTE LA PARTIDA MIENTRAS BAILAN
+            const gameScreenEl = document.getElementById('game-screen');
+            const womanOverlayEl = document.getElementById('woman-like-overlay');
+            if (gameScreenEl && gameScreenEl.classList.contains('active') && currentDanceState !== 'idle') {
+                suddenWomanTimer -= dt;
+                if (suddenWomanTimer <= 0) {
+                    // Reiniciar temporizador aleatorio (entre 16 y 24 segundos de baile activo)
+                    suddenWomanTimer = 16.0 + Math.random() * 8.0;
+                    if (womanOverlayEl && !womanOverlayEl.classList.contains('active')) {
+                        triggerScreenShake(1.1);
+                        spawnWordRain('🎉 ¡SUSCRÍBETE, COMENTA Y DEJA TU LIKE! 💖', ['#ec4899', '#22d3ee', '#facc15', '#4ade80']);
+                        triggerWomanLikePorFavorOverlay();
+                    }
+                }
             }
 
             if (superAuraGroup && superAuraGroup.visible && avatarRoot) {
@@ -2201,85 +3061,58 @@
                 const baseBotX = idx === 0 ? -4.0 : 4.0;
                 const baseBotZ = -2.0;
 
+                if (bot.vfxGroup) {
+                    bot.vfxGroup.rotation.y = -time * 3.5;
+                    const pulseScale = 1 + Math.sin(time * 9 + idx) * 0.14;
+                    bot.vfxGroup.scale.set(pulseScale, 1, pulseScale);
+                }
+                if (bot.leftHandTrail) bot.leftHandTrail.rotation.x = time * 8;
+                if (bot.rightHandTrail) bot.rightHandTrail.rotation.y = time * 8;
+
                 if (bot.sign) {
                     bot.sign.position.y = 4.8 + Math.sin(bt * (isTrioChoreo ? 8 : 2)) * 0.25;
-                    bot.sign.rotation.z = isTrioChoreo ? Math.sin(time * 10 + idx) * 0.12 : 0;
+                    bot.sign.rotation.z = isTrioChoreo ? Math.sin(time * 8) * 0.1 : 0;
                 }
 
                 if (isTrioChoreo) {
-                    // Los dos bots avanzan al frente en formación V junto al personaje principal
-                    const phase = idx === 0 ? -0.6 : 0.6;
-                    const targetX = (idx === 0 ? -2.45 : 2.45) + Math.sin(time * 6) * 0.45;
-                    const targetZ = -0.65 + Math.cos(time * 6 + phase) * 0.35;
+                    const dancerRoleIdx = idx === 0 ? 0 : 2;
+                    const trioPose = computeCoherentTrioPose(currentDanceState, time, dancerRoleIdx);
+                    const formationBaseX = idx === 0 ? -2.35 : 2.35;
+                    const formationBaseZ = -0.45;
+                    const botLerp = Math.min(12 * dt, 0.6);
 
-                    bot.root.position.x = THREE.MathUtils.lerp(bot.root.position.x, targetX, 6 * dt);
-                    bot.root.position.z = THREE.MathUtils.lerp(bot.root.position.z, targetZ, 6 * dt);
+                    bot.root.position.x = THREE.MathUtils.lerp(bot.root.position.x, formationBaseX + trioPose.offsetX, botLerp);
+                    bot.root.position.z = THREE.MathUtils.lerp(bot.root.position.z, formationBaseZ + trioPose.offsetZ, botLerp);
+                    bot.root.position.y = THREE.MathUtils.lerp(bot.root.position.y, trioPose.rootPosY, botLerp);
+                    bot.root.rotation.y = THREE.MathUtils.lerp(bot.root.rotation.y, trioPose.rootRotY, botLerp);
 
-                    if (currentDanceState === 'trio_suscribete') {
-                        // Ola grupal de saltos + giro sincronizado + brazos pidiendo suscripción
-                        const waveJump = Math.max(0, Math.sin(time * 10 + (idx === 0 ? -1.0 : 1.0))) * 1.35;
-                        bot.root.position.y = waveJump;
-                        bot.root.rotation.y = Math.sin(time * 5) * 0.55;
-                        bot.bodyGroup.rotation.z = Math.sin(time * 10) * 0.22;
-                        bot.bodyGroup.rotation.x = 0.1;
-                        if (bot.leftArm && bot.rightArm) {
-                            bot.leftArm.rotation.x = -Math.PI * 0.85 + Math.sin(time * 16) * 0.45;
-                            bot.rightArm.rotation.x = -Math.PI * 0.85 - Math.sin(time * 16) * 0.45;
-                            bot.leftArm.rotation.z = 0.45;
-                            bot.rightArm.rotation.z = -0.45;
-                            if (bot.leftElbow) bot.leftElbow.rotation.x = -0.5;
-                            if (bot.rightElbow) bot.rightElbow.rotation.x = -0.5;
-                        }
-                        if (bot.leftLeg && bot.rightLeg) {
-                            bot.leftLeg.rotation.x = Math.sin(time * 14) * 0.65;
-                            bot.rightLeg.rotation.x = -Math.sin(time * 14) * 0.65;
-                            bot.leftKnee.rotation.x = waveJump > 0.3 ? 0.9 : 0.25;
-                            bot.rightKnee.rotation.x = waveJump > 0.3 ? 0.9 : 0.25;
-                        }
-                    } else if (currentDanceState === 'trio_like') {
-                        // Coreografía K-Pop Heart & Shuffle en trío
-                        bot.root.position.y = Math.abs(Math.sin(time * 14)) * 0.55;
-                        bot.root.rotation.y = Math.sin(time * 7) * 0.45;
-                        bot.bodyGroup.rotation.y = Math.sin(time * 14) * 0.35;
-                        bot.bodyGroup.rotation.x = 0;
-                        if (bot.leftArm && bot.rightArm) {
-                            bot.leftArm.rotation.x = -Math.PI * 0.75;
-                            bot.rightArm.rotation.x = -Math.PI * 0.75;
-                            bot.leftArm.rotation.z = -0.35 + Math.sin(time * 12) * 0.25;
-                            bot.rightArm.rotation.z = 0.35 - Math.sin(time * 12) * 0.25;
-                            if (bot.leftElbow) bot.leftElbow.rotation.x = -0.85;
-                            if (bot.rightElbow) bot.rightElbow.rotation.x = -0.85;
-                        }
-                        if (bot.leftLeg && bot.rightLeg) {
-                            bot.leftLeg.rotation.x = Math.sin(time * 18) * 0.8;
-                            bot.rightLeg.rotation.x = -Math.sin(time * 18) * 0.8;
-                            bot.leftKnee.rotation.x = Math.max(0, Math.cos(time * 18)) * 0.95;
-                            bot.rightKnee.rotation.x = Math.max(0, -Math.cos(time * 18)) * 0.95;
-                        }
-                    } else if (currentDanceState === 'trio_comparte') {
-                        // Fiesta Acrobática 360° en equipo
-                        bot.root.position.y = Math.abs(Math.sin(time * 12 + idx)) * 1.1;
-                        bot.root.rotation.y = time * (idx === 0 ? 10 : -10);
-                        bot.bodyGroup.rotation.z = Math.sin(time * 12) * 0.3;
-                        if (bot.leftArm && bot.rightArm) {
-                            bot.leftArm.rotation.z = 1.35 + Math.sin(time * 18) * 0.4;
-                            bot.rightArm.rotation.z = -1.35 - Math.sin(time * 18) * 0.4;
-                            bot.leftArm.rotation.x = Math.sin(time * 16) * 0.8;
-                            bot.rightArm.rotation.x = -Math.sin(time * 16) * 0.8;
-                        }
-                        if (bot.leftLeg && bot.rightLeg) {
-                            bot.leftLeg.rotation.x = -0.45;
-                            bot.rightLeg.rotation.x = 0.45;
-                            bot.leftKnee.rotation.x = 0.85;
-                            bot.rightKnee.rotation.x = 0.85;
-                        }
+                    bot.bodyGroup.position.y = THREE.MathUtils.lerp(bot.bodyGroup.position.y, trioPose.bodyY, botLerp);
+                    bot.bodyGroup.rotation.x = THREE.MathUtils.lerp(bot.bodyGroup.rotation.x, trioPose.bodyRotX, botLerp);
+                    bot.bodyGroup.rotation.y = THREE.MathUtils.lerp(bot.bodyGroup.rotation.y, trioPose.bodyRotY, botLerp);
+                    bot.bodyGroup.rotation.z = THREE.MathUtils.lerp(bot.bodyGroup.rotation.z, trioPose.bodyRotZ, botLerp);
+
+                    if (bot.leftArm && bot.rightArm) {
+                        bot.leftArm.rotation.x = THREE.MathUtils.lerp(bot.leftArm.rotation.x, trioPose.lArmX, botLerp);
+                        bot.leftArm.rotation.z = THREE.MathUtils.lerp(bot.leftArm.rotation.z, trioPose.lArmZ, botLerp);
+                        bot.rightArm.rotation.x = THREE.MathUtils.lerp(bot.rightArm.rotation.x, trioPose.rArmX, botLerp);
+                        bot.rightArm.rotation.z = THREE.MathUtils.lerp(bot.rightArm.rotation.z, trioPose.rArmZ, botLerp);
+                        if (bot.leftElbow) bot.leftElbow.rotation.x = THREE.MathUtils.lerp(bot.leftElbow.rotation.x, trioPose.lElbowX, botLerp);
+                        if (bot.rightElbow) bot.rightElbow.rotation.x = THREE.MathUtils.lerp(bot.rightElbow.rotation.x, trioPose.rElbowX, botLerp);
+                    }
+                    if (bot.leftLeg && bot.rightLeg) {
+                        bot.leftLeg.rotation.x = THREE.MathUtils.lerp(bot.leftLeg.rotation.x, trioPose.lLegX, botLerp);
+                        bot.rightLeg.rotation.x = THREE.MathUtils.lerp(bot.rightLeg.rotation.x, trioPose.rLegX, botLerp);
+                        if (bot.leftKnee) bot.leftKnee.rotation.x = THREE.MathUtils.lerp(bot.leftKnee.rotation.x, trioPose.lKneeX, botLerp);
+                        if (bot.rightKnee) bot.rightKnee.rotation.x = THREE.MathUtils.lerp(bot.rightKnee.rotation.x, trioPose.rKneeX, botLerp);
                     }
                     if (bot.head) {
-                        bot.head.rotation.y = Math.sin(time * 10) * 0.35;
-                        bot.head.rotation.x = Math.sin(time * 8) * 0.2;
+                        bot.head.rotation.x = THREE.MathUtils.lerp(bot.head.rotation.x, trioPose.headRotX, botLerp);
+                        bot.head.rotation.y = THREE.MathUtils.lerp(bot.head.rotation.y, trioPose.headRotY, botLerp);
+                    }
+                    if (bot.currentMouth) {
+                        bot.currentMouth.scale.y = THREE.MathUtils.lerp(bot.currentMouth.scale.y, trioPose.mouthScaleY, botLerp);
                     }
                 } else {
-                    // Regreso suave a su posición base cuando no están en modo trío
                     bot.root.position.x = THREE.MathUtils.lerp(bot.root.position.x, baseBotX, 5 * dt);
                     bot.root.position.z = THREE.MathUtils.lerp(bot.root.position.z, baseBotZ, 5 * dt);
                     bot.root.rotation.y = THREE.MathUtils.lerp(bot.root.rotation.y, 0, 5 * dt);
@@ -2302,7 +3135,6 @@
                 resetTargets();
                 if (head) { head.rotation.x = 0; head.rotation.y = 0; }
 
-                // Mapeo de Pasos Sostenidos y los 25 Pasos Extraordinarios de Super Regalos TikTok
                 switch(currentDanceState) {
                     case 'idle':
                         targets.bodyY = Math.sin(time * 4) * 0.05;
@@ -2331,8 +3163,6 @@
                         targets.lElbowX = -Math.PI / 2; targets.rElbowX = -Math.PI / 2;
                         targets.bodyRotX = 0.1;
                         break;
-
-                    // 20 PASOS DE BAILE SOSTENIDOS
                     case 'trend_tiktok':
                         targets.bodyRotY = Math.sin(time * 12) * 0.3; targets.rootPosY = Math.abs(Math.sin(time * 12)) * 0.1;
                         targets.lArmX = -Math.PI / 3 + Math.sin(time * 12) * 0.4; targets.rArmX = -Math.PI / 3 - Math.sin(time * 12) * 0.4;
@@ -2466,16 +3296,14 @@
                         targets.lKneeX = 0.5; targets.rKneeX = 0.5;
                         break;
 
-                    // =========================================================================
-                    // 🌟 25 PASOS EXTRAORDINARIOS DEL MENÚ DE SUPER REGALOS TIKTOK LIVE
-                    // =========================================================================
-                    case 'extra_tornado': // 🌹 Giro Tornado 360°
+                    // PASOS EXTRAORDINARIOS DEL MENÚ DE SUPER REGALOS TIKTOK LIVE
+                    case 'extra_tornado':
                         targets.rootRotY = time * 16;
                         targets.rootPosY = 0.6 + Math.sin(time * 8) * 0.3;
                         targets.lArmZ = Math.PI / 2; targets.rArmZ = -Math.PI / 2;
                         targets.lLegX = -0.3; targets.rLegX = 0.4; targets.rKneeX = 0.8;
                         break;
-                    case 'extra_heart_float': // 💝 Levitación Pop
+                    case 'extra_heart_float':
                         targets.rootPosY = 1.6 + Math.sin(time * 5) * 0.4;
                         targets.rootRotY = Math.sin(time * 3) * 0.8;
                         targets.lArmX = -Math.PI * 0.85; targets.rArmX = -Math.PI * 0.85;
@@ -2483,7 +3311,7 @@
                         targets.lElbowX = -0.8; targets.rElbowX = -0.8;
                         targets.lLegX = 0.25; targets.rLegX = -0.25; targets.lKneeX = 0.6; targets.rKneeX = 0.6;
                         break;
-                    case 'extra_fire_spin': // 🔥 Molino Ignición (Windmill Breakdance)
+                    case 'extra_fire_spin':
                         targets.rootPosY = -0.6 + Math.abs(Math.sin(time * 12)) * 0.3;
                         targets.rootRotY = time * 18;
                         targets.rootRotX = Math.PI / 2.2;
@@ -2491,7 +3319,7 @@
                         targets.lLegX = -0.7; targets.rLegX = 0.7;
                         targets.lArmZ = 1.2; targets.rArmZ = -1.2;
                         break;
-                    case 'extra_matrix_dodge': // 🧋 Onda Matrix 360°
+                    case 'extra_matrix_dodge':
                         targets.bodyRotX = -0.85 + Math.sin(time * 4) * 0.25;
                         targets.rootPosY = -0.35;
                         targets.rootRotY = time * 5;
@@ -2500,7 +3328,7 @@
                         targets.lArmX = -Math.PI / 2 + Math.sin(time * 12) * 0.7;
                         targets.rArmX = -Math.PI / 2 + Math.cos(time * 12) * 0.7;
                         break;
-                    case 'extra_cyber_glitch': // 🎮 Glitch Cyber Rave
+                    case 'extra_cyber_glitch':
                         let glitchTick = Math.floor(time * 18);
                         targets.rootPosY = (glitchTick % 3 === 0) ? 0.9 : 0;
                         targets.rootRotY = Math.sin(glitchTick * 2.5) * 1.6;
@@ -2510,20 +3338,20 @@
                         targets.lLegX = Math.cos(glitchTick * 2) * 0.8;
                         targets.rLegX = -Math.cos(glitchTick * 2) * 0.8;
                         break;
-                    case 'extra_zero_gravity': // 🌙 Caminata Gravedad Cero
+                    case 'extra_zero_gravity':
                         targets.rootPosY = 2.0 + Math.sin(time * 3) * 0.5;
                         targets.rootRotX = 0.35 * Math.sin(time * 2);
                         targets.rootRotY = time * 2.5;
                         targets.lLegX = Math.sin(time * 5) * 0.9; targets.rLegX = -Math.sin(time * 5) * 0.9;
                         targets.lArmZ = 1.1 + Math.sin(time * 4) * 0.3; targets.rArmZ = -1.1 - Math.sin(time * 4) * 0.3;
                         break;
-                    case 'extra_party_blast': // 🎉 Salto Explosión
+                    case 'extra_party_blast':
                         targets.rootPosY = Math.abs(Math.sin(time * 11)) * 2.6;
                         targets.rootRotY = Math.sin(time * 5.5) * Math.PI;
                         targets.lArmZ = Math.PI * 0.8; targets.rArmZ = -Math.PI * 0.8;
                         targets.lLegX = -0.5; targets.rLegX = -0.5; targets.lKneeX = 0.9; targets.rKneeX = 0.9;
                         break;
-                    case 'extra_headspin': // 🧢 Headspin Urbano (Giro Invertido de Cabeza)
+                    case 'extra_headspin':
                         targets.rootPosY = 1.9;
                         targets.rootRotX = Math.PI;
                         targets.rootRotY = time * 16;
@@ -2531,33 +3359,33 @@
                         targets.rLegX = 0.5 - Math.sin(time * 10) * 0.4;
                         targets.lArmZ = 0.8; targets.rArmZ = -0.8;
                         break;
-                    case 'extra_butterfly_fly': // 🦋 Vuelo Hada Neón
+                    case 'extra_butterfly_fly':
                         targets.rootPosY = 1.8 + Math.sin(time * 6) * 0.45;
                         targets.rootRotY = Math.sin(time * 2.5) * 1.2;
                         targets.lArmZ = 1.4 + Math.sin(time * 18) * 0.65;
                         targets.rArmZ = -1.4 - Math.sin(time * 18) * 0.65;
                         targets.lLegX = 0.2; targets.rLegX = 0.2; targets.lKneeX = 0.7; targets.rKneeX = 0.7;
                         break;
-                    case 'extra_disco_fever': // 🪩 Boogie Aéreo VIP
+                    case 'extra_disco_fever':
                         targets.rootPosY = Math.abs(Math.sin(time * 10)) * 1.1;
                         targets.rootRotY = time * 6;
                         targets.rArmX = -Math.PI + Math.sin(time * 14) * 0.5;
                         targets.lArmZ = 0.6; targets.lElbowX = -Math.PI / 2;
                         targets.lLegX = Math.sin(time * 14) * 0.7; targets.rLegX = -Math.sin(time * 14) * 0.7;
                         break;
-                    case 'extra_mega_jump': // 🍩 Mega Salto Doble
+                    case 'extra_mega_jump':
                         targets.rootPosY = Math.abs(Math.sin(time * 9)) * 3.2;
                         targets.lArmZ = Math.PI - 0.25; targets.rArmZ = -Math.PI + 0.25;
                         targets.lLegX = -0.6; targets.rLegX = -0.6; targets.lKneeX = 1.1; targets.rKneeX = 1.1;
                         break;
-                    case 'extra_candy_twirl': // 🍭 Torbellino Candy
+                    case 'extra_candy_twirl':
                         targets.rootRotY = time * 14;
                         targets.bodyRotZ = Math.sin(time * 10) * 0.35;
                         targets.rootPosY = Math.abs(Math.sin(time * 10)) * 0.8;
                         targets.lArmX = -Math.PI / 2; targets.rArmX = -Math.PI / 2;
                         targets.lElbowX = -1.2; targets.rElbowX = -1.2;
                         break;
-                    case 'extra_sonic_feet': // 👟 Pies Supersónicos
+                    case 'extra_sonic_feet':
                         targets.rootPosY = Math.abs(Math.sin(time * 28)) * 0.35;
                         targets.lLegX = Math.sin(time * 32) * 1.1;
                         targets.rLegX = -Math.sin(time * 32) * 1.1;
@@ -2566,7 +3394,7 @@
                         targets.lArmX = Math.cos(time * 32) * 1.2;
                         targets.rArmX = -Math.cos(time * 32) * 1.2;
                         break;
-                    case 'extra_volcano_drop': // 🌶️ Drop Volcánico
+                    case 'extra_volcano_drop':
                         targets.rootPosY = -0.55 + Math.abs(Math.sin(time * 20)) * 0.9;
                         targets.bodyRotX = 0.65;
                         targets.bodyRotY = Math.sin(time * 28) * 0.55;
@@ -2574,7 +3402,7 @@
                         targets.lKneeX = 1.2; targets.rKneeX = 1.2;
                         targets.lArmZ = 1.4; targets.rArmZ = -1.4;
                         break;
-                    case 'extra_swag_levitate': // 🕶️ Swag Levitante
+                    case 'extra_swag_levitate':
                         targets.rootPosY = 1.4 + Math.sin(time * 4) * 0.25;
                         targets.rootRotY = time * 3.5;
                         targets.bodyRotX = -0.25;
@@ -2582,14 +3410,14 @@
                         targets.rArmZ = -0.6; targets.rElbowX = -1.1;
                         targets.lLegX = -0.35; targets.lKneeX = 0.85;
                         break;
-                    case 'extra_skate_flip': // 🛹 Kickflip Aéreo 720°
+                    case 'extra_skate_flip':
                         targets.rootPosY = Math.abs(Math.sin(time * 7)) * 2.8;
                         targets.rootRotY = time * 14;
                         targets.rootRotZ = Math.sin(time * 7) * 0.8;
                         targets.lArmZ = 1.3; targets.rArmZ = -1.3;
                         targets.lLegX = -0.5; targets.rLegX = 0.5;
                         break;
-                    case 'extra_thriller_king': // 🧟 Rey Zombie Pop
+                    case 'extra_thriller_king':
                         targets.rootPosY = Math.abs(Math.sin(time * 8)) * 0.4;
                         targets.bodyRotZ = Math.sin(time * 8) * 0.4;
                         targets.lArmX = -Math.PI / 2 + Math.sin(time * 16) * 0.4;
@@ -2597,7 +3425,7 @@
                         targets.lLegX = Math.sin(time * 8) * 0.6;
                         targets.rLegX = -Math.sin(time * 8) * 0.6;
                         break;
-                    case 'extra_carnaval_spin': // 🎭 Samba Acrobática
+                    case 'extra_carnaval_spin':
                         targets.rootRotY = time * 10;
                         targets.rootPosY = Math.abs(Math.sin(time * 18)) * 0.65;
                         targets.bodyRotY = Math.sin(time * 26) * 0.6;
@@ -2606,7 +3434,7 @@
                         targets.lLegX = Math.sin(time * 26) * 0.75;
                         targets.rLegX = -Math.sin(time * 26) * 0.75;
                         break;
-                    case 'extra_kpop_star': // 🫰 Idol Star Aéreo
+                    case 'extra_kpop_star':
                         targets.rootPosY = 1.1 + Math.sin(time * 8) * 0.35;
                         targets.rootRotY = Math.sin(time * 4) * 1.5;
                         targets.lArmX = -Math.PI * 0.85; targets.rArmX = -Math.PI * 0.85;
@@ -2614,7 +3442,7 @@
                         targets.lLegX = Math.sin(time * 12) * 0.5;
                         targets.rLegX = -Math.sin(time * 12) * 0.5;
                         break;
-                    case 'extra_thunder_god': // ⚡ Dios del Trueno
+                    case 'extra_thunder_god':
                         targets.rootPosY = 1.5 + Math.sin(time * 18) * 0.25;
                         targets.lArmX = Math.sin(time * 28) * 2.0;
                         targets.rArmX = -Math.sin(time * 28) * 2.0;
@@ -2622,34 +3450,34 @@
                         targets.rLegX = Math.sin(time * 28) * 1.0;
                         targets.rootRotY = time * 9;
                         break;
-                    case 'extra_diamond_spin': // 💎 Giro Diamante 3D
+                    case 'extra_diamond_spin':
                         targets.rootPosY = 1.8 + Math.sin(time * 5) * 0.3;
                         targets.rootRotY = time * 18;
                         targets.lArmZ = Math.PI * 0.9; targets.rArmZ = -Math.PI * 0.9;
                         targets.lLegX = -0.2; targets.rLegX = 0.5; targets.rKneeX = 1.1;
                         break;
-                    case 'extra_rocket_launch': // 🚀 Despegue Orbital
+                    case 'extra_rocket_launch':
                         targets.rootPosY = 2.8 + Math.sin(time * 6) * 0.8;
                         targets.rootRotY = time * 15;
                         targets.rootRotX = 0.35;
                         targets.lArmZ = Math.PI * 0.95; targets.rArmZ = -Math.PI * 0.95;
                         targets.lLegX = 0.2; targets.rLegX = 0.2;
                         break;
-                    case 'extra_royal_flip': // 👑 Mortal Imperial Continuo
+                    case 'extra_royal_flip':
                         targets.rootRotX = -time * 10;
                         targets.rootPosY = 2.3 + Math.sin(time * 10) * 1.2;
                         targets.lLegX = -1.1; targets.rLegX = -1.1;
                         targets.lKneeX = 1.4; targets.rKneeX = 1.4;
                         targets.lArmX = Math.PI; targets.rArmX = Math.PI;
                         break;
-                    case 'extra_lion_roar': // 🦁 Hélice Rey León
+                    case 'extra_lion_roar':
                         targets.rootPosY = 1.2 + Math.abs(Math.sin(time * 12)) * 1.4;
                         targets.rootRotY = time * 14;
                         targets.rootRotZ = Math.sin(time * 8) * 0.9;
                         targets.lArmZ = 1.5; targets.rArmZ = -1.5;
                         targets.lLegX = -0.8; targets.rLegX = 0.8;
                         break;
-                    case 'extra_universe_god': // 🌌 Ascensión Cósmica TikTok Universe
+                    case 'extra_universe_god':
                         targets.rootPosY = 2.6 + Math.sin(time * 4) * 0.6;
                         targets.rootRotY = time * 12;
                         targets.rootRotX = Math.sin(time * 5) * 0.7;
@@ -2659,52 +3487,34 @@
                         targets.lKneeX = 0.8; targets.rKneeX = 0.8;
                         break;
 
-                    case 'trio_suscribete': // 🔔 Coreografía Grupal ¡Suscríbete!
-                        targets.rootPosY = Math.max(0, Math.sin(time * 10)) * 1.45;
-                        targets.rootRotY = Math.sin(time * 5) * 0.65;
-                        targets.bodyRotZ = Math.sin(time * 10) * 0.25;
-                        targets.lArmX = -Math.PI * 0.88 + Math.sin(time * 16) * 0.45;
-                        targets.rArmX = -Math.PI * 0.88 - Math.sin(time * 16) * 0.45;
-                        targets.lArmZ = 0.5; targets.rArmZ = -0.5;
-                        targets.lElbowX = -0.55; targets.rElbowX = -0.55;
-                        targets.lLegX = Math.sin(time * 14) * 0.7;
-                        targets.rLegX = -Math.sin(time * 14) * 0.7;
-                        targets.lKneeX = targets.rootPosY > 0.3 ? 0.95 : 0.25;
-                        targets.rKneeX = targets.rootPosY > 0.3 ? 0.95 : 0.25;
-                        targets.mouthScaleY = 1.8 + Math.abs(Math.sin(time * 14));
-                        if (head) head.rotation.y = Math.sin(time * 10) * 0.35;
+                    case 'trio_suscribete':
+                    case 'trio_like':
+                    case 'trio_comparte': {
+                        const centerTrioPose = computeCoherentTrioPose(currentDanceState, time, 1);
+                        avatarRoot.position.x = THREE.MathUtils.lerp(avatarRoot.position.x, centerTrioPose.offsetX, 8 * dt);
+                        avatarRoot.position.z = THREE.MathUtils.lerp(avatarRoot.position.z, 0.35 + centerTrioPose.offsetZ, 8 * dt);
+                        targets.rootPosY = centerTrioPose.rootPosY;
+                        targets.rootRotY = centerTrioPose.rootRotY;
+                        targets.bodyY = centerTrioPose.bodyY;
+                        targets.bodyRotX = centerTrioPose.bodyRotX;
+                        targets.bodyRotY = centerTrioPose.bodyRotY;
+                        targets.bodyRotZ = centerTrioPose.bodyRotZ;
+                        targets.lArmX = centerTrioPose.lArmX; targets.lArmZ = centerTrioPose.lArmZ; targets.lElbowX = centerTrioPose.lElbowX;
+                        targets.rArmX = centerTrioPose.rArmX; targets.rArmZ = centerTrioPose.rArmZ; targets.rElbowX = centerTrioPose.rElbowX;
+                        targets.lLegX = centerTrioPose.lLegX; targets.rLegX = centerTrioPose.rLegX;
+                        targets.lKneeX = centerTrioPose.lKneeX; targets.rKneeX = centerTrioPose.rKneeX;
+                        targets.mouthScaleY = centerTrioPose.mouthScaleY;
+                        if (head) {
+                            head.rotation.x = centerTrioPose.headRotX;
+                            head.rotation.y = centerTrioPose.headRotY;
+                        }
                         break;
+                    }
+                }
 
-                    case 'trio_like': // ❤️ Coreografía Grupal ¡Dale Like! (Corazón Gigante + Shuffle)
-                        targets.rootPosY = Math.abs(Math.sin(time * 14)) * 0.65;
-                        targets.rootRotY = Math.sin(time * 7) * 0.5;
-                        targets.bodyRotY = Math.sin(time * 14) * 0.4;
-                        targets.lArmX = -Math.PI * 0.78;
-                        targets.rArmX = -Math.PI * 0.78;
-                        targets.lArmZ = -0.38 + Math.sin(time * 12) * 0.25;
-                        targets.rArmZ = 0.38 - Math.sin(time * 12) * 0.25;
-                        targets.lElbowX = -0.9; targets.rElbowX = -0.9;
-                        targets.lLegX = Math.sin(time * 18) * 0.85;
-                        targets.rLegX = -Math.sin(time * 18) * 0.85;
-                        targets.lKneeX = Math.max(0, Math.cos(time * 18)) * 1.0;
-                        targets.rKneeX = Math.max(0, -Math.cos(time * 18)) * 1.0;
-                        targets.mouthScaleY = 1.6 + Math.abs(Math.sin(time * 12));
-                        if (head) head.rotation.x = Math.sin(time * 14) * 0.22;
-                        break;
-
-                    case 'trio_comparte': // 📲 Coreografía Grupal ¡Comparte a tus amigos! (Fiesta 360°)
-                        targets.rootPosY = Math.abs(Math.sin(time * 12)) * 1.35;
-                        targets.rootRotY = time * 11;
-                        targets.bodyRotZ = Math.sin(time * 12) * 0.35;
-                        targets.lArmZ = 1.45 + Math.sin(time * 18) * 0.45;
-                        targets.rArmZ = -1.45 - Math.sin(time * 18) * 0.45;
-                        targets.lArmX = Math.sin(time * 16) * 0.85;
-                        targets.rArmX = -Math.sin(time * 16) * 0.85;
-                        targets.lElbowX = -0.7; targets.rElbowX = -0.7;
-                        targets.lLegX = -0.5; targets.rLegX = 0.5;
-                        targets.lKneeX = 0.9; targets.rKneeX = 0.9;
-                        targets.mouthScaleY = 2.0 + Math.abs(Math.sin(time * 16));
-                        break;
+                if (!isTrioChoreo) {
+                    avatarRoot.position.x = THREE.MathUtils.lerp(avatarRoot.position.x, 0, 6 * dt);
+                    avatarRoot.position.z = THREE.MathUtils.lerp(avatarRoot.position.z, 0, 6 * dt);
                 }
 
                 const lerpSpeed = Math.min(11 * dt, 0.55); 
@@ -2737,6 +3547,18 @@
                     const vector = new THREE.Vector3(); head.getWorldPosition(vector); vector.y += 0.8; vector.project(camera); 
                     const x = (vector.x * 0.5 + 0.5) * window.innerWidth; const y = (vector.y * -0.5 + 0.5) * window.innerHeight;
                     const nameTag = document.getElementById('avatar-name-tag'); if (nameTag.style.display !== 'none') { nameTag.style.left = `${x}px`; nameTag.style.top = `${y}px`; }
+                }
+
+                // Animar aros de energía estilo videojuego y estelas en las manos mientras ejecuta el baile
+                if (avatarRoot && avatarRoot.children[0] && avatarRoot.children[0].children) {
+                    const vfxGrp = avatarRoot.children[0];
+                    vfxGrp.rotation.y = time * (currentDanceState === 'idle' ? 1.5 : 5.5);
+                    const dancePulse = currentDanceState === 'idle' ? 1.0 : (1.18 + Math.sin(time * 12) * 0.18);
+                    vfxGrp.scale.set(dancePulse, 1, dancePulse);
+                }
+                if (leftElbow && rightElbow) {
+                    leftElbow.children.forEach(ch => { if (ch.geometry && ch.geometry.type === 'TorusGeometry') ch.rotation.x = time * 10; });
+                    rightElbow.children.forEach(ch => { if (ch.geometry && ch.geometry.type === 'TorusGeometry') ch.rotation.y = time * 10; });
                 }
             }
             renderer.render(scene, camera);
