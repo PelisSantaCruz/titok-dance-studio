@@ -100,35 +100,10 @@
             transition: all 0.12s ease;
         }
         .syllable-pill.speaking {
-            transform: scale(1.18) translateY(-4px);
+            transform: scale(1.22) translateY(-4px);
             background: linear-gradient(135deg, #ec4899, #facc15);
             color: #0f172a;
             box-shadow: 0 0 25px rgba(250, 204, 21, 0.95);
-        }
-
-        /* EXPLOSIÓN DE COTILLONES 2D EN PANTALLA */
-        @keyframes cotillonBurst {
-            0% {
-                transform: translate(0, 0) scale(0.2) rotate(0deg);
-                opacity: 1;
-            }
-            25% {
-                opacity: 1;
-            }
-            100% {
-                transform: translate(var(--tx, 120px), var(--ty, -220px)) scale(1.25) rotate(var(--rot, 540deg));
-                opacity: 0;
-            }
-        }
-        .cotillon-burst-item {
-            position: fixed;
-            left: 50%;
-            top: 50%;
-            pointer-events: none;
-            z-index: 95;
-            font-size: var(--size, 2.2rem);
-            filter: drop-shadow(0 0 12px rgba(250, 204, 21, 0.8));
-            animation: cotillonBurst var(--dur, 2.6s) cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
@@ -401,23 +376,23 @@
                     <path d="M 250 238 L 246 282 Q 250 290 258 284" fill="none" stroke="#d97757" stroke-width="3.5" stroke-linecap="round"/>
                     <circle cx="253" cy="276" r="3" fill="#ffffff" opacity="0.6"/>
 
-                    <!-- GRAN SONRISA RADIANTE COORDINADA CON EL AUDIO "SUSCRÍBETE, COMENTA DEJANDO TU LIKE APOYAS AL CANAL" -->
-                    <g id="woman-mouth-group" transform="translate(250, 332)">
-                        <!-- Cavidad Vocal Interna de Gran Sonrisa -->
-                        <ellipse id="woman-mouth-cavity" cx="0" cy="6" rx="54" ry="12" fill="#4c0519"/>
-                        <!-- Dientes Superiores Blancos Radiantes (Sonrisa Amplia) -->
-                        <path id="woman-mouth-teeth" d="M -46 -3 Q 0 9 46 -3 L 40 11 Q 0 18 -40 11 Z" fill="#ffffff"/>
+                    <!-- BOCA SONRIENTE COORDINADA CON EL AUDIO "LIKE POR FAVOR" -->
+                    <g id="woman-mouth-group" transform="translate(250, 334)">
+                        <!-- Cavidad Vocal Interna -->
+                        <ellipse id="woman-mouth-cavity" cx="0" cy="4" rx="44" ry="8" fill="#4c0519"/>
+                        <!-- Dientes Superiores Sonrientes -->
+                        <path id="woman-mouth-teeth" d="M -36 -2 Q 0 6 36 -2 L 32 8 Q 0 14 -32 8 Z" fill="#ffffff"/>
                         <!-- Lengua -->
-                        <ellipse id="woman-mouth-tongue" cx="0" cy="15" rx="26" ry="7" fill="#fb7185"/>
-                        <!-- Labio Superior Arco de Cupido Elevado en Gran Sonrisa -->
-                        <path id="woman-lip-upper" d="M -62 -6 Q -26 -22 -9 -10 Q 0 -4 9 -10 Q 26 -22 62 -6 Q 0 12 -62 -6 Z" fill="url(#lipGlossGrad)"/>
-                        <!-- Labio Inferior Glossy (Se desplaza verticalmente con cada palabra) -->
-                        <path id="woman-lip-lower" d="M -62 -6 Q 0 42 62 -6 Q 0 20 -62 -6 Z" fill="url(#lipGlossGrad)"/>
+                        <ellipse id="woman-mouth-tongue" cx="0" cy="12" rx="22" ry="6" fill="#fb7185"/>
+                        <!-- Labio Superior Arco de Cupido -->
+                        <path id="woman-lip-upper" d="M -52 -2 Q -22 -18 -8 -8 Q 0 -3 8 -8 Q 22 -18 52 -2 Q 0 10 -52 -2 Z" fill="url(#lipGlossGrad)"/>
+                        <!-- Labio Inferior Glossy (Se desplaza verticalmente con cada sílaba) -->
+                        <path id="woman-lip-lower" d="M -52 -2 Q 0 34 52 -2 Q 0 16 -52 -2 Z" fill="url(#lipGlossGrad)"/>
                         <!-- Brillo de Labios -->
-                        <ellipse id="woman-lip-shine" cx="0" cy="15" rx="20" ry="4" fill="#ffffff" opacity="0.65"/>
-                        <!-- Hoyuelos y Comisuras de Gran Sonrisa Carismática -->
-                        <path d="M -64 -7 Q -74 -16 -66 -24" fill="none" stroke="#be123c" stroke-width="3.5" stroke-linecap="round"/>
-                        <path d="M 64 -7 Q 74 -16 66 -24" fill="none" stroke="#be123c" stroke-width="3.5" stroke-linecap="round"/>
+                        <ellipse id="woman-lip-shine" cx="0" cy="12" rx="16" ry="3.5" fill="#ffffff" opacity="0.55"/>
+                        <!-- Comisuras de Sonrisa Carismática -->
+                        <path d="M -54 -4 Q -62 -12 -56 -18" fill="none" stroke="#be123c" stroke-width="3" stroke-linecap="round"/>
+                        <path d="M 54 -4 Q 62 -12 56 -18" fill="none" stroke="#be123c" stroke-width="3" stroke-linecap="round"/>
                     </g>
 
                     <!-- Flequillo y Mechones Superiores con Brillo Neón -->
@@ -427,14 +402,14 @@
                 </svg>
             </div>
 
-            <!-- Burbuja de Voz Sincronizada: "Suscríbete, Comenta dejando tu Like apoyas al canal" -->
-            <div class="glass-panel px-5 py-3 rounded-3xl border-2 border-pink-400 shadow-[0_0_40px_rgba(236,72,153,0.9)] flex flex-wrap items-center justify-center gap-2 -mt-4 max-w-2xl mx-4 text-center">
-                <span class="text-2xl animate-bounce">🎉</span>
-                <span id="syl-suscribete" class="syllable-pill px-3 py-1 rounded-full text-sm sm:text-xl font-black text-pink-300 uppercase tracking-wider">¡SUSCRÍBETE,</span>
-                <span id="syl-comenta" class="syllable-pill px-3 py-1 rounded-full text-sm sm:text-xl font-black text-cyan-300 uppercase tracking-wider">COMENTA,</span>
-                <span id="syl-like" class="syllable-pill px-3 py-1 rounded-full text-sm sm:text-xl font-black text-amber-300 uppercase tracking-wider">DEJANDO TU LIKE</span>
-                <span id="syl-apoyas" class="syllable-pill px-3 py-1 rounded-full text-sm sm:text-xl font-black text-emerald-300 uppercase tracking-wider">APOYAS AL CANAL!</span>
-                <span class="text-2xl animate-bounce">🎊</span>
+            <!-- Burbuja de Voz Sincronizada Silaba por Sílaba -->
+            <div class="glass-panel px-6 py-3 rounded-full border-2 border-pink-400 shadow-[0_0_35px_rgba(236,72,153,0.85)] flex items-center gap-2.5 -mt-4">
+                <span class="text-2xl animate-bounce">💖</span>
+                <span id="syl-like" class="syllable-pill px-3 py-1 rounded-full text-lg sm:text-2xl font-black text-pink-300 uppercase tracking-wider">¡LIKE</span>
+                <span id="syl-por" class="syllable-pill px-3 py-1 rounded-full text-lg sm:text-2xl font-black text-cyan-300 uppercase tracking-wider">POR</span>
+                <span id="syl-fa" class="syllable-pill px-3 py-1 rounded-full text-lg sm:text-2xl font-black text-amber-300 uppercase tracking-wider">FA</span>
+                <span id="syl-vor" class="syllable-pill px-3 py-1 rounded-full text-lg sm:text-2xl font-black text-emerald-300 uppercase tracking-wider">VOR!</span>
+                <span class="text-2xl animate-bounce">✨</span>
             </div>
         </div>
 
@@ -893,7 +868,6 @@
         let superAuraGroup = null;
         let superGiftBurstTimer = 0;
         let screenShakeTimer = 0;
-        let suddenWomanTimer = 14.0; // Temporizador para aparición repentina durante el baile
 
         function normalizePlayersList(raw) {
             if (!raw) return null;
@@ -942,46 +916,12 @@
         }
 
         // ============================================================================
-        // 🎉 EXPLOSIÓN DE COTILLONES (2D Y 3D) + ROSTRO CON GRAN SONRISA Y VOZ
-        // "Suscríbete, Comenta dejando tu Like apoyas al canal"
+        // 👩🎤 ROSTRO EN PANTALLA COMPLETA + VOZ Y BOCA COORDINADA ("¡LIKE POR FAVOR!")
         // ============================================================================
         let womanOverlayHideTimeout = null;
         let womanLipSyncTimeouts = [];
 
-        function triggerCotillonesExplosion() {
-            // Activar también los cotillones 3D y fuegos artificiales en el escenario
-            triggerGranPresentacion();
-
-            // Explosión radial 2D de cotillones (serpentinas, confeti, globos, trompetas de fiesta)
-            const cotillonIcons = ['🎉', '🎊', '🎈', '🥳', '✨', '🪅', '🎀', '⭐', '💖', '🪩'];
-            const totalPieces = 48;
-            for (let i = 0; i < totalPieces; i++) {
-                setTimeout(() => {
-                    const el = document.createElement('div');
-                    el.className = 'cotillon-burst-item';
-                    el.innerText = cotillonIcons[i % cotillonIcons.length];
-
-                    const angle = (Math.PI * 2 * i) / totalPieces + (Math.random() - 0.5) * 0.35;
-                    const dist = 160 + Math.random() * (Math.min(window.innerWidth, window.innerHeight) * 0.48);
-                    const tx = Math.cos(angle) * dist;
-                    const ty = Math.sin(angle) * dist - 40;
-                    const rot = Math.floor((Math.random() - 0.5) * 920) + 'deg';
-                    const size = (1.6 + Math.random() * 1.6).toFixed(2) + 'rem';
-                    const dur = (2.1 + Math.random() * 1.1).toFixed(2) + 's';
-
-                    el.style.setProperty('--tx', `${tx.toFixed(0)}px`);
-                    el.style.setProperty('--ty', `${ty.toFixed(0)}px`);
-                    el.style.setProperty('--rot', rot);
-                    el.style.setProperty('--size', size);
-                    el.style.setProperty('--dur', dur);
-
-                    document.body.appendChild(el);
-                    setTimeout(() => el.remove(), parseFloat(dur) * 1000 + 100);
-                }, (i % 8) * 35);
-            }
-        }
-
-        function setWomanMouthShape(openness = 0, widthScale = 1.08, activeSylId = null) {
+        function setWomanMouthShape(openness = 0, widthScale = 1, activeSylId = null) {
             const cavity = document.getElementById('woman-mouth-cavity');
             const lowerLip = document.getElementById('woman-lip-lower');
             const tongue = document.getElementById('woman-mouth-tongue');
@@ -989,34 +929,33 @@
             const cheeks = document.getElementById('woman-cheeks-group');
             const brows = document.getElementById('woman-brows-group');
 
-            // Mantiene una gran sonrisa constante mientras articula cada sílaba
-            const ry = 9 + openness * 25;
-            const rx = 50 * widthScale;
-            const lipDrop = 38 + openness * 34;
+            const ry = 6 + openness * 24;
+            const rx = 42 * widthScale;
+            const lipDrop = 32 + openness * 32;
 
             if (cavity) {
                 cavity.setAttribute('ry', ry.toFixed(1));
                 cavity.setAttribute('rx', rx.toFixed(1));
-                cavity.setAttribute('cy', (5 + openness * 10).toFixed(1));
+                cavity.setAttribute('cy', (4 + openness * 10).toFixed(1));
             }
             if (lowerLip) {
-                lowerLip.setAttribute('d', `M -${(62 * widthScale).toFixed(1)} -6 Q 0 ${lipDrop.toFixed(1)} ${(62 * widthScale).toFixed(1)} -6 Q 0 ${(18 + openness * 24).toFixed(1)} -${(62 * widthScale).toFixed(1)} -6 Z`);
+                lowerLip.setAttribute('d', `M -${(52 * widthScale).toFixed(1)} -2 Q 0 ${lipDrop.toFixed(1)} ${(52 * widthScale).toFixed(1)} -2 Q 0 ${(14 + openness * 24).toFixed(1)} -${(52 * widthScale).toFixed(1)} -2 Z`);
             }
             if (tongue) {
-                tongue.setAttribute('cy', (13 + openness * 14).toFixed(1));
-                tongue.setAttribute('ry', (6 + openness * 7).toFixed(1));
+                tongue.setAttribute('cy', (10 + openness * 14).toFixed(1));
+                tongue.setAttribute('ry', (5 + openness * 7).toFixed(1));
             }
             if (shine) {
-                shine.setAttribute('cy', (14 + openness * 18).toFixed(1));
+                shine.setAttribute('cy', (12 + openness * 18).toFixed(1));
             }
             if (cheeks) {
-                cheeks.setAttribute('transform', `translate(0, ${(-2 - openness * 6).toFixed(1)})`);
+                cheeks.setAttribute('transform', `translate(0, ${(-openness * 5).toFixed(1)})`);
             }
             if (brows) {
-                brows.setAttribute('transform', `translate(0, ${(-2 - openness * 7).toFixed(1)})`);
+                brows.setAttribute('transform', `translate(0, ${(-openness * 7).toFixed(1)})`);
             }
 
-            ['syl-suscribete', 'syl-comenta', 'syl-like', 'syl-apoyas'].forEach(id => {
+            ['syl-like', 'syl-por', 'syl-fa', 'syl-vor'].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) {
                     if (id === activeSylId) el.classList.add('speaking');
@@ -1037,9 +976,10 @@
                 osc.type = 'sawtooth';
                 subOsc.type = 'triangle';
                 osc.frequency.setValueAtTime(pitchFreq, now);
-                osc.frequency.exponentialRampToValueAtTime(pitchFreq * 1.05, now + durationSec);
+                osc.frequency.exponentialRampToValueAtTime(pitchFreq * 1.06, now + durationSec);
                 subOsc.frequency.setValueAtTime(pitchFreq * 2, now);
 
+                // Filtros de formantes vocales femeninos (F1 y F2) para articular cada vocal
                 const filter1 = audioCtx.createBiquadFilter();
                 filter1.type = 'bandpass';
                 filter1.frequency.setValueAtTime(f1, now);
@@ -1052,7 +992,7 @@
 
                 const masterGain = audioCtx.createGain();
                 masterGain.gain.setValueAtTime(0.01, now);
-                masterGain.gain.linearRampToValueAtTime(0.20, now + 0.035);
+                masterGain.gain.linearRampToValueAtTime(0.22, now + 0.04);
                 masterGain.gain.exponentialRampToValueAtTime(0.001, now + durationSec);
 
                 osc.connect(filter1);
@@ -1077,20 +1017,17 @@
             womanLipSyncTimeouts.forEach(t => clearTimeout(t));
             womanLipSyncTimeouts = [];
 
-            // Explosión espectacular de cotillones al aparecer de manera repentina
-            triggerCotillonesExplosion();
-
             overlay.classList.add('active');
-            setWomanMouthShape(0.22, 1.12, null);
+            setWomanMouthShape(0.1, 1.05, null);
 
-            // Síntesis de voz femenina alegre diciendo: "Suscríbete, Comenta dejando tu Like apoyas al canal"
+            // Síntesis de voz femenina en español ("¡Like por favor!") coordinada con formantes Web Audio
             try {
                 if ('speechSynthesis' in window && soundEffectsEnabled) {
                     window.speechSynthesis.cancel();
-                    const utter = new SpeechSynthesisUtterance("¡Suscríbete, comenta, dejando tu Like apoyas al canal!");
+                    const utter = new SpeechSynthesisUtterance("¡Like, por favor!");
                     utter.lang = 'es-MX';
-                    utter.pitch = 1.32;
-                    utter.rate = 1.04;
+                    utter.pitch = 1.35;
+                    utter.rate = 1.02;
                     utter.volume = 1.0;
                     const voices = window.speechSynthesis.getVoices();
                     const femVoice = voices.find(v => v.lang.startsWith('es') && /paulina|monica|helena|sabina|lucia|female|mujer|google/i.test(v.name)) || voices.find(v => v.lang.startsWith('es'));
@@ -1099,30 +1036,18 @@
                 }
             } catch (e) {}
 
-            // Cronograma labial y vocal coordinado para: "¡Suscríbete, comenta, dejando tu Like apoyas al canal!"
+            // Secuencia exacta sílaba por sílaba sincronizando boca y formantes vocales: "¡LIKE - POR - FA - VOR!"
             const syllableTimeline = [
-                // "SUS-CRÍ-BE-TE"
-                { delay: 50,   open: 0.45, width: 0.96, syl: 'syl-suscribete', f1: 380, f2: 950,  pitch: 310, dur: 0.16 },
-                { delay: 220,  open: 0.85, width: 1.14, syl: 'syl-suscribete', f1: 420, f2: 2350, pitch: 370, dur: 0.22 },
-                { delay: 450,  open: 0.60, width: 1.08, syl: 'syl-suscribete', f1: 550, f2: 1850, pitch: 340, dur: 0.16 },
-                { delay: 620,  open: 0.55, width: 1.10, syl: 'syl-suscribete', f1: 530, f2: 1900, pitch: 330, dur: 0.18 },
-                // "CO-MEN-TA"
-                { delay: 860,  open: 0.65, width: 0.95, syl: 'syl-comenta',    f1: 520, f2: 980,  pitch: 349, dur: 0.16 },
-                { delay: 1040, open: 0.78, width: 1.08, syl: 'syl-comenta',    f1: 580, f2: 1820, pitch: 392, dur: 0.20 },
-                { delay: 1260, open: 0.92, width: 1.14, syl: 'syl-comenta',    f1: 850, f2: 1550, pitch: 360, dur: 0.20 },
-                // "DE-JAN-DO TU LIKE"
-                { delay: 1520, open: 0.62, width: 1.06, syl: 'syl-like',       f1: 540, f2: 1850, pitch: 350, dur: 0.15 },
-                { delay: 1690, open: 0.88, width: 1.12, syl: 'syl-like',       f1: 840, f2: 1600, pitch: 380, dur: 0.18 },
-                { delay: 1890, open: 0.55, width: 0.94, syl: 'syl-like',       f1: 480, f2: 960,  pitch: 340, dur: 0.15 },
-                { delay: 2060, open: 0.96, width: 1.16, syl: 'syl-like',       f1: 820, f2: 1980, pitch: 440, dur: 0.28 },
-                // "A-PO-YAS AL CA-NAL"
-                { delay: 2380, open: 0.85, width: 1.10, syl: 'syl-apoyas',     f1: 860, f2: 1500, pitch: 370, dur: 0.16 },
-                { delay: 2560, open: 0.72, width: 0.96, syl: 'syl-apoyas',     f1: 520, f2: 980,  pitch: 392, dur: 0.18 },
-                { delay: 2760, open: 0.82, width: 1.12, syl: 'syl-apoyas',     f1: 840, f2: 1620, pitch: 415, dur: 0.18 },
-                { delay: 2960, open: 0.75, width: 1.08, syl: 'syl-apoyas',     f1: 820, f2: 1550, pitch: 380, dur: 0.16 },
-                { delay: 3140, open: 0.95, width: 1.16, syl: 'syl-apoyas',     f1: 880, f2: 1520, pitch: 466, dur: 0.34 },
-                // Gran sonrisa radiante final
-                { delay: 3520, open: 0.26, width: 1.18, syl: null,             f1: 0,   f2: 0,    pitch: 0,   dur: 0    }
+                { delay: 60,   open: 0.95, width: 1.12, syl: 'syl-like', f1: 820, f2: 1950, pitch: 293.66, dur: 0.30 }, // "LAIK"
+                { delay: 230,  open: 0.35, width: 1.08, syl: 'syl-like', f1: 420, f2: 2350, pitch: 329.63, dur: 0.14 },
+                { delay: 390,  open: 0.12, width: 1.00, syl: null,       f1: 0,   f2: 0,    pitch: 0,      dur: 0    },
+                { delay: 460,  open: 0.72, width: 0.86, syl: 'syl-por',  f1: 520, f2: 980,  pitch: 349.23, dur: 0.24 }, // "POR"
+                { delay: 720,  open: 0.15, width: 1.00, syl: null,       f1: 0,   f2: 0,    pitch: 0,      dur: 0    },
+                { delay: 800,  open: 0.92, width: 1.10, syl: 'syl-fa',   f1: 880, f2: 1450, pitch: 392.00, dur: 0.25 }, // "FA"
+                { delay: 1060, open: 0.18, width: 1.02, syl: null,       f1: 0,   f2: 0,    pitch: 0,      dur: 0    },
+                { delay: 1140, open: 0.85, width: 0.88, syl: 'syl-vor',  f1: 540, f2: 1020, pitch: 440.00, dur: 0.42 }, // "VOR!"
+                { delay: 1420, open: 0.45, width: 1.10, syl: 'syl-vor',  f1: 650, f2: 1600, pitch: 523.25, dur: 0.22 },
+                { delay: 1680, open: 0.18, width: 1.14, syl: null,       f1: 0,   f2: 0,    pitch: 0,      dur: 0    }  // Sonrisa radiante final
             ];
 
             syllableTimeline.forEach(step => {
@@ -1137,28 +1062,28 @@
 
             womanOverlayHideTimeout = setTimeout(() => {
                 overlay.classList.remove('active');
-                setWomanMouthShape(0.2, 1.12, null);
-            }, 4600);
+                setWomanMouthShape(0.1, 1.0, null);
+            }, 3100);
         }
 
         function triggerTrioLiveAction(type) {
             const configs = {
                 'suscribete': {
-                    phrase: '🔔 ¡SUSCRÍBETE, COMENTA Y DEJA TU LIKE! 🔥',
+                    phrase: '🔔 ¡SUSCRÍBETE Y LIKE POR FAVOR! 🔥',
                     action: 'trio_suscribete',
                     stepLabel: 'Trío Live: ¡Suscríbete!',
                     lightColor: 0xff007f,
                     colors: ['#ff007f', '#f43f5e', '#facc15', '#ec4899']
                 },
                 'like': {
-                    phrase: '❤️ ¡DEJANDO TU LIKE APOYAS AL CANAL! 👍',
+                    phrase: '❤️ ¡LIKE POR FAVOR! 👍',
                     action: 'trio_like',
-                    stepLabel: 'Trío Live: ¡Apoya con tu Like!',
+                    stepLabel: 'Trío Live: ¡Like por favor!',
                     lightColor: 0x00f2fe,
                     colors: ['#22d3ee', '#38bdf8', '#f472b6', '#a855f7']
                 },
                 'comparte': {
-                    phrase: '📲 ¡SUSCRÍBETE, COMENTA Y APOYA AL CANAL! 🚀',
+                    phrase: '📲 ¡COMPARTE Y LIKE POR FAVOR! 🚀',
                     action: 'trio_comparte',
                     stepLabel: 'Trío Live: ¡Comparte!',
                     lightColor: 0xf59e0b,
@@ -1944,43 +1869,20 @@
                 leftKnee: null, rightKnee: null,
                 head: null, neck: null,
                 currentMouth: null,
-                danceOffset: Math.random() * 10,
-                vfxGroup: new THREE.Group(),
-                leftHandTrail: null,
-                rightHandTrail: null
+                danceOffset: Math.random() * 10
             };
 
-            // Materiales PBR de estética Videojuego Next-Gen (piel realista cálida + shaders neón juveniles)
-            const matSkinMale = new THREE.MeshStandardMaterial({ color: 0xeab68c, roughness: 0.36, metalness: 0.08, emissive: 0x2a1208, emissiveIntensity: 0.08 });
-            const matSkinFemale = new THREE.MeshStandardMaterial({ color: 0xf6c9a8, roughness: 0.32, metalness: 0.06, emissive: 0x33140c, emissiveIntensity: 0.08 });
-            const matDarkFabric = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.42, metalness: 0.35 });
-            const matDenimCargo = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.38, metalness: 0.35 });
-            const matWhiteSole = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.2, metalness: 0.25, emissive: 0x38bdf8, emissiveIntensity: 0.15 });
-            const matSclera = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.1 });
+            const matSkinMale = new THREE.MeshStandardMaterial({ color: 0xe8b48a, roughness: 0.48, metalness: 0.04 });
+            const matSkinFemale = new THREE.MeshStandardMaterial({ color: 0xf4c6a4, roughness: 0.42, metalness: 0.04 });
+            const matDarkFabric = new THREE.MeshStandardMaterial({ color: 0x111827, roughness: 0.65, metalness: 0.15 });
+            const matDenimCargo = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.55, metalness: 0.2 });
+            const matWhiteSole = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.3, metalness: 0.1 });
+            const matSclera = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.15 });
             const matPupil = new THREE.MeshBasicMaterial({ color: 0x050811 });
             const matEyeCatch = new THREE.MeshBasicMaterial({ color: 0xffffff });
-            const matSilverChain = new THREE.MeshStandardMaterial({ color: 0xf1f5f9, metalness: 0.95, roughness: 0.1 });
-            const hwOrange = new THREE.MeshStandardMaterial({ color: 0xff6600, emissive: 0xff4400, emissiveIntensity: 0.55, roughness: 0.3 });
-            const hwBlack = new THREE.MeshStandardMaterial({ color: 0x0f1016, metalness: 0.5, roughness: 0.35 });
-
-            // Aro de energía estilo Videojuego bajo los pies del personaje (se enciende al bailar)
-            const ringColorHex = type === 'chica' ? 0xec4899 : (type === 'robot' ? 0x00ffff : 0x38bdf8);
-            const groundHalo = new THREE.Mesh(
-                new THREE.RingGeometry(0.48, 0.62, 32),
-                new THREE.MeshBasicMaterial({ color: ringColorHex, side: THREE.DoubleSide, transparent: true, opacity: 0.75 })
-            );
-            groundHalo.rotation.x = -Math.PI / 2;
-            groundHalo.position.y = 0.03;
-            avatar.vfxGroup.add(groundHalo);
-
-            const innerHalo = new THREE.Mesh(
-                new THREE.RingGeometry(0.25, 0.30, 6),
-                new THREE.MeshBasicMaterial({ color: 0xfacc15, side: THREE.DoubleSide, transparent: true, opacity: 0.65 })
-            );
-            innerHalo.rotation.x = -Math.PI / 2;
-            innerHalo.position.y = 0.04;
-            avatar.vfxGroup.add(innerHalo);
-            avatar.root.add(avatar.vfxGroup);
+            const matSilverChain = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.92, roughness: 0.15 });
+            const hwOrange = new THREE.MeshStandardMaterial({ color: 0xff6600, emissive: 0xff4400, emissiveIntensity: 0.45, roughness: 0.35 });
+            const hwBlack = new THREE.MeshStandardMaterial({ color: 0x0f1016, metalness: 0.4, roughness: 0.45 });
 
             function buildRealisticHead(skinMat, irisHex, lipHex, isFemale) {
                 const headGroup = new THREE.Group();
@@ -2007,117 +1909,6 @@
                     headGroup.add(eyeL, eyeR, mouthMesh);
                     return { headGroup, mouthMesh };
                 }
-
-                // Cráneo, pómulos y línea mandibular esculpida con estética Hero de videojuego
-                const cranium = new THREE.Mesh(new THREE.SphereGeometry(0.34, 32, 32), skinMat);
-                cranium.scale.set(0.96, 1.08, 0.98);
-                cranium.castShadow = true;
-                headGroup.add(cranium);
-
-                const jaw = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.16, 0.25, 24), skinMat);
-                jaw.position.set(0, -0.15, 0.03);
-                jaw.scale.set(0.95, 1, 0.88);
-                headGroup.add(jaw);
-
-                const chin = new THREE.Mesh(new THREE.SphereGeometry(0.11, 16, 16), skinMat);
-                chin.scale.set(1.1, 0.75, 0.9);
-                chin.position.set(0, -0.25, 0.11);
-                headGroup.add(chin);
-
-                // Pómulos juveniles con rubor/acento cyber-glow
-                const blushMat = new THREE.MeshBasicMaterial({ color: isFemale ? 0xfb7185 : 0x38bdf8, transparent: true, opacity: isFemale ? 0.35 : 0.25 });
-                [-1, 1].forEach(side => {
-                    const cheekGlow = new THREE.Mesh(new THREE.PlaneGeometry(0.085, 0.032), blushMat);
-                    cheekGlow.position.set(side * 0.18, -0.04, 0.31);
-                    cheekGlow.rotation.y = side * 0.35;
-                    headGroup.add(cheekGlow);
-
-                    const ear = new THREE.Mesh(new THREE.SphereGeometry(0.065, 16, 16), skinMat);
-                    ear.scale.set(0.45, 1.15, 0.7);
-                    ear.position.set(side * 0.33, -0.02, -0.02);
-                    headGroup.add(ear);
-
-                    const earring = new THREE.Mesh(
-                        new THREE.TorusGeometry(isFemale ? 0.048 : 0.024, 0.009, 8, 16),
-                        new THREE.MeshBasicMaterial({ color: isFemale ? 0x22d3ee : 0xfacc15 })
-                    );
-                    earring.position.set(side * 0.35, isFemale ? -0.10 : -0.07, -0.01);
-                    earring.rotation.y = Math.PI / 2;
-                    headGroup.add(earring);
-                });
-
-                // Micrófono Headset Gamer/Idol en la mejilla derecha
-                const micArm = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.22, 8), matSilverChain);
-                micArm.position.set(0.27, -0.11, 0.18);
-                micArm.rotation.x = Math.PI / 2.5;
-                micArm.rotation.z = 0.45;
-                const micTip = new THREE.Mesh(new THREE.SphereGeometry(0.022, 12, 12), new THREE.MeshBasicMaterial({ color: 0x00ffff }));
-                micTip.position.set(0.18, -0.14, 0.29);
-                headGroup.add(micArm, micTip);
-
-                // Ojos estilo Videojuego AAA con anillo de iris luminoso y doble reflejo
-                const matIris = new THREE.MeshStandardMaterial({ color: irisHex, emissive: irisHex, emissiveIntensity: 0.45, roughness: 0.15 });
-                const browMat = new THREE.MeshStandardMaterial({ color: isFemale ? 0x3b0764 : 0x0f172a, roughness: 0.4 });
-
-                [-1, 1].forEach(side => {
-                    const eyeGroup = new THREE.Group();
-                    eyeGroup.position.set(side * 0.115, 0.04, 0.298);
-
-                    const sclera = new THREE.Mesh(new THREE.SphereGeometry(0.055, 20, 20), matSclera);
-                    sclera.scale.set(1.18, 0.92, 0.65);
-
-                    const iris = new THREE.Mesh(new THREE.SphereGeometry(0.034, 16, 16), matIris);
-                    iris.scale.set(1.0, 1.0, 0.45);
-                    iris.position.z = 0.026;
-
-                    const pupil = new THREE.Mesh(new THREE.SphereGeometry(0.018, 12, 12), matPupil);
-                    pupil.scale.set(1.0, 1.0, 0.4);
-                    pupil.position.z = 0.035;
-
-                    const catchLight = new THREE.Mesh(new THREE.SphereGeometry(0.008, 8, 8), matEyeCatch);
-                    catchLight.position.set(0.013, 0.013, 0.040);
-
-                    const catchLight2 = new THREE.Mesh(new THREE.SphereGeometry(0.004, 8, 8), matEyeCatch);
-                    catchLight2.position.set(-0.010, -0.008, 0.040);
-
-                    eyeGroup.add(sclera, iris, pupil, catchLight, catchLight2);
-
-                    if (isFemale) {
-                        const lash = new THREE.Mesh(new THREE.BoxGeometry(0.125, 0.016, 0.02), new THREE.MeshBasicMaterial({ color: 0x090d16 }));
-                        lash.position.set(0, 0.040, 0.02);
-                        lash.rotation.z = side * -0.09;
-                        eyeGroup.add(lash);
-                    }
-                    headGroup.add(eyeGroup);
-
-                    const brow = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.024, 0.025), browMat);
-                    brow.position.set(side * 0.115, 0.118, 0.308);
-                    brow.rotation.z = side * (isFemale ? -0.07 : 0.06);
-                    headGroup.add(brow);
-                });
-
-                const noseBridge = new THREE.Mesh(new THREE.ConeGeometry(0.038, 0.135, 12), skinMat);
-                noseBridge.position.set(0, -0.02, 0.338);
-                noseBridge.rotation.x = 0.22;
-                headGroup.add(noseBridge);
-
-                // Boca sonriente con diente brillante superior
-                const mouthGroup = new THREE.Group();
-                mouthGroup.position.set(0, -0.145, 0.318);
-                const lipsMesh = new THREE.Mesh(
-                    new THREE.BoxGeometry(isFemale ? 0.118 : 0.125, 0.036, 0.045),
-                    new THREE.MeshStandardMaterial({ color: lipHex, roughness: 0.25, metalness: 0.1 })
-                );
-                const smileTeeth = new THREE.Mesh(
-                    new THREE.BoxGeometry(isFemale ? 0.09 : 0.095, 0.016, 0.048),
-                    matSclera
-                );
-                smileTeeth.position.y = 0.004;
-                mouthGroup.add(lipsMesh, smileTeeth);
-                headGroup.add(mouthGroup);
-
-                return { headGroup, mouthMesh: mouthGroup };
-            }
 
                 const cranium = new THREE.Mesh(new THREE.SphereGeometry(0.34, 32, 32), skinMat);
                 cranium.scale.set(0.96, 1.08, 0.98);
@@ -2350,29 +2141,21 @@
                     palm.position.y = -0.60;
                     elbowGroup.add(palm);
 
-                    // Orbe de energía de videojuego en la mano para estelas al bailar
-                    const handOrb = new THREE.Mesh(
-                        new THREE.TorusGeometry(0.11, 0.012, 8, 20),
-                        new THREE.MeshBasicMaterial({ color: 0x22d3ee, transparent: true, opacity: 0.75 })
-                    );
-                    handOrb.position.y = -0.60;
-                    elbowGroup.add(handOrb);
-
                     const thumb = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.018, 0.08, 8), skin);
                     thumb.position.set(isLeft ? 0.055 : -0.055, -0.59, 0.03);
                     thumb.rotation.z = isLeft ? -0.5 : 0.5;
                     elbowGroup.add(thumb);
 
                     armGroup.add(elbowGroup);
-                    return { armGroup, elbowGroup, handOrb };
+                    return { armGroup, elbowGroup };
                 }
 
                 const leftArmObj = buildMaleArm(true);
-                avatar.leftArm = leftArmObj.armGroup; avatar.leftElbow = leftArmObj.elbowGroup; avatar.leftHandTrail = leftArmObj.handOrb;
+                avatar.leftArm = leftArmObj.armGroup; avatar.leftElbow = leftArmObj.elbowGroup;
                 avatar.bodyGroup.add(avatar.leftArm);
 
                 const rightArmObj = buildMaleArm(false);
-                avatar.rightArm = rightArmObj.armGroup; avatar.rightElbow = rightArmObj.elbowGroup; avatar.rightHandTrail = rightArmObj.handOrb;
+                avatar.rightArm = rightArmObj.armGroup; avatar.rightElbow = rightArmObj.elbowGroup;
                 avatar.bodyGroup.add(avatar.rightArm);
 
                 function buildMaleLeg(isLeft) {
@@ -2547,24 +2330,16 @@
                     hand.position.y = -0.58;
                     elbowGroup.add(hand);
 
-                    // Aro de luz Idol de videojuego en las manos al bailar
-                    const handOrb = new THREE.Mesh(
-                        new THREE.TorusGeometry(0.10, 0.012, 8, 20),
-                        new THREE.MeshBasicMaterial({ color: 0xec4899, transparent: true, opacity: 0.8 })
-                    );
-                    handOrb.position.y = -0.58;
-                    elbowGroup.add(handOrb);
-
                     armGroup.add(elbowGroup);
-                    return { armGroup, elbowGroup, handOrb };
+                    return { armGroup, elbowGroup };
                 }
 
                 const leftArmObj = buildFemaleArm(true);
-                avatar.leftArm = leftArmObj.armGroup; avatar.leftElbow = leftArmObj.elbowGroup; avatar.leftHandTrail = leftArmObj.handOrb;
+                avatar.leftArm = leftArmObj.armGroup; avatar.leftElbow = leftArmObj.elbowGroup;
                 avatar.bodyGroup.add(avatar.leftArm);
 
                 const rightArmObj = buildFemaleArm(false);
-                avatar.rightArm = rightArmObj.armGroup; avatar.rightElbow = rightArmObj.elbowGroup; avatar.rightHandTrail = rightArmObj.handOrb;
+                avatar.rightArm = rightArmObj.armGroup; avatar.rightElbow = rightArmObj.elbowGroup;
                 avatar.bodyGroup.add(avatar.rightArm);
 
                 function buildFemaleLeg(isLeft) {
@@ -2971,22 +2746,6 @@
                 superGiftBurstTimer -= dt;
             }
 
-            // APARICIÓN REPENTINA DE LA MUJER SONRIENTE CON EXPLOSIÓN DE COTILLONES DURANTE LA PARTIDA MIENTRAS BAILAN
-            const gameScreenEl = document.getElementById('game-screen');
-            const womanOverlayEl = document.getElementById('woman-like-overlay');
-            if (gameScreenEl && gameScreenEl.classList.contains('active') && currentDanceState !== 'idle') {
-                suddenWomanTimer -= dt;
-                if (suddenWomanTimer <= 0) {
-                    // Reiniciar temporizador aleatorio (entre 16 y 24 segundos de baile activo)
-                    suddenWomanTimer = 16.0 + Math.random() * 8.0;
-                    if (womanOverlayEl && !womanOverlayEl.classList.contains('active')) {
-                        triggerScreenShake(1.1);
-                        spawnWordRain('🎉 ¡SUSCRÍBETE, COMENTA Y DEJA TU LIKE! 💖', ['#ec4899', '#22d3ee', '#facc15', '#4ade80']);
-                        triggerWomanLikePorFavorOverlay();
-                    }
-                }
-            }
-
             if (superAuraGroup && superAuraGroup.visible && avatarRoot) {
                 superAuraGroup.position.x = avatarRoot.position.x;
                 superAuraGroup.position.z = avatarRoot.position.z;
@@ -3060,14 +2819,6 @@
                 let bt = time + bot.danceOffset;
                 const baseBotX = idx === 0 ? -4.0 : 4.0;
                 const baseBotZ = -2.0;
-
-                if (bot.vfxGroup) {
-                    bot.vfxGroup.rotation.y = -time * 3.5;
-                    const pulseScale = 1 + Math.sin(time * 9 + idx) * 0.14;
-                    bot.vfxGroup.scale.set(pulseScale, 1, pulseScale);
-                }
-                if (bot.leftHandTrail) bot.leftHandTrail.rotation.x = time * 8;
-                if (bot.rightHandTrail) bot.rightHandTrail.rotation.y = time * 8;
 
                 if (bot.sign) {
                     bot.sign.position.y = 4.8 + Math.sin(bt * (isTrioChoreo ? 8 : 2)) * 0.25;
@@ -3547,18 +3298,6 @@
                     const vector = new THREE.Vector3(); head.getWorldPosition(vector); vector.y += 0.8; vector.project(camera); 
                     const x = (vector.x * 0.5 + 0.5) * window.innerWidth; const y = (vector.y * -0.5 + 0.5) * window.innerHeight;
                     const nameTag = document.getElementById('avatar-name-tag'); if (nameTag.style.display !== 'none') { nameTag.style.left = `${x}px`; nameTag.style.top = `${y}px`; }
-                }
-
-                // Animar aros de energía estilo videojuego y estelas en las manos mientras ejecuta el baile
-                if (avatarRoot && avatarRoot.children[0] && avatarRoot.children[0].children) {
-                    const vfxGrp = avatarRoot.children[0];
-                    vfxGrp.rotation.y = time * (currentDanceState === 'idle' ? 1.5 : 5.5);
-                    const dancePulse = currentDanceState === 'idle' ? 1.0 : (1.18 + Math.sin(time * 12) * 0.18);
-                    vfxGrp.scale.set(dancePulse, 1, dancePulse);
-                }
-                if (leftElbow && rightElbow) {
-                    leftElbow.children.forEach(ch => { if (ch.geometry && ch.geometry.type === 'TorusGeometry') ch.rotation.x = time * 10; });
-                    rightElbow.children.forEach(ch => { if (ch.geometry && ch.geometry.type === 'TorusGeometry') ch.rotation.y = time * 10; });
                 }
             }
             renderer.render(scene, camera);
