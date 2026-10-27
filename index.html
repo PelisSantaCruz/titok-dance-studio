@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TikTok Dance Studio Model Bolivia  Modernas</title>
+    <title>STAGE 1: Cuartel de Juguetes, Héroes y Estrenos - TikTok Dance Studio Model Bolivia</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -195,7 +195,8 @@
     <div id="login-screen" class="screen justify-center items-center">
         <div class="glass-panel p-8 rounded-2xl w-full max-w-md mx-4 relative overflow-hidden shadow-[0_0_50px_rgba(236,72,153,0.2)]">
             <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500"></div>
-            <h1 class="text-3xl font-black text-center mb-2 text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-cyan-400">STUDIO DIGITAL MODEL BOLIVIA 🔥</h1>
+            <div class="text-center mb-1"><span class="bg-gradient-to-r from-amber-500 to-pink-600 text-white text-[10px] font-black px-3 py-0.5 rounded-full uppercase tracking-widest shadow">Saga 10 Stages • Repositorio Stage 1 (Meta: 20 Min)</span></div>
+            <h1 class="text-3xl font-black text-center mb-2 text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-cyan-400">STAGE 1: STUDIO MODEL BOLIVIA 🔥</h1>
             <p class="text-center text-gray-300 mb-6 text-sm font-semibold">Fiesta, Streaming & Entretenimiento Digital Model Bolivia</p>
             
             <div class="space-y-4">
@@ -212,8 +213,11 @@
                         🔥 ENTRAR A LA PISTA
                     </button>
                 </div>
-                <div class="text-[10px] text-center text-gray-500 mt-2">
-                    Si tu usuario no existe, se creará uno nuevo automáticamente.
+                <div id="external-link-login-badge" class="bg-slate-900/90 border border-cyan-500/40 rounded-xl p-2.5 text-[10px] text-cyan-300 font-semibold text-center">
+                    🔗 Verificando vínculo con página externa y llave de Stage en Firebase...
+                </div>
+                <div class="text-[10px] text-center text-gray-500 mt-1">
+                    Si tu usuario no existe, se creará en Firebase con tu Setup de Logros (Stage 1: 20 min).
                 </div>
             </div>
         </div>
@@ -398,11 +402,16 @@
                     </button>
                     
                     <div id="custom-panel" class="flex flex-wrap gap-2 transform transition-all duration-300 origin-top scale-y-0 opacity-0 h-0 overflow-hidden">
-                        <div class="glass-panel px-3 py-1.5 rounded-xl flex gap-2 justify-center items-center border border-pink-500/30">
-                            <span class="text-[10px] font-bold text-gray-400 uppercase">Outfit:</span>
-                            <button onclick="changeAvatar('chico')" class="bg-blue-800 hover:bg-blue-600 px-3 py-1 rounded-lg text-xs font-bold transition-colors shadow-md">👨 Chico Urbano</button>
-                            <button onclick="changeAvatar('chica')" class="bg-pink-800 hover:bg-pink-600 px-3 py-1 rounded-lg text-xs font-bold transition-colors shadow-md">👩 Chica Neón</button>
-                            <button onclick="changeAvatar('robot')" class="bg-slate-700 hover:bg-cyan-600 px-2 py-1 rounded-lg text-[10px] font-bold transition-colors">🤖 Bot Trend</button>
+                        <div class="glass-panel px-3 py-1.5 rounded-xl flex flex-wrap gap-1.5 justify-center items-center border border-pink-500/40">
+                            <span class="text-[10px] font-black text-amber-300 uppercase">Saga Icónica (Juguetes / Héroes / Cine):</span>
+                            <button onclick="changeAvatar('toy_astro')" class="bg-emerald-700 hover:bg-emerald-600 px-2.5 py-1 rounded-lg text-[10px] font-black text-white transition-colors shadow-md border border-emerald-400/50">🚀 Guardián Juguete</button>
+                            <button onclick="changeAvatar('toy_fashion')" class="bg-fuchsia-700 hover:bg-fuchsia-600 px-2.5 py-1 rounded-lg text-[10px] font-black text-white transition-colors shadow-md border border-fuchsia-400/50">🎀 Muñeca Pop Glam</button>
+                            <button onclick="changeAvatar('hero_iron')" class="bg-red-700 hover:bg-red-600 px-2.5 py-1 rounded-lg text-[10px] font-black text-amber-200 transition-colors shadow-md border border-amber-400/60">🛡️ Ciber-Héroe</button>
+                            <button onclick="changeAvatar('hero_arachnid')" class="bg-blue-800 hover:bg-red-600 px-2.5 py-1 rounded-lg text-[10px] font-black text-white transition-colors shadow-md border border-red-400/50">🕷️ Héroe Acróbata</button>
+                            <button onclick="changeAvatar('movie_blockbuster')" class="bg-amber-700 hover:bg-amber-600 px-2.5 py-1 rounded-lg text-[10px] font-black text-white transition-colors shadow-md border border-yellow-300/60">🎬 Astro de Estreno</button>
+                            <button onclick="changeAvatar('chico')" class="bg-slate-800 hover:bg-blue-700 px-2 py-1 rounded-lg text-[10px] font-bold transition-colors">👨 Urbano</button>
+                            <button onclick="changeAvatar('chica')" class="bg-slate-800 hover:bg-pink-700 px-2 py-1 rounded-lg text-[10px] font-bold transition-colors">👩 Neón</button>
+                            <button onclick="changeAvatar('robot')" class="bg-slate-800 hover:bg-cyan-700 px-2 py-1 rounded-lg text-[10px] font-bold transition-colors">🤖 Bot</button>
                         </div>
                         <div class="glass-panel px-3 py-1.5 rounded-xl flex gap-2 justify-center items-center border border-cyan-500/30">
                             <span class="text-[10px] font-bold text-cyan-300 uppercase">Vibes:</span>
@@ -434,9 +443,19 @@
                         <span>🔊</span> <span class="hidden sm:inline">SFX ON</span>
                     </button>
 
-                    <!-- Botón Desplegable del Nuevo Menú de Super Regalos TikTok -->
-                    <button onclick="toggleSuperGiftsMenu()" id="btn-toggle-super-gifts" class="bg-gradient-to-r from-pink-600 via-fuchsia-600 to-amber-500 text-white px-3.5 py-1.5 rounded-xl text-xs font-black shadow-[0_0_20px_rgba(236,72,153,0.6)] border border-amber-300/70 hover:scale-105 transition-transform flex items-center gap-1.5">
-                        <span>🎁</span> Super Regalos TikTok ▲
+                    <!-- NUEVO BOTÓN CON SÍMBOLO DE REGALOS: Coreografía Grupal Coordinada (Todos los Regalos TikTok) -->
+                    <button onclick="toggleGroupChoreoMenu()" id="btn-toggle-group-choreo" class="bg-gradient-to-r from-pink-600 via-fuchsia-600 to-amber-500 text-white px-3 py-1.5 rounded-xl text-[11px] font-black shadow-[0_0_20px_rgba(236,72,153,0.6)] border border-amber-300/80 hover:scale-105 transition-transform flex items-center gap-1">
+                        <span>🎁</span> Coreo Grupal TikTok ▲
+                    </button>
+
+                    <!-- PANEL ANTERIOR CONSERVADO COMO TAREA (SIN SÍMBOLO DE REGALOS) -->
+                    <button onclick="toggleSuperGiftsMenu()" id="btn-toggle-super-gifts" class="bg-gradient-to-r from-cyan-700 to-indigo-700 text-cyan-100 px-3 py-1.5 rounded-xl text-[11px] font-black shadow-lg border border-cyan-400/60 hover:scale-105 transition-transform flex items-center gap-1">
+                        <span>🎯</span> Tareas Stage ▼
+                    </button>
+
+                    <!-- Botón para ver el Setup de Memoria / Llave de Stage -->
+                    <button onclick="toggleStageSetupModal()" id="btn-stage-memory" class="glass-panel px-2.5 py-1.5 rounded-xl text-[11px] font-black text-amber-300 border border-amber-400/50 hover:bg-amber-900/40 transition-colors flex items-center gap-1" title="Ver Setup de Logros y Llave de Stage">
+                        <span>🏆</span> Stage 1/10
                     </button>
 
                     <button onclick="logout()" class="glass-panel px-4 py-1.5 rounded-xl flex items-center gap-2 text-xs font-bold text-red-400 hover:text-white hover:bg-red-500/50 transition-colors shadow-lg border border-red-500/30">
@@ -534,33 +553,96 @@
             </div>
         </div>
 
-        <!-- NUEVO MENÚ DESPLEGABLE DE SUPER REGALOS TIKTOK LIVE (CON TODOS LOS EMOJIS Y PASOS EXTRAORDINARIOS) -->
-        <div id="gifts-wrapper" class="absolute right-3 top-36 bottom-28 pointer-events-auto z-40 flex items-start transition-all duration-300">
-            <div id="tiktok-gifts-panel" class="glass-panel p-3 rounded-2xl flex flex-col gap-2 border border-pink-500/60 shadow-[0_0_30px_rgba(236,72,153,0.4)] w-72 sm:w-80 max-h-full overflow-hidden">
+        <!-- HUD COMPACTO DE MEMORIA DEL STAGE 1 (META: 20 MINUTOS + TAREAS + COREOGRAFÍAS GRUPALES) -->
+        <div id="stage-progress-hud" class="fixed top-12 left-1/2 transform -translate-x-1/2 z-30 pointer-events-auto glass-panel px-3 py-1.5 rounded-2xl border border-amber-400/50 shadow-[0_0_20px_rgba(251,191,36,0.25)] flex flex-wrap items-center justify-center gap-2 sm:gap-3 max-w-[95vw]">
+            <div class="flex items-center gap-1.5">
+                <span class="bg-gradient-to-r from-amber-500 to-pink-600 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase">STAGE 1 / 10</span>
+                <span id="hud-origin-badge" class="text-[9px] font-bold text-emerald-300 bg-emerald-950/80 border border-emerald-500/40 px-1.5 py-0.5 rounded">🔗 Vínculo OK</span>
+            </div>
+            <div class="flex items-center gap-1 text-[10px] font-bold text-cyan-200" title="Tiempo activo requerido en el Stage 1 (20 minutos)">
+                <span>⏱️</span>
+                <span id="hud-time-label">00:00 / 20:00</span>
+            </div>
+            <div class="flex items-center gap-1 text-[10px] font-bold text-indigo-200" title="Tareas de pasos ejecutadas">
+                <span>🎯 Tareas:</span>
+                <span id="hud-tasks-label">0/40</span>
+            </div>
+            <div class="flex items-center gap-1 text-[10px] font-bold text-pink-200" title="Coreografías Grupales con Regalos TikTok">
+                <span>🎁 Coreo Grupo:</span>
+                <span id="hud-group-label">0/20</span>
+            </div>
+            <button onclick="toggleStageSetupModal()" class="bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-400/40 px-2 py-0.5 rounded-lg text-[9px] font-black transition-colors">
+                📊 Memoria & Llave
+            </button>
+            <button id="btn-hud-next-stage" onclick="proceedToNextStageRepo()" class="hidden bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-950 font-black text-[9px] px-2.5 py-0.5 rounded-full animate-pulse shadow-lg">
+                🔓 IR AL STAGE 2 ➔
+            </button>
+        </div>
+
+        <!-- PANEL ANTERIOR CONSERVADO COMO TAREA DE STAGE (SIN EL SÍMBOLO DE REGALOS) -->
+        <div id="gifts-wrapper" class="absolute left-3 top-36 bottom-28 pointer-events-auto z-40 flex items-start transition-all duration-300 -translate-x-[120%]">
+            <div id="tiktok-gifts-panel" class="glass-panel p-3 rounded-2xl flex flex-col gap-2 border border-cyan-500/60 shadow-[0_0_30px_rgba(6,182,212,0.35)] w-72 sm:w-80 max-h-full overflow-hidden">
                 
-                <!-- Cabecera del Menú Desplegable de Super Regalos -->
-                <div class="flex justify-between items-center border-b border-pink-500/40 pb-2">
+                <!-- Cabecera del Panel de Tareas (Sin símbolo de regalos) -->
+                <div class="flex justify-between items-center border-b border-cyan-500/40 pb-2">
                     <div>
-                        <h3 class="text-xs font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-amber-300 to-cyan-300 uppercase tracking-wider">
-                            🎁 Super Regalos TikTok Live
+                        <h3 class="text-xs font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-indigo-300 to-emerald-300 uppercase tracking-wider">
+                            🎯 Panel de Tareas y Acrobacias (Misión)
                         </h3>
-                        <p class="text-[9px] text-gray-300 font-semibold">Ejecuta pasos extraordinarios sostenidos</p>
+                        <p class="text-[9px] text-gray-300 font-semibold">Suma puntos de Tarea Individual para el Stage 1</p>
                     </div>
                     <button onclick="toggleSuperGiftsMenu()" class="text-gray-400 hover:text-white bg-slate-800/80 hover:bg-rose-600/80 rounded-lg px-2 py-0.5 text-xs font-bold transition-colors">
                         ✕
                     </button>
                 </div>
 
-                <!-- Selector de Categorías de Regalos TikTok -->
+                <!-- Selector de Categorías de Tareas -->
                 <div class="flex gap-1 text-[9px] font-black uppercase">
-                    <button onclick="filterSuperGifts('all')" id="tab-gift-all" class="flex-1 bg-pink-600 text-white py-1 rounded-md transition-colors">Todos (30)</button>
-                    <button onclick="filterSuperGifts('popular')" id="tab-gift-popular" class="flex-1 bg-slate-800 hover:bg-slate-700 text-gray-300 py-1 rounded-md transition-colors">Populares</button>
-                    <button onclick="filterSuperGifts('luxury')" id="tab-gift-luxury" class="flex-1 bg-slate-800 hover:bg-slate-700 text-amber-300 py-1 rounded-md transition-colors">Épicos VIP</button>
+                    <button onclick="filterSuperGifts('all')" id="tab-gift-all" class="flex-1 bg-cyan-600 text-white py-1 rounded-md transition-colors">Todas (30)</button>
+                    <button onclick="filterSuperGifts('popular')" id="tab-gift-popular" class="flex-1 bg-slate-800 hover:bg-slate-700 text-gray-300 py-1 rounded-md transition-colors">Nivel 1</button>
+                    <button onclick="filterSuperGifts('luxury')" id="tab-gift-luxury" class="flex-1 bg-slate-800 hover:bg-slate-700 text-cyan-300 py-1 rounded-md transition-colors">Pro Master</button>
                 </div>
 
-                <!-- Cuadrícula Desplegable con Todos los Emojis del Menú de Regalos de TikTok -->
+                <!-- Cuadrícula Desplegable de Tareas (Sin símbolo de regalos) -->
                 <div id="super-gifts-grid" class="grid grid-cols-3 gap-1.5 overflow-y-auto pr-1 pb-1 flex-1">
-                    <!-- Se llena dinámicamente desde SUPER_GIFTS_CATALOG -->
+                    <!-- Se llena dinámicamente sin íconos de regalo -->
+                </div>
+            </div>
+        </div>
+
+        <!-- NUEVO PANEL DE COREOGRAFÍA DE GRUPO COORDINADA (LLEVA EL SÍMBOLO DE REGALOS 🎁 Y TODA LA LISTA DE REGALOS DE TIKTOK) -->
+        <div id="group-choreo-wrapper" class="absolute right-3 top-36 bottom-28 pointer-events-auto z-40 flex items-start transition-all duration-300">
+            <div id="group-choreo-panel" class="glass-panel p-3 rounded-2xl flex flex-col gap-2 border border-pink-500/70 shadow-[0_0_32px_rgba(236,72,153,0.45)] w-72 sm:w-84 max-h-full overflow-hidden">
+                <div class="flex justify-between items-center border-b border-pink-500/40 pb-2">
+                    <div>
+                        <h3 class="text-xs font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-amber-300 to-cyan-300 uppercase tracking-wider">
+                            🎁 Coreografía de Grupo TikTok Live
+                        </h3>
+                        <p class="text-[9px] text-amber-200 font-semibold">Escuadrón de 5 personajes sincronizados por Regalo</p>
+                    </div>
+                    <button onclick="toggleGroupChoreoMenu()" class="text-gray-400 hover:text-white bg-slate-800/80 hover:bg-rose-600/80 rounded-lg px-2 py-0.5 text-xs font-bold transition-colors">
+                        ✕
+                    </button>
+                </div>
+
+                <!-- Selector de Formación Coreográfica del Escuadrón -->
+                <div class="flex items-center justify-between gap-1 bg-slate-900/90 px-2 py-1 rounded-lg border border-pink-500/30 text-[9px]">
+                    <span class="font-black text-pink-300 uppercase">Formación 5D:</span>
+                    <button onclick="setSquadFormation('v_wedge')" id="fmt-btn-v_wedge" class="bg-pink-600 text-white px-1.5 py-0.5 rounded font-bold">V-Escuadrón</button>
+                    <button onclick="setSquadFormation('diamond')" id="fmt-btn-diamond" class="bg-slate-800 text-gray-300 px-1.5 py-0.5 rounded font-bold">Diamante</button>
+                    <button onclick="setSquadFormation('line_wave')" id="fmt-btn-line_wave" class="bg-slate-800 text-gray-300 px-1.5 py-0.5 rounded font-bold">Línea Ola</button>
+                </div>
+
+                <!-- Filtro de toda la lista de regalos de TikTok -->
+                <div class="flex gap-1 text-[9px] font-black uppercase">
+                    <button onclick="filterGroupChoreoGifts('all')" id="tab-group-all" class="flex-1 bg-gradient-to-r from-pink-600 to-amber-500 text-white py-1 rounded-md transition-colors">🎁 Todos (30)</button>
+                    <button onclick="filterGroupChoreoGifts('popular')" id="tab-group-popular" class="flex-1 bg-slate-800 hover:bg-slate-700 text-gray-300 py-1 rounded-md transition-colors">Populares</button>
+                    <button onclick="filterGroupChoreoGifts('luxury')" id="tab-group-luxury" class="flex-1 bg-slate-800 hover:bg-slate-700 text-amber-300 py-1 rounded-md transition-colors">Épicos VIP</button>
+                </div>
+
+                <!-- Cuadrícula con los 30 Regalos Oficiales de TikTok que activan la Coreografía Grupal -->
+                <div id="group-choreo-gifts-grid" class="grid grid-cols-3 gap-1.5 overflow-y-auto pr-1 pb-1 flex-1">
+                    <!-- Se llena dinámicamente con el símbolo 🎁 y todos los regalos de TikTok -->
                 </div>
             </div>
         </div>
@@ -664,6 +746,97 @@
 
     </div>
 
+    <!-- MODAL DE MEMORIA DEL JUEGO (SETUP DE LOGROS, VÍNCULO EXTERNO Y LLAVE MULTI-REPOSITORIO) -->
+    <div id="stage-setup-modal" class="modal-overlay z-[360]">
+        <div class="glass-panel p-5 rounded-2xl w-full max-w-xl mx-4 border border-amber-400/60 shadow-[0_0_40px_rgba(251,191,36,0.3)] flex flex-col gap-3 max-h-[92vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-slate-700 pb-2">
+                <div>
+                    <span class="text-[9px] font-black uppercase tracking-widest text-amber-400">Setup de Memoria Firebase • Saga 10 Stages</span>
+                    <h2 class="text-lg font-black text-white">🏆 Progreso del Jugador — STAGE 1 (Meta: 20 Minutos)</h2>
+                </div>
+                <button onclick="toggleStageSetupModal()" class="text-gray-400 hover:text-white text-2xl leading-none">&times;</button>
+            </div>
+
+            <!-- Estado de Autenticación y Vínculo con Página Externa -->
+            <div class="bg-slate-900/90 border border-cyan-500/40 rounded-xl p-3 flex flex-col gap-1.5 text-xs">
+                <div class="flex justify-between items-center">
+                    <span class="font-bold text-cyan-300">🔐 Estado de Llave en Base de Datos (`stageProgressDB`):</span>
+                    <span id="modal-origin-status" class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-900/80 text-emerald-300 border border-emerald-400/40">Vinculado</span>
+                </div>
+                <p id="modal-origin-desc" class="text-[11px] text-gray-300">
+                    La base de datos verifica que vienes de la página externa vinculada. Si un jugador ingresa a los repositorios de los Stages 2 al 10 sin vínculo válido o sin llave desbloqueada, es enviado automáticamente al Stage 1.
+                </p>
+                <div class="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-slate-800 text-[10px] text-gray-400">
+                    <div>Llave personal Stage: <code id="modal-gate-token" class="text-amber-300 font-mono font-bold">STG1-PENDIENTE</code></div>
+                    <div>Stage Desbloqueado: <strong id="modal-stage-unlocked" class="text-cyan-300">Stage 1 de 10</strong></div>
+                </div>
+            </div>
+
+            <!-- Barras de Progreso del Stage 1 (20 Minutos + Tareas + Coreografía Grupal + XP) -->
+            <div class="space-y-2.5 bg-slate-800/70 p-3.5 rounded-xl border border-slate-700">
+                <div>
+                    <div class="flex justify-between text-xs font-bold mb-1">
+                        <span class="text-cyan-300">⏱️ 1. Tiempo de Permanencia Activa (20 Minutos por Stage)</span>
+                        <span id="bar-time-text" class="text-white">0m 00s / 20m 00s (0%)</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-slate-950 rounded-full overflow-hidden border border-cyan-500/30">
+                        <div id="bar-time-fill" class="h-full bg-gradient-to-r from-cyan-500 to-blue-500 transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex justify-between text-xs font-bold mb-1">
+                        <span class="text-indigo-300">🎯 2. Tareas de Pasos y Acrobacias de Nivel (Panel Tareas / Teclado)</span>
+                        <span id="bar-tasks-text" class="text-white">0 / 40 tareas (0%)</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-slate-950 rounded-full overflow-hidden border border-indigo-500/30">
+                        <div id="bar-tasks-fill" class="h-full bg-gradient-to-r from-indigo-500 to-emerald-400 transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex justify-between text-xs font-bold mb-1">
+                        <span class="text-pink-300">🎁 3. Coreografías Grupales Sincronizadas (Panel Regalos TikTok)</span>
+                        <span id="bar-group-text" class="text-white">0 / 20 coreografías (0%)</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-slate-950 rounded-full overflow-hidden border border-pink-500/30">
+                        <div id="bar-group-fill" class="h-full bg-gradient-to-r from-pink-500 to-amber-400 transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex justify-between text-xs font-bold mb-1">
+                        <span class="text-amber-300">⚡ 4. Puntos de Experiencia Acumulados (XP Stage 1)</span>
+                        <span id="bar-xp-text" class="text-white">0 / 2,500 XP (0%)</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-slate-950 rounded-full overflow-hidden border border-amber-500/30">
+                        <div id="bar-xp-fill" class="h-full bg-gradient-to-r from-amber-500 to-yellow-300 transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Configuración del Enlace al Repositorio del Stage 2 y Herramientas de Prueba -->
+            <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700 flex flex-col gap-2">
+                <label class="text-[10px] font-bold text-gray-300 uppercase">🔗 Dominio Oficial del Stage 2 (dancestudiobolivia2.modelsoft.sbs + llave):</label>
+                <div class="flex gap-1.5">
+                    <input type="text" id="next-stage-repo-input" value="https://dancestudiobolivia2.modelsoft.sbs" class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-cyan-300 font-mono outline-none focus:border-cyan-400">
+                    <button onclick="saveNextStageRepoUrl()" class="bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg">Guardar URL</button>
+                </div>
+                <div class="flex flex-wrap gap-2 pt-1">
+                    <button id="btn-modal-unlock-stage2" onclick="proceedToNextStageRepo()" disabled class="flex-1 bg-slate-700 text-gray-400 font-black text-xs py-2.5 px-4 rounded-xl cursor-not-allowed transition-all">
+                        🔒 Completa los 20 min y metas para pasar al Stage 2
+                    </button>
+                    <button onclick="simulateExternalOriginLink()" class="bg-cyan-900/80 hover:bg-cyan-800 text-cyan-200 border border-cyan-500/40 text-[10px] font-bold px-2.5 py-1.5 rounded-xl" title="Simular entrada desde página externa vinculada">
+                        🔗 Simular Vínculo Externo
+                    </button>
+                    <button onclick="fastForwardStage1ForTest()" class="bg-amber-900/70 hover:bg-amber-800 text-amber-200 border border-amber-500/40 text-[10px] font-bold px-2.5 py-1.5 rounded-xl" title="Adelantar progreso para probar la llave del Stage 2">
+                        ⚡ Test: +5 Min / +Tareas
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL DE CAMBIO DE CONTRASEÑA OBLIGATORIO -->
     <div id="force-pwd-modal" class="modal-overlay z-[200]">
         <div class="glass-panel p-6 rounded-2xl w-full max-w-sm mx-4 border border-red-500/50 shadow-[0_0_30px_rgba(239,68,68,0.3)]">
@@ -760,7 +933,7 @@
             modal.querySelector('div').classList.remove('scale-100'); modal.querySelector('div').classList.add('scale-95');
             setTimeout(() => modal.classList.remove('active'), 200);
         }
-        window.alert = function(msg) { customAlert(msg); };
+        function alert(msg) { customAlert(msg); }
 
         // ============================================================================
         // 🔗 CONFIGURACIÓN FIREBASE Y DB (BASE OFICIAL DEL PROTOTIPO)
@@ -821,7 +994,7 @@
         let floorGrid, solidFloor, solidWall, mainSign, spotLight1, spotLight2;
         let stageArenaGroup, stageFloorRings = [], dynamicPointLights = [];
         let isDraggingScene = false, prevMouseX = 0, manualCameraAzimuth = 0;
-        let currentAvatarType = 'chico'; 
+        let currentAvatarType = 'toy_astro'; 
         let modernPropsGroup;
         let presTimer = 0;
         let presParticles = null;
@@ -1402,17 +1575,58 @@
             { id: 'universo', name: 'TikTok Universe', emoji: '🌌', coins: 34999, category: 'luxury', stepTitle: 'Ascensión Cósmica', action: 'extra_universe_god', color: 0x06b6d4 }
         ];
 
+        // Renderiza el Panel de Tareas Individuales (Conserva su funcionamiento como tarea, SIN el símbolo ni emojis de regalos)
         function renderSuperGiftsMenu(filter = 'all') {
             const grid = document.getElementById('super-gifts-grid');
             if (!grid) return;
             grid.innerHTML = '';
 
-            // Actualizar pestañas activas
             ['all', 'popular', 'luxury'].forEach(tab => {
                 const btn = document.getElementById('tab-gift-' + tab);
                 if (btn) {
                     if (tab === filter) {
-                        btn.className = "flex-1 bg-gradient-to-r from-pink-600 to-purple-600 text-white py-1 rounded-md shadow transition-colors";
+                        btn.className = "flex-1 bg-gradient-to-r from-cyan-600 to-indigo-600 text-white py-1 rounded-md shadow transition-colors";
+                    } else {
+                        btn.className = "flex-1 bg-slate-800 hover:bg-slate-700 text-gray-300 py-1 rounded-md transition-colors";
+                    }
+                }
+            });
+
+            const items = filter === 'all' ? SUPER_GIFTS_CATALOG : SUPER_GIFTS_CATALOG.filter(g => g.category === filter);
+
+            items.forEach((gift, idx) => {
+                const isActive = currentDanceState === gift.action && !isGroupChoreoActive;
+                const taskXP = Math.min(150, 25 + Math.round(Math.sqrt(gift.coins) * 2));
+                const card = document.createElement('button');
+                card.id = `super-gift-btn-${gift.id}`;
+                card.onclick = () => sendGift(gift.id);
+                card.className = `gift-btn bg-gradient-to-b from-slate-800/90 to-slate-950/95 hover:from-cyan-900/60 hover:to-indigo-950/80 p-2 rounded-xl border ${isActive ? 'border-cyan-300 shadow-[0_0_15px_rgba(34,211,238,0.7)]' : 'border-cyan-500/30'} flex flex-col items-center justify-between text-center group`;
+                card.innerHTML = `
+                    <div class="w-full flex justify-between items-center">
+                        <span class="text-[8px] font-black text-cyan-300 bg-black/50 px-1.5 py-0.5 rounded-full">🎯+${taskXP}XP</span>
+                        <span class="text-[7px] text-emerald-300 font-bold uppercase">TAREA #${idx + 1}</span>
+                    </div>
+                    <div class="my-1.5 w-7 h-7 rounded-lg bg-cyan-950/90 border border-cyan-400/40 flex items-center justify-center text-[10px] font-black text-cyan-200 group-hover:scale-110 transition-transform">
+                        T${idx + 1}
+                    </div>
+                    <span class="text-[9px] font-black text-white leading-tight truncate w-full">${gift.stepTitle}</span>
+                    <span class="text-[8px] text-cyan-300 font-semibold leading-tight truncate w-full">Misión Individual</span>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Renderiza el NUEVO Panel de Coreografías Grupales Coordinadas (Lleva el símbolo 🎁 y toda la lista de 30 regalos de TikTok)
+        function renderGroupChoreoGiftsMenu(filter = 'all') {
+            const grid = document.getElementById('group-choreo-gifts-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            ['all', 'popular', 'luxury'].forEach(tab => {
+                const btn = document.getElementById('tab-group-' + tab);
+                if (btn) {
+                    if (tab === filter) {
+                        btn.className = "flex-1 bg-gradient-to-r from-pink-600 to-amber-500 text-white py-1 rounded-md shadow transition-colors";
                     } else {
                         btn.className = "flex-1 bg-slate-800 hover:bg-slate-700 text-gray-300 py-1 rounded-md transition-colors";
                     }
@@ -1422,22 +1636,40 @@
             const items = filter === 'all' ? SUPER_GIFTS_CATALOG : SUPER_GIFTS_CATALOG.filter(g => g.category === filter);
 
             items.forEach(gift => {
-                const isActive = currentDanceState === gift.action;
+                const isActive = isGroupChoreoActive && activeGroupGiftId === gift.id;
                 const card = document.createElement('button');
-                card.id = `super-gift-btn-${gift.id}`;
-                card.onclick = () => sendGift(gift.id);
-                card.className = `gift-btn bg-gradient-to-b from-slate-800/90 to-slate-950/95 hover:from-pink-900/60 hover:to-purple-950/80 p-2 rounded-xl border ${isActive ? 'border-amber-300 shadow-[0_0_15px_rgba(251,191,36,0.7)]' : 'border-pink-500/30'} flex flex-col items-center justify-between text-center group`;
+                card.id = `group-choreo-btn-${gift.id}`;
+                card.onclick = () => triggerGroupChoreoGift(gift.id);
+                card.className = `gift-btn bg-gradient-to-b from-slate-800/95 to-slate-950/95 hover:from-pink-900/70 hover:to-amber-950/80 p-2 rounded-xl border ${isActive ? 'border-amber-300 shadow-[0_0_15px_rgba(251,191,36,0.85)]' : 'border-pink-500/40'} flex flex-col items-center justify-between text-center group`;
                 card.innerHTML = `
                     <div class="w-full flex justify-between items-center">
-                        <span class="text-[8px] font-black text-amber-300 bg-black/50 px-1.5 py-0.5 rounded-full">🪙${gift.coins}</span>
-                        <span class="text-[7px] text-cyan-300 font-bold uppercase">3D</span>
+                        <span class="text-[8px] font-black text-amber-300 bg-black/60 px-1.5 py-0.5 rounded-full">🎁 ${gift.coins}</span>
+                        <span class="text-[7px] text-pink-300 font-black uppercase">5X COREO</span>
                     </div>
                     <span class="text-2xl my-1 drop-shadow-md group-hover:scale-110 transition-transform">${gift.emoji}</span>
                     <span class="text-[9px] font-black text-white leading-tight truncate w-full">${gift.name}</span>
-                    <span class="text-[8px] text-pink-300 font-semibold leading-tight truncate w-full">${gift.stepTitle}</span>
+                    <span class="text-[8px] text-amber-300 font-semibold leading-tight truncate w-full">Escuadrón: ${gift.stepTitle}</span>
                 `;
                 grid.appendChild(card);
             });
+        }
+
+        function filterGroupChoreoGifts(category) {
+            playSynthSound('step');
+            renderGroupChoreoGiftsMenu(category);
+        }
+
+        function toggleGroupChoreoMenu() {
+            const wrapper = document.getElementById('group-choreo-wrapper');
+            const btn = document.getElementById('btn-toggle-group-choreo');
+            if (!wrapper) return;
+            if (wrapper.classList.contains('translate-x-[120%]')) {
+                wrapper.classList.remove('translate-x-[120%]');
+                if (btn) btn.innerHTML = '<span>🎁</span> Coreo Grupal TikTok ▲';
+            } else {
+                wrapper.classList.add('translate-x-[120%]');
+                if (btn) btn.innerHTML = '<span>🎁</span> Coreo Grupal TikTok ▼';
+            }
         }
 
         function filterSuperGifts(category) {
@@ -1633,13 +1865,541 @@
             });
         }
 
+        // ============================================================================
+        // 🔐 MEMORIA DEL STAGE 1 (20 MINUTOS = 1200s) + LLAVE FIREBASE MULTI-REPOSITORIO
+        // ============================================================================
+        const CURRENT_STAGE_NUMBER = 1; // Repositorio Stage 1 de 10
+        let STAGE_1_REPO_URL = "https://dancestudiobolivia.modelsoft.sbs";
+        const STAGE_DOMAINS_MAP = {
+            1: "https://dancestudiobolivia.modelsoft.sbs",
+            2: "https://dancestudiobolivia2.modelsoft.sbs",
+            3: "https://dancestudiobolivia3.modelsoft.sbs",
+            4: "https://dancestudiobolivia4.modelsoft.sbs",
+            5: "https://dancestudiobolivia5.modelsoft.sbs",
+            6: "https://dancestudiobolivia6.modelsoft.sbs",
+            7: "https://dancestudiobolivia7.modelsoft.sbs",
+            8: "https://dancestudiobolivia8.modelsoft.sbs",
+            9: "https://dancestudiobolivia9.modelsoft.sbs",
+            10: "https://dancestudiobolivia10.modelsoft.sbs"
+        };
+        let NEXT_STAGE_REPO_URL = STAGE_DOMAINS_MAP[CURRENT_STAGE_NUMBER + 1] || "https://dancestudiobolivia2.modelsoft.sbs";
+        const EXTERNAL_VIP_TOKEN = "MOBOL-EXT-VIP-2026";
+        const ALLOWED_LINKED_DOMAINS = ["modelsoft.sbs", "dancestudiobolivia", "modelbolivia", "github.io", "localhost", "127.0.0.1"];
+
+        // Metas del Stage 1: 20 minutos (1200 seg) + 40 tareas de pasos + 20 coreografías grupales + 2500 XP
+        const STAGE_1_GOALS = {
+            requiredPlayTimeSeconds: 1200, // 20 minutos entre stage y stage
+            requiredSoloStepsTask: 40,
+            requiredGroupChoreoGifts: 20,
+            requiredXpPoints: 2500
+        };
+
+        let playerStageProgress = null;
+        let stageMemoryIntervalId = null;
+        let isGroupChoreoActive = false;
+        let activeGroupGiftId = null;
+        let currentSquadFormation = 'v_wedge'; // 'v_wedge' | 'diamond' | 'line_wave'
+
+        function checkExternalLinkOrigin() {
+            const params = new URLSearchParams(window.location.search);
+            const originToken = params.get('origin_token');
+            const gateKey = params.get('gate_key');
+            const urlUser = params.get('user');
+            const ref = (document.referrer || '').toLowerCase();
+            let storedLinked = false;
+            try {
+                storedLinked = localStorage.getItem('mobol_external_linked') === 'true';
+            } catch (e) {}
+
+            const matchesDomain = ALLOWED_LINKED_DOMAINS.some(d => ref.includes(d));
+            const matchesToken = (originToken === EXTERNAL_VIP_TOKEN);
+            const isValidExternal = matchesDomain || matchesToken || storedLinked;
+
+            if (isValidExternal) {
+                try { localStorage.setItem('mobol_external_linked', 'true'); } catch (e) {}
+            }
+
+            const loginBadge = document.getElementById('external-link-login-badge');
+            if (loginBadge) {
+                if (isValidExternal) {
+                    loginBadge.className = "bg-emerald-950/90 border border-emerald-500/50 rounded-xl p-2.5 text-[10px] text-emerald-300 font-bold text-center";
+                    loginBadge.innerText = "✅ Vínculo con página externa verificado: Base de datos lista para cargar tu Stage.";
+                } else {
+                    loginBadge.className = "bg-amber-950/90 border border-amber-500/50 rounded-xl p-2.5 text-[10px] text-amber-300 font-bold text-center";
+                    loginBadge.innerText = "⚠️ Entrada directa sin página vinculada: Iniciando obligatoriamente desde el Stage 1.";
+                }
+            }
+
+            if (urlUser) {
+                const uInp = document.getElementById('username');
+                if (uInp && !uInp.value) uInp.value = urlUser;
+            }
+
+            return { isValidExternal, gateKey, urlUser };
+        }
+
+        function generateStageGateToken(stageNum, username) {
+            const clean = sanitizeKey(username || 'PLAYER').toUpperCase().slice(0, 6);
+            const rand = Math.random().toString(36).substring(2, 8).toUpperCase();
+            return `STG${stageNum}-${clean}-${rand}`;
+        }
+
+        function getDefaultStageProgress(username, isValidExternal) {
+            return {
+                username: username,
+                currentStageUnlocked: 1,
+                stageGateToken: generateStageGateToken(1, username),
+                linkedExternalOrigin: !!isValidExternal,
+                lastUpdated: Date.now(),
+                stagesData: {
+                    stage_1: {
+                        unlocked: true,
+                        completed: false,
+                        playTimeSeconds: 0,
+                        requiredPlayTimeSeconds: STAGE_1_GOALS.requiredPlayTimeSeconds,
+                        soloStepsTaskCount: 0,
+                        requiredSoloStepsTask: STAGE_1_GOALS.requiredSoloStepsTask,
+                        groupChoreoGiftsCount: 0,
+                        requiredGroupChoreoGifts: STAGE_1_GOALS.requiredGroupChoreoGifts,
+                        xpPoints: 0,
+                        requiredXpPoints: STAGE_1_GOALS.requiredXpPoints
+                    }
+                }
+            };
+        }
+
+        async function loadAndValidateStageProgress(username) {
+            const safeKey = sanitizeKey(username.toLowerCase());
+            const originInfo = checkExternalLinkOrigin();
+            let progress = null;
+
+            try {
+                const localRaw = localStorage.getItem('mobol_stageProgress_' + safeKey);
+                if (localRaw) progress = JSON.parse(localRaw);
+            } catch (e) {}
+
+            if (database) {
+                const remoteData = await new Promise((resolve) => {
+                    let done = false;
+                    const t = setTimeout(() => { if (!done) { done = true; resolve(null); } }, 1400);
+                    database.ref('stageProgressDB/' + safeKey).once('value')
+                        .then(snap => { if (!done) { done = true; clearTimeout(t); resolve(snap.val()); } })
+                        .catch(() => { if (!done) { done = true; clearTimeout(t); resolve(null); } });
+                });
+                if (remoteData && remoteData.username) {
+                    if (!progress || (remoteData.lastUpdated || 0) >= (progress.lastUpdated || 0)) {
+                        progress = remoteData;
+                    }
+                }
+            }
+
+            if (!progress) {
+                progress = getDefaultStageProgress(username, originInfo.isValidExternal);
+            } else {
+                if (originInfo.isValidExternal) progress.linkedExternalOrigin = true;
+                if (!progress.stagesData) progress.stagesData = {};
+                if (!progress.stagesData.stage_1) {
+                    progress.stagesData.stage_1 = getDefaultStageProgress(username, originInfo.isValidExternal).stagesData.stage_1;
+                }
+                // Asegurar que la meta de tiempo del Stage 1 sea exactamente 20 minutos (1200 segundos)
+                progress.stagesData.stage_1.requiredPlayTimeSeconds = STAGE_1_GOALS.requiredPlayTimeSeconds;
+                progress.stagesData.stage_1.requiredSoloStepsTask = STAGE_1_GOALS.requiredSoloStepsTask;
+                progress.stagesData.stage_1.requiredGroupChoreoGifts = STAGE_1_GOALS.requiredGroupChoreoGifts;
+                progress.stagesData.stage_1.requiredXpPoints = STAGE_1_GOALS.requiredXpPoints;
+            }
+
+            // REGLA DE BLOQUEO MULTI-REPOSITORIO:
+            // Si este código se sube en Stages 2..10 y el jugador no viene de la página vinculada o no tiene llave,
+            // se le pide ir al Stage 1 automáticamente.
+            if (CURRENT_STAGE_NUMBER > 1) {
+                const hasUnlocked = (progress.currentStageUnlocked || 1) >= CURRENT_STAGE_NUMBER;
+                const validKey = originInfo.gateKey && originInfo.gateKey === progress.stageGateToken;
+                if (!hasUnlocked || (!progress.linkedExternalOrigin && !validKey)) {
+                    customAlert(
+                        `Acceso bloqueado al Stage ${CURRENT_STAGE_NUMBER}. No vienes de la página vinculada o aún no has superado el Stage anterior. Serás redirigido al Stage 1.`,
+                        "Llave de Stage Requerida"
+                    );
+                    setTimeout(() => {
+                        window.location.href = `${STAGE_1_REPO_URL}?user=${encodeURIComponent(username)}`;
+                    }, 2600);
+                    return null;
+                }
+            }
+
+            playerStageProgress = progress;
+            persistStageProgress();
+            updateStageProgressUI();
+            startStageMemoryHeartbeat();
+            return progress;
+        }
+
+        function persistStageProgress() {
+            if (!currentUser || !playerStageProgress) return;
+            const safeKey = sanitizeKey(currentUser.toLowerCase());
+            playerStageProgress.lastUpdated = Date.now();
+            try {
+                localStorage.setItem('mobol_stageProgress_' + safeKey, JSON.stringify(playerStageProgress));
+            } catch (e) {}
+            if (database) {
+                database.ref('stageProgressDB/' + safeKey).set(playerStageProgress).catch(() => {});
+            }
+        }
+
+        function startStageMemoryHeartbeat() {
+            if (stageMemoryIntervalId) clearInterval(stageMemoryIntervalId);
+            let tickCount = 0;
+            stageMemoryIntervalId = setInterval(() => {
+                if (!currentUser || !playerStageProgress) return;
+                const st1 = playerStageProgress.stagesData.stage_1;
+                st1.playTimeSeconds = (st1.playTimeSeconds || 0) + 1;
+
+                // Si está bailando activamente un paso sostenido o coreografía grupal, gana XP constante
+                if (currentDanceState !== 'idle') {
+                    st1.xpPoints = (st1.xpPoints || 0) + 2;
+                }
+
+                checkStage1CompletionStatus();
+                updateStageProgressUI();
+
+                tickCount++;
+                if (tickCount % 5 === 0) {
+                    persistStageProgress();
+                }
+            }, 1000);
+        }
+
+        function recordStageTaskProgress(type, xpAmount = 35) {
+            if (!playerStageProgress || !playerStageProgress.stagesData) return;
+            const st1 = playerStageProgress.stagesData.stage_1;
+            if (type === 'solo_task') {
+                st1.soloStepsTaskCount = (st1.soloStepsTaskCount || 0) + 1;
+            } else if (type === 'group_choreo') {
+                st1.groupChoreoGiftsCount = (st1.groupChoreoGiftsCount || 0) + 1;
+            }
+            st1.xpPoints = (st1.xpPoints || 0) + xpAmount;
+            checkStage1CompletionStatus();
+            updateStageProgressUI();
+            persistStageProgress();
+        }
+
+        function checkStage1CompletionStatus() {
+            if (!playerStageProgress || !playerStageProgress.stagesData) return;
+            const st1 = playerStageProgress.stagesData.stage_1;
+            const timeOk = st1.playTimeSeconds >= st1.requiredPlayTimeSeconds;
+            const tasksOk = st1.soloStepsTaskCount >= st1.requiredSoloStepsTask;
+            const groupOk = st1.groupChoreoGiftsCount >= st1.requiredGroupChoreoGifts;
+            const xpOk = st1.xpPoints >= st1.requiredXpPoints;
+
+            if (timeOk && tasksOk && groupOk && xpOk && !st1.completed) {
+                st1.completed = true;
+                if ((playerStageProgress.currentStageUnlocked || 1) < 2) {
+                    playerStageProgress.currentStageUnlocked = 2;
+                    playerStageProgress.stageGateToken = generateStageGateToken(2, currentUser);
+                }
+                playSynthSound('epic');
+                triggerGranPresentacion();
+                showNotification("🏆 ¡STAGE 1 COMPLETADO! Llave del Stage 2 generada en la Base de Datos 🔓", "text-amber-300");
+                persistStageProgress();
+            }
+        }
+
+        function formatMMSS(totalSec) {
+            const m = Math.floor(totalSec / 60);
+            const s = totalSec % 60;
+            return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        }
+
+        function updateStageProgressUI() {
+            if (!playerStageProgress || !playerStageProgress.stagesData) return;
+            const st1 = playerStageProgress.stagesData.stage_1;
+
+            const tCur = Math.min(st1.playTimeSeconds, st1.requiredPlayTimeSeconds);
+            const taskCur = Math.min(st1.soloStepsTaskCount, st1.requiredSoloStepsTask);
+            const grpCur = Math.min(st1.groupChoreoGiftsCount, st1.requiredGroupChoreoGifts);
+            const xpCur = Math.min(st1.xpPoints, st1.requiredXpPoints);
+
+            const tPct = Math.min(100, Math.round((st1.playTimeSeconds / st1.requiredPlayTimeSeconds) * 100));
+            const taskPct = Math.min(100, Math.round((st1.soloStepsTaskCount / st1.requiredSoloStepsTask) * 100));
+            const grpPct = Math.min(100, Math.round((st1.groupChoreoGiftsCount / st1.requiredGroupChoreoGifts) * 100));
+            const xpPct = Math.min(100, Math.round((st1.xpPoints / st1.requiredXpPoints) * 100));
+
+            // HUD Superior
+            const hudTime = document.getElementById('hud-time-label');
+            const hudTasks = document.getElementById('hud-tasks-label');
+            const hudGroup = document.getElementById('hud-group-label');
+            const hudOrigin = document.getElementById('hud-origin-badge');
+            const hudNextBtn = document.getElementById('btn-hud-next-stage');
+
+            if (hudTime) hudTime.innerText = `${formatMMSS(st1.playTimeSeconds)} / 20:00`;
+            if (hudTasks) hudTasks.innerText = `${st1.soloStepsTaskCount}/${st1.requiredSoloStepsTask}`;
+            if (hudGroup) hudGroup.innerText = `${st1.groupChoreoGiftsCount}/${st1.requiredGroupChoreoGifts}`;
+            if (hudOrigin) {
+                hudOrigin.innerText = playerStageProgress.linkedExternalOrigin ? "🔗 Vínculo OK" : "⚠️ Stage 1 Base";
+                hudOrigin.className = playerStageProgress.linkedExternalOrigin
+                    ? "text-[9px] font-bold text-emerald-300 bg-emerald-950/80 border border-emerald-500/40 px-1.5 py-0.5 rounded"
+                    : "text-[9px] font-bold text-amber-300 bg-amber-950/80 border border-amber-500/40 px-1.5 py-0.5 rounded";
+            }
+
+            if (hudNextBtn) {
+                if (st1.completed) hudNextBtn.classList.remove('hidden');
+                else hudNextBtn.classList.add('hidden');
+            }
+
+            // Barras del Modal de Memoria
+            const bTimeText = document.getElementById('bar-time-text');
+            const bTimeFill = document.getElementById('bar-time-fill');
+            if (bTimeText) bTimeText.innerText = `${formatMMSS(tCur)} / 20:00 (${tPct}%)`;
+            if (bTimeFill) bTimeFill.style.width = `${tPct}%`;
+
+            const bTasksText = document.getElementById('bar-tasks-text');
+            const bTasksFill = document.getElementById('bar-tasks-fill');
+            if (bTasksText) bTasksText.innerText = `${taskCur} / ${st1.requiredSoloStepsTask} tareas (${taskPct}%)`;
+            if (bTasksFill) bTasksFill.style.width = `${taskPct}%`;
+
+            const bGroupText = document.getElementById('bar-group-text');
+            const bGroupFill = document.getElementById('bar-group-fill');
+            if (bGroupText) bGroupText.innerText = `${grpCur} / ${st1.requiredGroupChoreoGifts} coreografías (${grpPct}%)`;
+            if (bGroupFill) bGroupFill.style.width = `${grpPct}%`;
+
+            const bXpText = document.getElementById('bar-xp-text');
+            const bXpFill = document.getElementById('bar-xp-fill');
+            if (bXpText) bXpText.innerText = `${xpCur} / ${st1.requiredXpPoints} XP (${xpPct}%)`;
+            if (bXpFill) bXpFill.style.width = `${xpPct}%`;
+
+            const mToken = document.getElementById('modal-gate-token');
+            const mUnlocked = document.getElementById('modal-stage-unlocked');
+            const mOriginStatus = document.getElementById('modal-origin-status');
+            const btnModalUnlock = document.getElementById('btn-modal-unlock-stage2');
+
+            if (mToken) mToken.innerText = playerStageProgress.stageGateToken || 'STG1-KEY';
+            if (mUnlocked) mUnlocked.innerText = `Stage ${playerStageProgress.currentStageUnlocked || 1} de 10`;
+            if (mOriginStatus) {
+                mOriginStatus.innerText = playerStageProgress.linkedExternalOrigin ? "✅ Página Externa Vinculada" : "⚠️ Entrada Directa (Stage 1)";
+                mOriginStatus.className = playerStageProgress.linkedExternalOrigin
+                    ? "px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-900/80 text-emerald-300 border border-emerald-400/40"
+                    : "px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-900/80 text-amber-300 border border-amber-400/40";
+            }
+
+            if (btnModalUnlock) {
+                if (st1.completed) {
+                    btnModalUnlock.disabled = false;
+                    btnModalUnlock.className = "flex-1 bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-slate-950 font-black text-xs py-2.5 px-4 rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.5)] transition-all";
+                    btnModalUnlock.innerText = "🔓 PASAR AL REPOSITORIO DEL STAGE 2 CON LLAVE ➔";
+                } else {
+                    btnModalUnlock.disabled = true;
+                    btnModalUnlock.className = "flex-1 bg-slate-700 text-gray-400 font-black text-xs py-2.5 px-4 rounded-xl cursor-not-allowed transition-all";
+                    btnModalUnlock.innerText = `🔒 Progreso Stage 1: Tiempo ${tPct}% | Tareas ${taskPct}% | Coreo ${grpPct}%`;
+                }
+            }
+        }
+
+        function toggleStageSetupModal() {
+            const modal = document.getElementById('stage-setup-modal');
+            if (!modal) return;
+            if (modal.classList.contains('active')) {
+                modal.classList.remove('active');
+            } else {
+                updateStageProgressUI();
+                modal.classList.add('active');
+            }
+        }
+
+        function saveNextStageRepoUrl() {
+            const inp = document.getElementById('next-stage-repo-input');
+            if (inp && inp.value.trim()) {
+                NEXT_STAGE_REPO_URL = inp.value.trim();
+                try { localStorage.setItem('mobol_next_stage_url', NEXT_STAGE_REPO_URL); } catch (e) {}
+                showNotification("🔗 URL del repositorio Stage 2 guardada", "text-cyan-300");
+            }
+        }
+
+        function simulateExternalOriginLink() {
+            try { localStorage.setItem('mobol_external_linked', 'true'); } catch (e) {}
+            if (playerStageProgress) {
+                playerStageProgress.linkedExternalOrigin = true;
+                persistStageProgress();
+                updateStageProgressUI();
+            }
+            checkExternalLinkOrigin();
+            playSynthSound('gift');
+            showNotification("🔗 Vínculo con página externa activado y registrado en Firebase", "text-emerald-300");
+        }
+
+        function fastForwardStage1ForTest() {
+            if (!playerStageProgress || !playerStageProgress.stagesData) {
+                customAlert("Inicia sesión primero en la pista para probar el progreso del Stage 1.", "Inicia Sesión");
+                return;
+            }
+            const st1 = playerStageProgress.stagesData.stage_1;
+            st1.playTimeSeconds = Math.min(st1.requiredPlayTimeSeconds, (st1.playTimeSeconds || 0) + 300); // +5 min
+            st1.soloStepsTaskCount = Math.min(st1.requiredSoloStepsTask, (st1.soloStepsTaskCount || 0) + 10);
+            st1.groupChoreoGiftsCount = Math.min(st1.requiredGroupChoreoGifts, (st1.groupChoreoGiftsCount || 0) + 5);
+            st1.xpPoints = Math.min(st1.requiredXpPoints, (st1.xpPoints || 0) + 650);
+            checkStage1CompletionStatus();
+            updateStageProgressUI();
+            persistStageProgress();
+            playSynthSound('gift');
+            showNotification("⚡ +5 min, +10 tareas y +5 coreografías añadidas para prueba", "text-amber-300");
+        }
+
+        function proceedToNextStageRepo() {
+            if (!playerStageProgress || !playerStageProgress.stagesData.stage_1.completed) {
+                customAlert("Aún debes completar los 20 minutos, las tareas de pasos y las coreografías grupales para habilitar la llave del Stage 2.", "Stage 1 en Curso");
+                return;
+            }
+            const inp = document.getElementById('next-stage-repo-input');
+            if (inp && inp.value.trim()) NEXT_STAGE_REPO_URL = inp.value.trim();
+
+            const targetUrl = `${NEXT_STAGE_REPO_URL}${NEXT_STAGE_REPO_URL.includes('?') ? '&' : '?'}user=${encodeURIComponent(currentUser)}&gate_key=${encodeURIComponent(playerStageProgress.stageGateToken)}&origin_token=${EXTERNAL_VIP_TOKEN}&from_stage=${CURRENT_STAGE_NUMBER}`;
+            customAlert(
+                `¡Felicidades ${currentUser}! Tu llave criptográfica (${playerStageProgress.stageGateToken}) fue guardada en Firebase. Abriendo Stage 2 en: ${targetUrl}`,
+                "🔓 Pasando a dancestudiobolivia2.modelsoft.sbs"
+            );
+            setTimeout(() => {
+                try { window.location.href = targetUrl; } catch (e) {}
+            }, 2200);
+        }
+
+        // ============================================================================
+        // 🎁💃 MOTOR DE COREOGRAFÍA GRUPAL COORDINADA (5 PERSONAJES EN ESCENA CON REGALOS TIKTOK)
+        // ============================================================================
+        function setSquadFormation(fmt) {
+            currentSquadFormation = fmt;
+            ['v_wedge', 'diamond', 'line_wave'].forEach(k => {
+                const b = document.getElementById('fmt-btn-' + k);
+                if (b) {
+                    b.className = (k === fmt)
+                        ? "bg-pink-600 text-white px-1.5 py-0.5 rounded font-bold"
+                        : "bg-slate-800 text-gray-300 px-1.5 py-0.5 rounded font-bold";
+                }
+            });
+            playSynthSound('step');
+            showNotification(`👯‍♂️ Formación Grupal: ${fmt.toUpperCase()}`, "text-pink-300");
+        }
+
+        function triggerGroupChoreoGift(giftId) {
+            if (currentUser) {
+                const me = playersDB.find(p => p.name === currentUser);
+                if (me && !me.hasGameAccess) { logout(); return; }
+                if (me && !me.hasGiftAccess) { showNotification("No tienes permiso de regalos activo.", "text-red-400"); return; }
+            }
+
+            const gift = SUPER_GIFTS_CATALOG.find(g => g.id === giftId);
+            if (!gift) return;
+
+            isGroupChoreoActive = true;
+            activeGroupGiftId = gift.id;
+
+            const xpGain = Math.min(250, 45 + Math.round(Math.sqrt(gift.coins) * 3));
+            recordStageTaskProgress('group_choreo', xpGain);
+
+            playSynthSound(gift.coins >= 250 ? 'epic' : 'gift');
+            updateActiveStepUI(gift.action, `🎁 Coreo Grupal 5X: ${gift.emoji} ${gift.name}`);
+            showNotification(`🎁 ¡COREO GRUPAL TIKTOK! ${gift.emoji} ${gift.name} — Escuadrón de 5 en ${gift.stepTitle}`, "text-amber-300");
+
+            spawnFlyingEmoji(gift.emoji);
+            setTimeout(() => spawnFlyingEmoji(gift.emoji), 180);
+            setTimeout(() => spawnFlyingEmoji('🎁'), 340);
+
+            trigger3DAction({ action: gift.action, color: gift.color, isSuper: true });
+            renderGroupChoreoGiftsMenu('all');
+            renderSuperGiftsMenu('all');
+        }
+
+        function getSquadFormationCoords(dancerIdx, time) {
+            // dancerIdx: 0 = Centro (Jugador), 1 = Frente-Izq, 2 = Frente-Der, 3 = Fondo-Izq, 4 = Fondo-Der
+            const sway = Math.sin(time * 3) * 0.25;
+            if (currentSquadFormation === 'diamond') {
+                const coords = [
+                    { x: 0 + sway, z: 0.4 },
+                    { x: -2.4 + sway, z: -0.9 },
+                    { x: 2.4 + sway, z: -0.9 },
+                    { x: 0 - sway, z: -2.5 },
+                    { x: 0 + sway * 1.2, z: 1.65 }
+                ];
+                return coords[dancerIdx] || { x: 0, z: 0 };
+            } else if (currentSquadFormation === 'line_wave') {
+                const coords = [
+                    { x: 0, z: 0.2 + Math.sin(time * 5) * 0.25 },
+                    { x: -1.9, z: 0.2 + Math.sin(time * 5 + 0.7) * 0.25 },
+                    { x: 1.9, z: 0.2 + Math.sin(time * 5 - 0.7) * 0.25 },
+                    { x: -3.7, z: 0.2 + Math.sin(time * 5 + 1.4) * 0.25 },
+                    { x: 3.7, z: 0.2 + Math.sin(time * 5 - 1.4) * 0.25 }
+                ];
+                return coords[dancerIdx] || { x: 0, z: 0 };
+            }
+            // Default: V-Escuadrón ('v_wedge')
+            const vCoords = [
+                { x: 0 + sway, z: 0.55 },
+                { x: -2.1 + sway * 0.8, z: -0.75 },
+                { x: 2.1 + sway * 0.8, z: -0.75 },
+                { x: -4.0 + sway * 0.5, z: -2.1 },
+                { x: 4.0 + sway * 0.5, z: -2.1 }
+            ];
+            return vCoords[dancerIdx] || { x: 0, z: 0 };
+        }
+
+        function computeCoordinatedSquadPose(actionName, time, dancerIdx) {
+            // Cánones coreográficos sincronizados (Efecto ola + Espejo simétrico izquierda/derecha)
+            const mirror = (dancerIdx % 2 === 1) ? -1 : (dancerIdx === 0 ? 1 : 1);
+            const canonPhase = dancerIdx * 0.28;
+            const t = time * 9 + canonPhase;
+            const section = Math.floor(time * 0.8) % 3;
+
+            let p = {
+                rootPosY: Math.abs(Math.sin(t)) * 0.55,
+                rootRotY: 0,
+                rootRotX: 0,
+                bodyY: Math.sin(t * 2) * 0.08,
+                bodyRotY: Math.sin(t * 0.5) * 0.4 * mirror,
+                bodyRotX: 0.08,
+                bodyRotZ: Math.cos(t * 0.5) * 0.18 * mirror,
+                lArmX: -Math.PI * 0.65 + Math.sin(t) * 0.65,
+                rArmX: -Math.PI * 0.65 - Math.sin(t) * 0.65,
+                lArmZ: 0.55 + Math.cos(t) * 0.35,
+                rArmZ: -0.55 - Math.cos(t) * 0.35,
+                lElbowX: -0.85,
+                rElbowX: -0.85,
+                lLegX: Math.sin(t) * 0.7,
+                rLegX: -Math.sin(t) * 0.7,
+                lKneeX: Math.max(0, -Math.sin(t)) * 0.95,
+                rKneeX: Math.max(0, Math.sin(t)) * 0.95
+            };
+
+            if (section === 1) {
+                // Giro sincronizado de escuadrón 360°
+                p.rootRotY = (time * 6 + canonPhase * 0.5) % (Math.PI * 2);
+                p.lArmZ = 1.25;
+                p.rArmZ = -1.25;
+            } else if (section === 2 && (actionName.includes('flip') || actionName.includes('jump') || actionName.includes('rocket') || actionName.includes('universe'))) {
+                // Salto acrobático grupal en canon
+                p.rootPosY = Math.abs(Math.sin(t * 0.8)) * 1.85;
+                p.lArmX = -Math.PI * 0.9;
+                p.rArmX = -Math.PI * 0.9;
+            }
+
+            return p;
+        }
+
         window.onload = async () => {
+            try {
+                const savedUrl = localStorage.getItem('mobol_next_stage_url');
+                if (savedUrl) {
+                    NEXT_STAGE_REPO_URL = savedUrl;
+                    const inp = document.getElementById('next-stage-repo-input');
+                    if (inp) inp.value = savedUrl;
+                }
+            } catch (e) {}
+
+            checkExternalLinkOrigin();
+
             const userInp = document.getElementById('username');
             const passInp = document.getElementById('password');
             if (userInp) userInp.addEventListener('keydown', (e) => { if (e.key === 'Enter') login(); });
             if (passInp) passInp.addEventListener('keydown', (e) => { if (e.key === 'Enter') login(); });
 
             renderSuperGiftsMenu('all');
+            renderGroupChoreoGiftsMenu('all');
             init3D();
             playersDB = await loadDB();
             setupRealtimeSync();
@@ -1705,6 +2465,8 @@
             if (btnEditAds) btnEditAds.classList.remove('hidden');
 
             await bindIndependentUserAds(currentUser);
+            const validProgress = await loadAndValidateStageProgress(currentUser);
+            if (validProgress === null && CURRENT_STAGE_NUMBER > 1) return;
 
             document.getElementById('login-screen').classList.remove('active'); document.getElementById('game-screen').classList.add('active');
             playSynthSound('welcome');
@@ -1724,6 +2486,10 @@
         }
 
         function logout() {
+            if (stageMemoryIntervalId) {
+                clearInterval(stageMemoryIntervalId);
+                stageMemoryIntervalId = null;
+            }
             if (userAdsListenerRef) {
                 try { userAdsListenerRef.off(); } catch (e) {}
                 userAdsListenerRef = null;
@@ -1770,12 +2536,13 @@
         function toggleSuperGiftsMenu() {
             const wrapper = document.getElementById('gifts-wrapper');
             const btn = document.getElementById('btn-toggle-super-gifts');
-            if (wrapper.classList.contains('translate-x-[120%]')) {
-                wrapper.classList.remove('translate-x-[120%]');
-                if (btn) btn.innerHTML = '<span>🎁</span> Super Regalos TikTok ▲';
+            if (!wrapper) return;
+            if (wrapper.classList.contains('-translate-x-[120%]')) {
+                wrapper.classList.remove('-translate-x-[120%]');
+                if (btn) btn.innerHTML = '<span>🎯</span> Tareas Stage ▲';
             } else {
-                wrapper.classList.add('translate-x-[120%]');
-                if (btn) btn.innerHTML = '<span>🎁</span> Super Regalos TikTok ▼';
+                wrapper.classList.add('-translate-x-[120%]');
+                if (btn) btn.innerHTML = '<span>🎯</span> Tareas Stage ▼';
             }
         }
 
@@ -1889,32 +2656,41 @@
                 const me = playersDB.find(p => p.name === currentUser);
                 if (me && !me.hasGameAccess) { logout(); return; }
             }
+            isGroupChoreoActive = false;
+            activeGroupGiftId = null;
+            if (actionName !== 'idle') {
+                recordStageTaskProgress('solo_task', 25);
+            }
             playSynthSound('step');
             updateActiveStepUI(actionName, stepTitle);
             if (superAuraGroup) superAuraGroup.visible = false;
             trigger3DAction({ action: actionName, color: colorHex, isSuper: false });
+            renderGroupChoreoGiftsMenu('all');
         }
 
-        // Ejecutar Super Regalo de TikTok con Paso Extraordinario Sostenido + Efectos 3D
+        // Ejecutar Tarea de Acrobacia Individual del Panel de Tareas (Sin símbolo de regalo, suma tarea de Stage)
         function sendGift(giftId) { 
             if (currentUser) {
                 const me = playersDB.find(p => p.name === currentUser);
                 if (me && !me.hasGameAccess) { logout(); return; } 
-                if (me && !me.hasGiftAccess) { showNotification("No puedes enviar Super Regalos ahora.", "text-red-400"); return; } 
+                if (me && !me.hasGiftAccess) { showNotification("No tienes acceso a este panel ahora.", "text-red-400"); return; } 
             }
             
             const gift = SUPER_GIFTS_CATALOG.find(g => g.id === giftId);
             if (!gift) return;
 
-            playSynthSound(gift.coins >= 250 ? 'epic' : 'gift');
-            updateActiveStepUI(gift.action, `${gift.emoji} ${gift.stepTitle}`);
-            showNotification(`${currentUser || '@Streamer'} envió ${gift.name} ${gift.emoji} — ¡${gift.stepTitle}!`, "text-amber-300");
-            
-            // Máximo 2 emojis simultáneos para cuidar la fluidez del teléfono
-            spawnFlyingEmoji(gift.emoji);
-            setTimeout(() => spawnFlyingEmoji(gift.emoji), 220);
+            isGroupChoreoActive = false;
+            activeGroupGiftId = null;
+            const taskXP = Math.min(150, 25 + Math.round(Math.sqrt(gift.coins) * 2));
+            recordStageTaskProgress('solo_task', taskXP);
+
+            playSynthSound(gift.coins >= 250 ? 'epic' : 'step');
+            updateActiveStepUI(gift.action, `🎯 Tarea: ${gift.stepTitle}`);
+            showNotification(`🎯 Tarea de Nivel ejecutada: ${gift.stepTitle} (+${taskXP} XP)`, "text-cyan-300");
             
             trigger3DAction({ action: gift.action, color: gift.color, isSuper: true });
+            renderSuperGiftsMenu('all');
+            renderGroupChoreoGiftsMenu('all');
         }
 
         function toggleHalloween() {
@@ -2645,7 +3421,7 @@
                 avatar.rightLeg = rightLegObj.legGroup; avatar.rightKnee = rightLegObj.kneeGroup;
                 avatar.root.add(avatar.rightLeg);
 
-            } else if (type === 'chica') {
+            } else if (type === 'chica' || type === 'toy_fashion') {
                 const outfitMat = isHalloweenActive
                     ? hwOrange
                     : new THREE.MeshPhongMaterial({ color: 0xec4899, emissive: 0x500724, specular: 0xf472b6, shininess: 45 });
@@ -2812,7 +3588,171 @@
                 avatar.rightLeg = rightLegObj.legGroup; avatar.rightKnee = rightLegObj.kneeGroup;
                 avatar.root.add(avatar.rightLeg);
 
-            } else if (type === 'robot') {
+            } else if (type === 'toy_astro' || type === 'hero_iron' || type === 'hero_arachnid' || type === 'movie_blockbuster') {
+                // ARQUETIPOS ICÓNICOS 3D: JUGUETE GUARDIÁN ESPACIAL, SUPERHÉROES Y ESTRELLA DE PELÍCULA DE ESTRENO
+                const isAstro = type === 'toy_astro';
+                const isIron = type === 'hero_iron';
+                const isSpider = type === 'hero_arachnid';
+                const isMovie = type === 'movie_blockbuster';
+
+                const primaryColor = isAstro ? 0xf8fafc : (isIron ? 0xb91c1c : (isSpider ? 0xdc2626 : 0x1e293b));
+                const secondaryColor = isAstro ? 0x22c55e : (isIron ? 0xfacc15 : (isSpider ? 0x1d4ed8 : 0xd97706));
+                const glowColor = isAstro ? 0xa855f7 : (isIron ? 0x38bdf8 : (isSpider ? 0xffffff : 0x22d3ee));
+
+                const matPrimary = new THREE.MeshPhongMaterial({ color: primaryColor, specular: 0xffffff, shininess: 75 });
+                const matSecondary = new THREE.MeshPhongMaterial({ color: secondaryColor, specular: 0xfef08a, shininess: 65 });
+                const matGlow = new THREE.MeshBasicMaterial({ color: glowColor });
+
+                const faceObj = buildRealisticHead(matSkinMale, glowColor, 0x991b1b, false);
+                avatar.head = faceObj.headGroup;
+                avatar.currentMouth = faceObj.mouthMesh;
+
+                if (isAstro) {
+                    // Casco Domo Espacial Transparente de Juguete Coleccionable + Capucha Morada
+                    const hood = new THREE.Mesh(new THREE.SphereGeometry(0.36, 18, 18), new THREE.MeshPhongMaterial({ color: 0x6b21a8, shininess: 60 }));
+                    hood.scale.set(0.98, 1.05, 0.95);
+                    avatar.head.add(hood);
+                    const dome = new THREE.Mesh(
+                        new THREE.SphereGeometry(0.46, 20, 20),
+                        new THREE.MeshPhongMaterial({ color: 0xe0f2fe, transparent: true, opacity: 0.38, specular: 0xffffff, shininess: 100 })
+                    );
+                    dome.position.y = 0.02;
+                    avatar.head.add(dome);
+                } else if (isIron || isSpider) {
+                    // Casco / Máscara de Superhéroe con Ojos Luminosos
+                    const mask = new THREE.Mesh(new THREE.SphereGeometry(0.365, 20, 20), matPrimary);
+                    mask.scale.set(0.97, 1.08, 1.0);
+                    avatar.head.add(mask);
+                    if (isIron) {
+                        const faceplate = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.22, 0.42, 16, 1, false, -Math.PI * 0.38, Math.PI * 0.76), matSecondary);
+                        faceplate.position.set(0, -0.02, 0.08);
+                        avatar.head.add(faceplate);
+                    }
+                    [-1, 1].forEach(s => {
+                        const heroEye = new THREE.Mesh(new THREE.BoxGeometry(0.13, 0.055, 0.04), matGlow);
+                        heroEye.position.set(s * 0.12, 0.06, 0.36);
+                        heroEye.rotation.z = s * -0.15;
+                        avatar.head.add(heroEye);
+                    });
+                } else if (isMovie) {
+                    // Visor Holográfico de Película Sci-Fi de Estreno + Cabello Estilizado
+                    const cineHair = new THREE.Mesh(new THREE.SphereGeometry(0.36, 18, 18, 0, Math.PI * 2, 0, Math.PI * 0.55), matDarkFabric);
+                    cineHair.position.y = 0.05;
+                    avatar.head.add(cineHair);
+                    const visor = new THREE.Mesh(new THREE.BoxGeometry(0.52, 0.12, 0.08), matGlow);
+                    visor.position.set(0, 0.06, 0.33);
+                    avatar.head.add(visor);
+                }
+                avatar.bodyGroup.add(avatar.head);
+
+                avatar.neck = new THREE.Mesh(new THREE.CylinderGeometry(0.115, 0.13, 0.24, 14), matSecondary);
+                avatar.neck.position.y = 3.44;
+                avatar.bodyGroup.add(avatar.neck);
+
+                // Torso Blindado / Juguete / Cine
+                const chest = new THREE.Mesh(new THREE.CylinderGeometry(0.47, 0.35, 1.12, 18), matPrimary);
+                chest.scale.set(1.08, 1, 0.82);
+                chest.position.y = 2.78;
+                avatar.bodyGroup.add(chest);
+
+                const chestArmorTrim = new THREE.Mesh(new THREE.TorusGeometry(0.38, 0.045, 10, 22), matSecondary);
+                chestArmorTrim.rotation.x = Math.PI / 2;
+                chestArmorTrim.position.y = 3.12;
+                avatar.bodyGroup.add(chestArmorTrim);
+
+                // Emblema Central (Reactor / Insignia Espacial / Emblema Héroe)
+                const coreEmblem = new THREE.Mesh(new THREE.OctahedronGeometry(0.13, 0), matGlow);
+                coreEmblem.scale.set(1.2, 1.2, 0.35);
+                coreEmblem.position.set(0, 2.92, 0.37);
+                avatar.bodyGroup.add(coreEmblem);
+
+                if (isAstro) {
+                    // Alas Desplegables de Guardián Espacial de Juguete
+                    [-1, 1].forEach(side => {
+                        const wing = new THREE.Mesh(new THREE.BoxGeometry(0.75, 0.42, 0.06), matSecondary);
+                        wing.position.set(side * 0.62, 2.95, -0.32);
+                        wing.rotation.z = side * 0.18;
+                        const wingTip = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.44, 0.08), matGlow);
+                        wingTip.position.set(side * 0.38, 0, 0);
+                        wing.add(wingTip);
+                        avatar.bodyGroup.add(wing);
+                    });
+                } else if (isMovie || isIron) {
+                    // Capa / Propulsores Dorsales Cinematográficos
+                    const cape = new THREE.Mesh(new THREE.PlaneGeometry(0.88, 1.55), new THREE.MeshPhongMaterial({ color: secondaryColor, side: THREE.DoubleSide, shininess: 40 }));
+                    cape.position.set(0, 2.45, -0.36);
+                    cape.rotation.x = 0.14;
+                    avatar.bodyGroup.add(cape);
+                }
+
+                const hips = new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.39, 0.38, 16), matSecondary);
+                hips.scale.set(1.05, 1, 0.82);
+                hips.position.y = 1.92;
+                avatar.bodyGroup.add(hips);
+
+                function buildIconicArm(isLeft) {
+                    const armGroup = new THREE.Group();
+                    armGroup.position.set(isLeft ? -0.56 : 0.56, 3.22, 0);
+                    const shoulder = new THREE.Mesh(new THREE.SphereGeometry(0.15, 14, 14), matSecondary);
+                    armGroup.add(shoulder);
+                    const upper = new THREE.Mesh(new THREE.CylinderGeometry(0.125, 0.10, 0.58, 14), matPrimary);
+                    upper.position.y = -0.29;
+                    armGroup.add(upper);
+
+                    const elbowGroup = new THREE.Group();
+                    elbowGroup.position.set(0, -0.58, 0);
+                    const joint = new THREE.Mesh(new THREE.SphereGeometry(0.095, 10, 10), matGlow);
+                    elbowGroup.add(joint);
+                    const forearm = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.085, 0.54, 14), matSecondary);
+                    forearm.position.y = -0.27;
+                    elbowGroup.add(forearm);
+                    const glove = new THREE.Mesh(new THREE.SphereGeometry(0.09, 12, 12), matGlow);
+                    glove.position.y = -0.58;
+                    elbowGroup.add(glove);
+                    armGroup.add(elbowGroup);
+                    return { armGroup, elbowGroup };
+                }
+
+                const lArmI = buildIconicArm(true);
+                avatar.leftArm = lArmI.armGroup; avatar.leftElbow = lArmI.elbowGroup;
+                avatar.bodyGroup.add(avatar.leftArm);
+
+                const rArmI = buildIconicArm(false);
+                avatar.rightArm = rArmI.armGroup; avatar.rightElbow = rArmI.elbowGroup;
+                avatar.bodyGroup.add(avatar.rightArm);
+
+                function buildIconicLeg(isLeft) {
+                    const legGroup = new THREE.Group();
+                    legGroup.position.set(isLeft ? -0.21 : 0.21, 1.74, 0);
+                    const thigh = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.135, 0.86, 14), matPrimary);
+                    thigh.position.y = -0.43;
+                    legGroup.add(thigh);
+
+                    const kneeGroup = new THREE.Group();
+                    kneeGroup.position.set(0, -0.86, 0);
+                    const kneeJoint = new THREE.Mesh(new THREE.SphereGeometry(0.125, 12, 12), matGlow);
+                    kneeGroup.add(kneeJoint);
+                    const calf = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.11, 0.78, 14), matSecondary);
+                    calf.position.y = -0.39;
+                    kneeGroup.add(calf);
+                    kneeGroup.add(buildStreetSneaker(matPrimary, matGlow, false));
+                    legGroup.add(kneeGroup);
+                    return { legGroup, kneeGroup };
+                }
+
+                const lLegI = buildIconicLeg(true);
+                avatar.leftLeg = lLegI.legGroup; avatar.leftKnee = lLegI.kneeGroup;
+                avatar.root.add(avatar.leftLeg);
+
+                const rLegI = buildIconicLeg(false);
+                avatar.rightLeg = rLegI.legGroup; avatar.rightKnee = rLegI.kneeGroup;
+                avatar.root.add(avatar.rightLeg);
+
+            } else if (type === 'toy_fashion') {
+                // MUÑECA POP ARTICULADA DE COLECCIÓN (JUGUETE GLAM ICONIC)
+                type = 'chica';
+            }
+            if (type === 'robot') {
                 const matArmor = new THREE.MeshPhongMaterial({ color: isHalloweenActive ? 0x18181b : 0xe2e8f0, specular: 0xffffff, shininess: 85 });
                 const matCarbon = new THREE.MeshPhongMaterial({ color: 0x0f172a, specular: 0x475569, shininess: 40 });
                 const matAccent = new THREE.MeshBasicMaterial({ color: isHalloweenActive ? 0xff6600 : 0x22d3ee });
@@ -2998,9 +3938,28 @@
         }
 
         function spawnBots() {
-            botsArray.forEach(b => { scene.remove(b.root); disposeObject3D(b.root); }); botsArray = [];
-            let bot1 = buildAvatarModel('chica'); bot1.root.position.set(-4, 0, -2); let sign1 = createFloatingTextMesh("Servicios Digitales\nModel Bolivia", "#06b6d4"); sign1.position.set(0, 5, 0); bot1.root.add(sign1); bot1.sign = sign1; bot1.danceType = 'twerk'; botsArray.push(bot1); scene.add(bot1.root);
-            let bot2 = buildAvatarModel('robot'); bot2.root.position.set(4, 0, -2); let sign2 = createFloatingTextMesh("¡Suscríbete y deja\ntu Like para más!", "#facc15"); sign2.position.set(0, 5, 0); bot2.root.add(sign2); bot2.sign = sign2; bot2.danceType = 'robot_dance'; botsArray.push(bot2); scene.add(bot2.root);
+            botsArray.forEach(b => { scene.remove(b.root); disposeObject3D(b.root); });
+            botsArray = [];
+
+            const squadConfigs = [
+                { model: 'toy_fashion', pos: [-2.4, 0, -1.0], label: "🎀 Muñeca Pop\nModel Bolivia", color: "#ec4899", dance: "twerk" },
+                { model: 'hero_iron',   pos: [2.4, 0, -1.0],  label: "🛡️ Ciber-Héroe\n¡Envía Regalos!", color: "#facc15", dance: "robot_dance" },
+                { model: 'hero_arachnid', pos: [-4.3, 0, -2.4], label: "🕷️ Héroe Acróbata\nStage 1 (20m)", color: "#22d3ee", dance: "trend_tiktok" },
+                { model: 'movie_blockbuster', pos: [4.3, 0, -2.4], label: "🎬 Astro de Cine\n¡Dale Like!", color: "#a855f7", dance: "hiphop" }
+            ];
+
+            squadConfigs.forEach((cfg) => {
+                const bot = buildAvatarModel(cfg.model);
+                bot.root.position.set(cfg.pos[0], cfg.pos[1], cfg.pos[2]);
+                bot.basePos = { x: cfg.pos[0], y: cfg.pos[1], z: cfg.pos[2] };
+                const sign = createFloatingTextMesh(cfg.label, cfg.color);
+                sign.position.set(0, 5.0, 0);
+                bot.root.add(sign);
+                bot.sign = sign;
+                bot.danceType = cfg.dance;
+                botsArray.push(bot);
+                scene.add(bot.root);
+            });
         }
 
         function createParticles() {
@@ -3258,8 +4217,43 @@
 
             botsArray.forEach((bot, idx) => {
                 let bt = time + bot.danceOffset;
-                const baseBotX = idx === 0 ? -4.0 : 4.0;
-                const baseBotZ = -2.0;
+                const baseBotX = bot.basePos ? bot.basePos.x : (idx % 2 === 0 ? -3.2 : 3.2);
+                const baseBotZ = bot.basePos ? bot.basePos.z : -1.8;
+
+                if (isGroupChoreoActive) {
+                    const squadCoord = getSquadFormationCoords(idx + 1, time);
+                    const gPose = computeCoordinatedSquadPose(currentDanceState, time, idx + 1);
+                    const gLerp = Math.min(12 * dt, 0.65);
+
+                    bot.root.position.x = THREE.MathUtils.lerp(bot.root.position.x, squadCoord.x, gLerp);
+                    bot.root.position.z = THREE.MathUtils.lerp(bot.root.position.z, squadCoord.z, gLerp);
+                    bot.root.position.y = THREE.MathUtils.lerp(bot.root.position.y, gPose.rootPosY, gLerp);
+                    bot.root.rotation.y = THREE.MathUtils.lerp(bot.root.rotation.y, gPose.rootRotY, gLerp);
+
+                    bot.bodyGroup.position.y = THREE.MathUtils.lerp(bot.bodyGroup.position.y, gPose.bodyY, gLerp);
+                    bot.bodyGroup.rotation.x = THREE.MathUtils.lerp(bot.bodyGroup.rotation.x, gPose.bodyRotX, gLerp);
+                    bot.bodyGroup.rotation.y = THREE.MathUtils.lerp(bot.bodyGroup.rotation.y, gPose.bodyRotY, gLerp);
+                    bot.bodyGroup.rotation.z = THREE.MathUtils.lerp(bot.bodyGroup.rotation.z, gPose.bodyRotZ, gLerp);
+
+                    if (bot.leftArm && bot.rightArm) {
+                        bot.leftArm.rotation.x = THREE.MathUtils.lerp(bot.leftArm.rotation.x, gPose.lArmX, gLerp);
+                        bot.leftArm.rotation.z = THREE.MathUtils.lerp(bot.leftArm.rotation.z, gPose.lArmZ, gLerp);
+                        bot.rightArm.rotation.x = THREE.MathUtils.lerp(bot.rightArm.rotation.x, gPose.rArmX, gLerp);
+                        bot.rightArm.rotation.z = THREE.MathUtils.lerp(bot.rightArm.rotation.z, gPose.rArmZ, gLerp);
+                        if (bot.leftElbow) bot.leftElbow.rotation.x = THREE.MathUtils.lerp(bot.leftElbow.rotation.x, gPose.lElbowX, gLerp);
+                        if (bot.rightElbow) bot.rightElbow.rotation.x = THREE.MathUtils.lerp(bot.rightElbow.rotation.x, gPose.rElbowX, gLerp);
+                    }
+                    if (bot.leftLeg && bot.rightLeg) {
+                        bot.leftLeg.rotation.x = THREE.MathUtils.lerp(bot.leftLeg.rotation.x, gPose.lLegX, gLerp);
+                        bot.rightLeg.rotation.x = THREE.MathUtils.lerp(bot.rightLeg.rotation.x, gPose.rLegX, gLerp);
+                        if (bot.leftKnee) bot.leftKnee.rotation.x = THREE.MathUtils.lerp(bot.leftKnee.rotation.x, gPose.lKneeX, gLerp);
+                        if (bot.rightKnee) bot.rightKnee.rotation.x = THREE.MathUtils.lerp(bot.rightKnee.rotation.x, gPose.rKneeX, gLerp);
+                    }
+                    if (bot.sign) {
+                        bot.sign.position.y = 4.9 + Math.sin(time * 9 + idx) * 0.22;
+                    }
+                    return;
+                }
 
                 if (bot.sign) {
                     bot.sign.position.y = 4.8 + Math.sin(bt * (isTrioChoreo ? 8 : 2)) * 0.25;
@@ -3722,7 +4716,11 @@
                         break;
                 }
 
-                if (!isTrioChoreo) {
+                if (isGroupChoreoActive) {
+                    const centerCoord = getSquadFormationCoords(0, time);
+                    avatarRoot.position.x = THREE.MathUtils.lerp(avatarRoot.position.x, centerCoord.x, 8 * dt);
+                    avatarRoot.position.z = THREE.MathUtils.lerp(avatarRoot.position.z, centerCoord.z, 8 * dt);
+                } else if (!isTrioChoreo) {
                     avatarRoot.position.x = THREE.MathUtils.lerp(avatarRoot.position.x, 0, 6 * dt);
                     avatarRoot.position.z = THREE.MathUtils.lerp(avatarRoot.position.z, 0, 6 * dt);
                 }
